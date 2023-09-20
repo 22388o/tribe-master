@@ -1,9 +1,10 @@
+import TextInputComponent from "../../components/TextInputComponent";
 
 const CreateTribeNostr = () => {
   return (
     <div>
-      this is CreateTribe with Nostr
-      
+      <p>Enter an npub for everyone in your tribe:</p>
+      <TextInputComponent />
     </div>
   )
 };
