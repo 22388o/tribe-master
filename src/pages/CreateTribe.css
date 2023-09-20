@@ -1,6 +1,10 @@
 .create-container {
     padding: 1em;
     /* border: 1px solid red; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1em;
 }
 
 .multisig_creator {
@@ -9,24 +13,17 @@
     gap: 0.5em;
 }
 
-.radio-btn {
-    display: none;
+.choose-bitpac {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
 }
 
-.radio-label {
-    cursor: pointer;
-    color: #293264;
-    padding: .2em 1.25em;
-    outline: 1px solid #4D5B9E;
-    border-radius: 8px;
-    font-weight: 500;
-}
-
-.radio-label:hover {
+.bitpac-type {
+    background-color: #212121;
     color: white;
-    background-color: #4D5B9E;
-    padding: .2em 1.25em;
-    outline: 1px solid #4D5B9E;
-    border-radius: 8px;
-    font-weight: 500;
+    padding: 0.5em 1em;
+    text-decoration: none;
+    border-radius: 5px;
 }
