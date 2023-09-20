@@ -1,0 +1,22 @@
+.create-container {
+    padding: 1em;
+    /* border: 1px solid red; */
+}
+
+.multisig_creator {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+}
+
+.radio-btn {
+    display: none;
+}
+
+.radio-label {
+    color: #293264;
+    padding: .2em 1.25em;
+    outline: 1px solid #4D5B9E;
+    border-radius: 8px;
+    font-weight: 500;
+}

@@ -31,6 +31,7 @@ const Header = () => {
       <Link to='/' className="company-logo">
         <h1 className="company-name">Tribe</h1>
         <img className="company-img" src={tribeLogo} alt="Tribe logo" />
+        {/* <img className="company-img" src="https://raw.githubusercontent.com/22388o/12345/main/PNG%202.png" alt="Tribe logo" /> */}
       </Link>
       <nav className="navbar">
         <Link className='nav-links' to='create'>create</Link>
