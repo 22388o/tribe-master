@@ -14,7 +14,17 @@
 }
 
 .radio-label {
+    cursor: pointer;
     color: #293264;
+    padding: .2em 1.25em;
+    outline: 1px solid #4D5B9E;
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.radio-label:hover {
+    color: white;
+    background-color: #4D5B9E;
     padding: .2em 1.25em;
     outline: 1px solid #4D5B9E;
     border-radius: 8px;
