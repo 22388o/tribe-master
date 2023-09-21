@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import './MultiSig.css'
 
 const MultiSig = () => {
   const [selectThreshold, setSelectThreshold] = useState(1)
@@ -40,6 +41,7 @@ const MultiSig = () => {
             value={input}
             onChange={(e) => handleInputChange(index, e)}
             placeholder="Enter your text"
+            required
           />
           {!(inputs.length - 1 === 0) && <button onClick={() => removeInput(index)}>Delete</button>}
         </div>
@@ -48,17 +50,18 @@ const MultiSig = () => {
       <label>Pick how many votes are needed to spend the money:
         <input
             className='select_threshold' 
-            type="number" 
-            // value={1} 
+            type="number"  
             min={1} 
             step={1} 
             max={inputs.length}
             onChange={(event) => handleInputNumberChange(event)}
+            required
             />
       </label>
       <p>Your policy so far: {selectThreshold} out of {inputs.length}
       </p>
-      <input type="submit" value="submit" className='create-bitpac' />
+      <input 
+        type="submit" value="Create bitpac" className='create-multisg' />
     </div>
   );
 }
