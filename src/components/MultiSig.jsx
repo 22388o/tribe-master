@@ -47,7 +47,8 @@ const MultiSig = () => {
             placeholder="Enter your text"
             required
           />
-          {!(inputs.length - 1 === 0) && <button onClick={() => removeInput(index)}>Delete</button>}
+          {!(inputs.length - 1 === 0) && 
+          <button onClick={() => removeInput(index)}>Delete</button>}
         </div>
       ))}
       <button onClick={addInput}>Add Input</button>
