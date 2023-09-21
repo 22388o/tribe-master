@@ -6,7 +6,7 @@ const MultiSig = () => {
   const [inputs, setInputs] = useState(['']);
   // State to store the input values
  
-    console.log(inputs.length)
+    console.log(selectThreshold)
   // Function to add a new input field
   const addInput = () => {
     setInputs([...inputs, '']);
