@@ -10,6 +10,7 @@
 .company-logo {
     display: flex;
     flex-direction: row-reverse;
+    gap: .5em;
     align-items: center;
     text-decoration: none;
     color: white;
@@ -19,15 +20,12 @@
     margin: 0;
     font-weight: bold;
     font-family: 'Roboto', sans-serif;
-    color: #ff5722;
-    /* border: 1px solid magenta; */
+    color: orange;
 }
 
 .company-img {
     /* border: 1px solid magenta; */
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
+    width: 50px;
     margin: 0;
 }
 
