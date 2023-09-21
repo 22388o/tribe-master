@@ -26,11 +26,15 @@ const MultiSig = () => {
     newInputs[index] = event.target.value;
     setInputs(newInputs);
   };
-// Function to handle changes in number input value
-  const handleInputNumberChange = (event) => {
-    setSelectThreshold(event.target.value)
+  // Function to handle changes in number input value
+  // Define a function to handle changes in the input field
+  const handleThresholdChange = (event) => {
+    const inputValue = event.target.value;
+    // Check if the input is a valid number and less than or equal to inputs.length
+    if (!isNaN(inputValue) && Number(inputValue) <= inputs.length) {
+      setSelectThreshold(inputValue); // Update the state if it's a valid input
+    }
   };
-
 
   return (
     <div>
@@ -51,11 +55,11 @@ const MultiSig = () => {
         <input
             className='select_threshold' 
             type="number"  
-            min={1} 
+            min={1}
+            value={selectThreshold} 
             step={1} 
             max={inputs.length}
-            onChange={(event) => handleInputNumberChange(event)}
-            required
+            onChange={(event) => handleThresholdChange(event)}
             />
       </label>
       <p>Your policy so far: {selectThreshold} out of {inputs.length}

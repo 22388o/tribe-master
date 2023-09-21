@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { getAddress } from 'sats-connect'
-import tribeLogo from '../assets/tribe-logo.png'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faWallet } from '@fortawesome/free-solid-svg-icons'
+import { getAddress } from 'sats-connect'
+import tribeLogo from '../assets/tribe-logo.png'
+
 import './Header.css'
 
 const Header = () => {
@@ -39,6 +40,7 @@ const Header = () => {
         <Link className='nav-links' to='about'>about</Link>
         <button className='connect-wallet-btn' onClick={() => getAddress(getAddressOptions)}><FontAwesomeIcon icon={faWallet} /> connect wallet</button>
       </nav>
+      
     </div>
   )
 };
