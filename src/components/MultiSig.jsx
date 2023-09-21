@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-const TextInputComponent = () => {
+const MultiSig = () => {
   const [selectThreshold, setSelectThreshold] = useState(1)
 //   State to store the Threshold
   const [inputs, setInputs] = useState(['']);
@@ -19,13 +19,13 @@ const TextInputComponent = () => {
     setInputs(newInputs);
   };
 
-  // Function to handle changes in input values
+  // Function to handle changes in text input values
   const handleInputChange = (index, event) => {
     const newInputs = [...inputs];
     newInputs[index] = event.target.value;
     setInputs(newInputs);
   };
-
+// Function to handle changes in number input value
   const handleInputNumberChange = (event) => {
     setSelectThreshold(event.target.value)
   };
@@ -49,7 +49,7 @@ const TextInputComponent = () => {
         <input
             className='select_threshold' 
             type="number" 
-            value={selectThreshold} 
+            // value={1} 
             min={1} 
             step={1} 
             max={inputs.length}
@@ -63,4 +63,4 @@ const TextInputComponent = () => {
   );
 }
 
-export default TextInputComponent;
+export default MultiSig;
