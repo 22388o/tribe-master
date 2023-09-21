@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faWallet } from '@fortawesome/free-solid-svg-icons'
 import { getAddress } from 'sats-connect'
-import tribeLogo from '../assets/tribe-logo.png'
+import tribeLogo from '../assets/tribe-new-logo.png'
 
 import './Header.css'
 
