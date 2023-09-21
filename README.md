@@ -1,8 +1,5 @@
-# React + Vite
+# Tribe
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A bitpac is a publicly auditable cooperative that lives on bitcoin. Use this site to create a bitpac so that you and the other members of your cooperative can control some money and vote on how to spend it.
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Live demo (in progress): https://lucent-mooncake-a8791a.netlify.app/
