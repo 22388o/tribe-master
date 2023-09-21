@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Nabla&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
 .header-container {
     background-color: #212121;
@@ -9,17 +9,17 @@
 
 .company-logo {
     display: flex;
-    flex-direction: row;
+    flex-direction: row-reverse;
     align-items: center;
     text-decoration: none;
     color: white;
-    /* border: 1px solid orange; */
-    border-radius: 10px;
 }
 
 .company-name {
     margin: 0;
-    font-family: 'Nabla', cursive;
+    font-weight: bold;
+    font-family: 'Roboto', sans-serif;
+    color: #ff5722;
     /* border: 1px solid magenta; */
 }
 
@@ -28,6 +28,7 @@
     width: 60px;
     height: 60px;
     border-radius: 50%;
+    margin: 0;
 }
 
 .navbar {
