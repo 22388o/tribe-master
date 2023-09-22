@@ -25,4 +25,4 @@ Both participants can make proposals and submit votes to existing proposals, pas
 
 ## Status
 
-Currenctly, we're building our MVP and Aplha software for Tribe
+Currenctly, we're building our MVP and Alpha software for Tribe
