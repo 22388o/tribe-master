@@ -23,3 +23,6 @@ A multisig bitpac is created where both participants have access to make proposa
 
 Both participants can make proposals and submit votes to existing proposals, passed votes generate treasury transactions.
 
+## Status
+
+Currenctly, we're building our MVP for Tribe
