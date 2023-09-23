@@ -18,8 +18,8 @@ var BitcoinWallet() {
       'publicKey2',
       // Add more public keys as needed for Multisig setup
     ];
-    const m = 2; // Required number of signatures
-    const network = bitcoin.networks.bitcoin; // You can change the network if needed
+    const m = 67; // Required number of signatures
+    const network = bitcoin.networks.testnet; 
 
     const redeemScript = bitcoin.payments.p2ms({ m, pubkeys: pubKeys, network });
     const p2shAddress = bitcoin.payments.p2sh({ redeem: redeemScript, network });
