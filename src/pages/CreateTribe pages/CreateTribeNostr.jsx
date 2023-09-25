@@ -1272,27 +1272,8 @@ const CreateTribeNostr = () => {
         </script>
     </head>
     <body>
-<h1><a href="http://www.tribebtc.com/dhonboard.html">Tribe</a></h1>
+<h1><a href="https://stately-cheesecake-fc4b74.netlify.app/create/nostr">Tribe</a></h1>
         <div class="multisig_creator">
-            <p>
-                A bitpac is a publicly auditable cooperative that lives on bitcoin. Use this form to create a bitpac so that you and the other members of your cooperative can control some money and vote on how to spend it.
-            </p>
-            <p>Name your bitpac:</p>
-            <input class="bitpac_name">
-            <p>What is your bitpac based on?</p>
-            <select id="options">
-           <option value="npub">NOSTR npubs</option>
-           <option value="btcddress">BTC Wallet Addresses</option>
-            <option value="Ordinals">Ordinals</option>
-           </select>
-            <p>Enter an npub for everyone in your bitpac:</p>
-            <div class="select_npubs">
-            </div>
-            <p>Pick how many votes are needed to spend the money:</p>
-            <input class="select_threshold" type="number" value="1" min="1" step="1" max="74">
-            <p>Your policy so far: <span class="threshold_num">1</span> out of <span class="multisig_num">1</span></p>
-            <div class="nostr_profiles"></div>
-            <button class="create_bitpac">Submit</button>
         </div>
         <div class="multisig_viewer">
             <div class="loading">Loading<span class="dots">.</span></div>
