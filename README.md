@@ -30,6 +30,9 @@ Both participants can make proposals and submit votes to existing proposals, pas
 - [ ] Add Xverse wallet
 - [ ] Add Ordinals support
 - [ ] Fix potential bugs found
+- [ ] API for DAOs done
+- [ ] Search bar for Ordinals
+- [ ] React code complete
 - [ ] Stable software to Alpha
 
 ## Status
