@@ -23,6 +23,15 @@ A multisig bitpac is created where both participants have access to make proposa
 
 Both participants can make proposals and submit votes to existing proposals, passed votes generate treasury transactions.
 
+## Roadmap
+
+- [ ] Fix bugs around Nostr multisig
+- [ ] Add BTC address
+- [ ] Add Xverse wallet
+- [ ] Add Ordinals support
+- [ ] Fix potential bugs found
+- [ ] Stable software to Alpha
+
 ## Status
 
 Currenctly, we're building our MVP and Alpha software for Tribe
