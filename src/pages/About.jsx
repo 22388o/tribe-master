@@ -1,6 +1,6 @@
 const About = () => {
   return (
-    <div>
+    <div style={{marginTop: "100px"}}>
       this is about page
     </div>
   )

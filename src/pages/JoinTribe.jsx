@@ -1,6 +1,6 @@
 const JoinTribe = () => {
   return (
-    <div>
+    <div style={{marginTop: "100px"}}>
       this is join tribe
     </div>
   )
