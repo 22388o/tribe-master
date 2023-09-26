@@ -25,7 +25,7 @@ Both participants can make proposals and submit votes to existing proposals, pas
 
 ## Roadmap
 
-- [ ] Fix bugs around Nostr multisig
+- [ ] Add Nostr multisig
 - [ ] Add BTC address
 - [ ] Add Xverse wallet
 - [ ] Add Ordinals support
