@@ -7,36 +7,19 @@ const CreateTribeBtc = () => {
       <p>Enter pay-to-taproot (P2TR), also known as a Taproot or Bech32m address for everyone in your tribe:</p>
       <MultiSig />
       <script>
-var BitcoinWallet() {
-  const [multisigAddress, setMultisigAddress] = useState('');
-  const [taprootAddress, setTaprootAddress] = useState('');
-
-  // Create a Multisig address
-  const createMultisigAddress = () => {
-    const pubKeys = [
-      'publicKey1',
-      'publicKey2',
-      // Add more public keys as needed for Multisig setup
-    ];
-    const m = 67; // Required number of signatures
-    const network = bitcoin.networks.testnet; 
-
-    const redeemScript = bitcoin.payments.p2ms({ m, pubkeys: pubKeys, network });
-    const p2shAddress = bitcoin.payments.p2sh({ redeem: redeemScript, network });
-
-    setMultisigAddress(p2shAddress.address);
-  };
-
-  // Create a Taproot address
-  const createTaprootAddress = () => {
-    const keyPair = bitcoin.ECPair.makeRandom(); // Generate a random key pair
-    const publicKey = keyPair.publicKey;
-    const network = bitcoin.networks.bitcoin; // You can change the network if needed
-
-    const taprootAddress = bitcoin.payments.p2tr({ pubkey: publicKey, network });
-
-    setTaprootAddress(taprootAddress.address);
-  };
+      
+var network = "testnet";
+var threshold = 3;
+var script = [0];
+pubkeys.forEach( item => {
+    script.push( item, "OP_CHECKSIGADD" );
+});
+var pubkey = "ab".repeat( 32 );
+script.push( threshold, "OP_EQUAL" );
+var sbytes = tapscript.Script.encode( script );
+var tapleaf = tapscript.Tap.tree.getLeaf( sbytes );
+var [ tpubkey, cblock ] = tapscript.Tap.getPubKey(pubkey, { target: tapleaf });
+var multisig_address = tapscript.Address.p2tr.fromPubKey( tpubkey, network );
 
   return (
     <div>
