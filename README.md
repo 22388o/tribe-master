@@ -25,10 +25,10 @@ Both participants can make proposals and submit votes to existing proposals, pas
 
 ## Roadmap
 
-- [ ] Fix bugs around Nostr multisig
-- [ ] Add BTC address
-- [ ] Add Xverse wallet
-- [ ] Add Ordinals support
+- [ ] Add Nostr multisig (WIP)
+- [ ] Add BTC address (WIP)
+- [ ] Add Xverse wallet (WIP)
+- [ ] Add Ordinals support (WIP)
 - [ ] Fix potential bugs found
 - [ ] API for DAOs done
 - [ ] Search bar for Ordinals
