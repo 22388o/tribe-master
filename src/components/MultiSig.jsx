@@ -142,10 +142,10 @@ const [selectThreshold, setSelectThreshold] = useState(1)
         disabled={showModal}
       />
       {showModal ? <div className='modal'>
-    <button 
+    {/* <button 
       className="exit-modal-btn"
       // onClick={setShowModal(false)}
-      >X</button>
+      >X</button> */}
     <p className='modal-text'>Tribe name: {tribe.tribeName}</p>
     <p className='modal-text'>Your policy is: {selectThreshold} votes out of {inputs.length}
     </p>
