@@ -1,20 +1,8 @@
-import { useState } from "react";
+// import { useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import './CreateTribe.css'
 
 const CreateTribe = () => {
-    const [tribe, setTribe] = useState({
-        tribeName: '',
-        type: '',
-        pubkeys: []
-    })
-
-    const handleChange = (e) => {
-        setTribe({...tribe,
-                tribeName: e.target.value, 
-            });
-      }
-    console.log(tribe)
 
     const activeStyle = {
         fontWeight: "bold",
@@ -28,11 +16,6 @@ const CreateTribe = () => {
 
         <p>A tribe is a publicly auditable cooperative that lives on bitcoin. Use this form to create a tribe so that you and the other members of your cooperative can control some money and vote on how to spend it.
         </p>
-
-        <label>Name your tribe:
-            <input type="text" onChange={(event) => handleChange(event)} />
-        </label>
-
         <p>What is your tribe based on?</p>
 
         <div

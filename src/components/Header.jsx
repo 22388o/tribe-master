@@ -46,7 +46,7 @@ const Header = () => {
       purposes: ['ordinals', 'payment'],
       message: 'Address for receiving Ordinals and payments',
       network: {
-          type:'Mainnet'
+          type:'Testnet'
       },
       },
       onFinish: (response) => {

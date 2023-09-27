@@ -10,9 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@cmdcode/tapscript": "^1.4.1",
     "@fortawesome/fontawesome-svg-core": "^6.4.2",
     "@fortawesome/free-solid-svg-icons": "^6.4.2",
     "@fortawesome/react-fontawesome": "^0.2.0",
+    "bech32": "^2.0.0",
+    "buffer": "^6.0.3",
     "hamburger-react": "^2.5.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -27,6 +30,13 @@
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
+    "express": "^4.18.2",
+    "nodemon": "^3.0.1",
     "vite": "^4.4.5"
-  }
+  },
+  "description": "### Publicly Auditable Cooperatives on Bitcoin",
+  "main": "vite.config.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }
