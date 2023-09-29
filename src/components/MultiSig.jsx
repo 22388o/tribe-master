@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Address, Script, Tap } from '@cmdcode/tapscript'
 // import { Buffer } from 'buffer';
 // import { bech32 } from 'bech32'
@@ -37,15 +37,32 @@ const [selectThreshold, setSelectThreshold] = useState(1)
   
   var network = "testnet";
   var script = [0];
-  inputs.forEach( item => {
+
+  tribe.pubKeys.forEach( item => {
     script.push( item, "OP_CHECKSIGADD" );
   });
+
   var pubkey = "ab".repeat( 32 );
+
   script.push( selectThreshold, "OP_EQUAL" );
+
   var sbytes = Script.encode( script );
+
   var tapleaf = Tap.tree.getLeaf( sbytes );
+
   var [ tpubkey, cblock ] = Tap.getPubKey(pubkey, { target: tapleaf });
+
   var multisig_address = Address.p2tr.fromPubKey( tpubkey, network );
+
+  const createMultisig = () => {
+    console.log('CLicked!')
+    setTribe(prev => ({
+      ...prev, multiSigAddress: multisig_address
+    }))
+    setShowModal(true)
+
+  } 
+    
 
 
   // Function to add a new input field
@@ -83,17 +100,10 @@ const [selectThreshold, setSelectThreshold] = useState(1)
     // Check if the input is a valid number and less than or equal to inputs.length
     if (!isNaN(inputValue) && Number(inputValue) <= inputs.length) {
       setSelectThreshold(inputValue); // Update the state if it's a valid input
+    } else {
+      return inputs.length
     }
   };
-  
-  const createTribe = () => {
-    if (inputs.length <= selectThreshold) {
-      setShowModal(true)
-    } else {
-      setShowModal(false)
-      alert('there is an error')
-    }
-  }
 
   return (
     <div>
@@ -138,19 +148,10 @@ const [selectThreshold, setSelectThreshold] = useState(1)
       </p>
       <input 
         type="button" value="Create bitpac" className='create-multisig'
-        onClick={() => createTribe()}
-        disabled={showModal}
+        onClick={createMultisig}
+        disabled={tribe.tribeName && tribe.pubKeys && selectThreshold}
       />
-      {showModal ? <div className='modal'>
-    {/* <button 
-      className="exit-modal-btn"
-      // onClick={setShowModal(false)}
-      >X</button> */}
-    <p className='modal-text'>Tribe name: {tribe.tribeName}</p>
-    <p className='modal-text'>Your policy is: {selectThreshold} votes out of {inputs.length}
-    </p>
-    <p className='modal-text'>this is the multisig address: {tribe.multiSigAddress}</p>
-  </div> : null}
+      {showModal && <div>{tribe.tribeName}</div>}
     </div>
   );
 }
