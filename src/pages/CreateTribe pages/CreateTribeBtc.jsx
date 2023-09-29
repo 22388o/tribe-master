@@ -24,13 +24,15 @@ const CreateTribeBtc = () => {
   // console.log(tribeBtc.publicKeys)
 
    // Function to add a new input field
-   const addInput = () => {
+   const addInput = (e) => {
+    e.preventDefault()
     setInputs([...inputs, '']);
     setTribeBtc(prev => ({...prev, publicKeys: [...inputs, '']}))
   };
 
   // Function to remove an input field by index
   const removeInput = (index) => {
+    // e.preventDefault()
     const newInputs = [...inputs];
     newInputs.splice(index, 1);
     setInputs(newInputs);
@@ -105,9 +107,9 @@ console.log(multisig_address)
           placeholder="public keys Only"
           disabled={isModal}
         />
-        <button 
+        <button
           className="input-buttons" 
-          onClick={() => removeInput(index)}
+          onClick={removeInput}
           disabled={inputs.length === 1 || isModal}
           >-</button>
       </div>
@@ -127,8 +129,7 @@ console.log(multisig_address)
       </label>
       <p>Enter your bitcoin *public keys  address for everyone in your tribe:</p>
       {inputsComponent}
-      <button 
-        // type="button" 
+      <button  
         disabled={isModal} 
         className="input-buttons" 
         onClick={addInput}
