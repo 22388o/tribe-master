@@ -6,8 +6,9 @@ import VoteList from '@/components/vote/vote-list';
 import MemberList from '@/components/members/members-list';
 import { NostrTribe } from '@/types';
 import BitcoinImage from '@/assets/images/coin/bitcoin.svg';
-import { getNostrTagValue, shortenStr } from '@/utils/utils';
+import { getNostrTagValue, shortenStr, satsToFormattedDollarString } from '@/utils/utils';
 import useAddress from '@/hooks/useAddress';
+import useBitcoinPrice from '@/hooks/useBitcoinPrice';
 
 export default function ModernScreen({ tribe }: { tribe?: NostrTribe }) {
   const getAddress = () => {
@@ -20,19 +21,23 @@ export default function ModernScreen({ tribe }: { tribe?: NostrTribe }) {
   };
   
   const address = getAddress();
-  const { balance } = useAddress('tb1qp23xcmwrhwh8gu7jm6826xcfck7c8t00zgyypn')
- 
+  const { balance, sats } = useAddress(address)
+  const { price } = useBitcoinPrice();
 
+  const usdBalance = satsToFormattedDollarString(sats, price);
+ 
   const treasury = {
     id: '0',
     name: 'Bitcoin',
     symbol: 'BTC',
-    balance: balance,
-    usdBalance: '11,032.24',
+    balance,
+    usdBalance,
     logo: BitcoinImage,
     color: '#FDEDD4',
     address: shortenStr(address),
   };
+
+  console.log(treasury)
 
   return (
     <>

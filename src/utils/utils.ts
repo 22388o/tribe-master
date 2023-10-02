@@ -24,8 +24,15 @@ function satsToBtc(sats: number) {
   if (!sats) {
     return 0;
   }
-  
-  return sats / 100000000;
+
+   return Number(sats) / 10 ** 8;
 }
 
-export { bytesToHex, getNostrTagValue, shortenStr, satsToBtc };
+const satsToFormattedDollarString = (sats: number, bitcoinPrice: number) => {
+  return (satsToBtc(sats) * bitcoinPrice).toLocaleString(undefined, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+  });
+}
+
+export { bytesToHex, getNostrTagValue, shortenStr, satsToBtc, satsToFormattedDollarString };

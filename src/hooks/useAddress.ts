@@ -3,6 +3,7 @@ import { satsToBtc} from '@/utils/utils'
 
 import { useQuery } from 'react-query';
 
+
 const fetchAddress = async (address: string) => {
   const response = await fetch(`${API_ENDPOINTS.MEMPOOL_API}/address/${address}/utxo`);
   if (!response.ok) {
@@ -11,7 +12,7 @@ const fetchAddress = async (address: string) => {
   return response.json();
 };
 
-const useAddress = (address: string) => {
+const useAddress = (address: string)=> {
   const { data, isLoading, error } = useQuery(['address', address], () => fetchAddress(address));
 
   // Calculate the total balance

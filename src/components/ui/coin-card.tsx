@@ -97,8 +97,6 @@ export default function CoinSlider({ coins }: CoinSliderProps) {
             logo={coin.logo}
             balance={coin.balance}
             usdBalance={coin.usdBalance}
-            change={coin.change}
-            isChangePositive={coin.isChangePositive}
             color={coin.color}
             address={coin.address}
           />
