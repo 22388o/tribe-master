@@ -25,14 +25,24 @@ function satsToBtc(sats: number) {
     return 0;
   }
 
-   return Number(sats) / 10 ** 8;
+  return Number(sats) / 10 ** 8;
 }
 
 const satsToFormattedDollarString = (sats: number, bitcoinPrice: number) => {
-  return (satsToBtc(sats) * bitcoinPrice).toLocaleString(undefined, {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-  });
-}
+  if (!sats || !bitcoinPrice) {
+    return 0;
+  }
 
-export { bytesToHex, getNostrTagValue, shortenStr, satsToBtc, satsToFormattedDollarString };
+  return (satsToBtc(sats) * bitcoinPrice).toLocaleString(undefined, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+};
+
+export {
+  bytesToHex,
+  getNostrTagValue,
+  shortenStr,
+  satsToBtc,
+  satsToFormattedDollarString,
+};

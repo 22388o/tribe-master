@@ -19,7 +19,6 @@ export const defaultMenuItems = [
     icon: <VoteIcon />,
     href: routes.vote,
     dropdownItems: [
-     
       {
         name: 'Vote with tribe',
         href: routes.proposals,
@@ -30,10 +29,7 @@ export const defaultMenuItems = [
       },
     ],
   },
- 
 ];
 
 // add about page or other
-export const otherPagesMenuItems = [
- 
-];
+export const otherPagesMenuItems = [];

@@ -45,7 +45,10 @@ export default function VoteDetailsCard({ vote }: any) {
     >
       <motion.div
         layout
-        className={cn('flex w-full flex-col-reverse justify-between ', 'md:grid md:grid-cols-3')}
+        className={cn(
+          'flex w-full flex-col-reverse justify-between ',
+          'md:grid md:grid-cols-3'
+        )}
       >
         <div className="self-start md:col-span-2">
           <h3

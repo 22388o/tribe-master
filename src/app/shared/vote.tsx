@@ -20,17 +20,15 @@ const VotePage = () => {
   return (
     <div className="mx-auto w-full max-w-[1160px] text-sm md:pt-14 4xl:pt-24">
       <div
-        className={cn('grid', 'grid-cols-1 gap-6 xs:grid-cols-2 lg:grid-cols-3')}
+        className={cn(
+          'grid',
+          'grid-cols-1 gap-6 xs:grid-cols-2 lg:grid-cols-3'
+        )}
       >
         <motion.div
           whileTap={{ scale: 0.98 }}
           whileHover={{ scale: 1.015 }}
-          onClick={() =>
-            router.push(
-              
-                routes.proposals
-            )
-          }
+          onClick={() => router.push(routes.proposals)}
           className={cn(
             'flex cursor-pointer flex-col items-center justify-center rounded-lg bg-white p-6 text-center shadow-card transition-shadow duration-200 hover:shadow-large dark:bg-light-dark',
             'xs:col-span-2 sm:col-auto sm:row-span-2'
@@ -55,7 +53,7 @@ const VotePage = () => {
           rel="noopener noreferrer"
           href="https://discord.com/"
           className={cn(
-            'rounded-lg bg-white p-6 shadow-card transition-shadow duration-200 hover:shadow-large dark:bg-light-dark',
+            'rounded-lg bg-white p-6 shadow-card transition-shadow duration-200 hover:shadow-large dark:bg-light-dark'
           )}
         >
           <span className="inline-block h-auto w-12 sm:w-auto">
@@ -72,8 +70,7 @@ const VotePage = () => {
           rel="noopener noreferrer"
           href="https://www.discourse.org/"
           className={cn(
-            'rounded-lg bg-white p-6 shadow-card transition-shadow duration-200 hover:shadow-large dark:bg-light-dark',
-      
+            'rounded-lg bg-white p-6 shadow-card transition-shadow duration-200 hover:shadow-large dark:bg-light-dark'
           )}
         >
           <span className="inline-block h-auto w-12 sm:w-auto">
@@ -88,8 +85,7 @@ const VotePage = () => {
           whileHover={{ scale: 1.015 }}
           // onClick={() => router.push('/')}
           className={cn(
-            'cursor-pointer rounded-lg bg-white p-6 shadow-card transition-shadow duration-200 hover:shadow-large dark:bg-light-dark',
-      
+            'cursor-pointer rounded-lg bg-white p-6 shadow-card transition-shadow duration-200 hover:shadow-large dark:bg-light-dark'
           )}
         >
           <div className="h-auto w-12 sm:w-auto">
@@ -106,8 +102,7 @@ const VotePage = () => {
           rel="noopener noreferrer"
           href="https://forum.mirror.finance/"
           className={cn(
-            'rounded-lg bg-white p-6 shadow-card transition-shadow duration-200 hover:shadow-large dark:bg-light-dark',
-       
+            'rounded-lg bg-white p-6 shadow-card transition-shadow duration-200 hover:shadow-large dark:bg-light-dark'
           )}
         >
           <span className="inline-block h-auto w-11 sm:w-auto">

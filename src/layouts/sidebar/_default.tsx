@@ -32,8 +32,7 @@ export default function Sidebar({
   const sideBarMenus = menuItems?.map((item) => ({
     name: item.name,
     icon: item.icon,
-    href:
-      layoutOption + item.href,
+    href: layoutOption + item.href,
     ...(item.dropdownItems && {
       dropdownItems: item?.dropdownItems?.map((dropdownItem: any) => ({
         name: dropdownItem.name,

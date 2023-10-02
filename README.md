@@ -12,7 +12,6 @@ Bitpac participants can be selected in various ways, through assets they hold, t
 
 In the future we plan to upgrade and improve the tooling and ability of this tech through the integration of DLCs, Lightning, Nostr, and more. Tribe will always be bitcoin only and aims to push the capability of on-chain organization and governance forward.
 
-
 ## How Tribe Works:
 
 Tribe will offer bitpacs based on several inputs, including NOSTR npubs, btc wallet addresses, and ordinals assets held. Using NOSTR for example:

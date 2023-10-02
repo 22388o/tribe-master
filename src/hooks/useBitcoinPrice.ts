@@ -1,4 +1,4 @@
-import { API_ENDPOINTS } from '@/data/utils/endpoints'
+import { API_ENDPOINTS } from '@/data/utils/endpoints';
 import { useQuery } from 'react-query';
 
 const fetchBitcoinPrice = async () => {
@@ -11,7 +11,10 @@ const fetchBitcoinPrice = async () => {
 };
 
 const useBitcoinPrice = () => {
-  const { data, isLoading, error } = useQuery('bitcoinPrice', fetchBitcoinPrice);
+  const { data, isLoading, error } = useQuery(
+    'bitcoinPrice',
+    fetchBitcoinPrice
+  );
 
   return { price: data, isLoading, error };
 };

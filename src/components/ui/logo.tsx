@@ -23,8 +23,7 @@ export default function Logo({ className }: LogoPropTypes) {
     isMounted && (
       <AnchorLink
         href={{
-          pathname:
-            routes.home,
+          pathname: routes.home,
         }}
         className={cn('flex w-28 outline-none sm:w-32 4xl:w-36', className)}
       >

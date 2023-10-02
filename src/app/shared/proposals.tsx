@@ -25,9 +25,7 @@ const ProposalsPage = () => {
   const { totalVote: totalPastVote } = getVotesByStatus('past');
   function goToCreateProposalPage() {
     setTimeout(() => {
-      router.push(
-          routes.createProposal
-      );
+      router.push(routes.createProposal);
     }, 800);
   }
   const tabMenuItems = [
@@ -64,7 +62,7 @@ const ProposalsPage = () => {
       <header
         className={cn(
           'mb-8 flex flex-col gap-4 rounded-lg bg-white p-5 py-6 shadow-card dark:bg-light-dark xs:p-6 sm:flex-row sm:items-center sm:justify-between',
-            'sm:flex-row sm:items-center sm:justify-between'
+          'sm:flex-row sm:items-center sm:justify-between'
         )}
       >
         <div className="flex items-start gap-4 xs:items-center xs:gap-3 xl:gap-4">

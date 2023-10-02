@@ -42,8 +42,7 @@ const NotFoundPage = () => {
         </p>
         <AnchorLink
           href={{
-            pathname:
-              '/' 
+            pathname: '/',
           }}
         >
           <Button shape="rounded">Back to Home</Button>
