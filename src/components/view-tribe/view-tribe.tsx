@@ -7,27 +7,29 @@ import MemberList from '@/components/members/members-list';
 import { NostrTribe } from '@/types';
 import BitcoinImage from '@/assets/images/coin/bitcoin.svg';
 import { getNostrTagValue, shortenStr } from '@/utils/utils';
+import useAddress from '@/hooks/useAddress';
 
 export default function ModernScreen({ tribe }: { tribe?: NostrTribe }) {
   const getAddress = () => {
     if (!tribe) {
       return '';
     }
-
+    
     return getNostrTagValue('a', tribe.tags) || '';
+    
   };
-
+  
   const address = getAddress();
+  const { balance } = useAddress('tb1qp23xcmwrhwh8gu7jm6826xcfck7c8t00zgyypn')
+ 
 
   const treasury = {
     id: '0',
     name: 'Bitcoin',
     symbol: 'BTC',
-    balance: '0.2231345',
+    balance: balance,
     usdBalance: '11,032.24',
     logo: BitcoinImage,
-    change: '+12.5%',
-    isChangePositive: true,
     color: '#FDEDD4',
     address: shortenStr(address),
   };

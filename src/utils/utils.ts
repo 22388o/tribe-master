@@ -20,4 +20,12 @@ const shortenStr = (str: string, size: number = 8): string => {
   )}`;
 };
 
-export { bytesToHex, getNostrTagValue, shortenStr };
+function satsToBtc(sats: number) {
+  if (!sats) {
+    return 0;
+  }
+  
+  return sats / 100000000;
+}
+
+export { bytesToHex, getNostrTagValue, shortenStr, satsToBtc };

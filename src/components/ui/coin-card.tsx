@@ -13,8 +13,6 @@ type CoinCardProps = {
   logo: StaticImageData;
   balance: string;
   usdBalance: string;
-  change: string;
-  isChangePositive: boolean;
   color?: string;
   address?: string;
 };
@@ -26,8 +24,6 @@ export function CoinCard({
   balance,
   usdBalance,
   address,
-  change,
-  isChangePositive,
   color = '#FDEDD4',
 }: CoinCardProps) {
   return (
