@@ -1,8 +1,0 @@
-.layout { 
-    display:flex; 
-    flex-direction: column;
-    justify-content: space-between;
-    height: 100%;
-    min-height: 100vh;
-    background-image: linear-gradient(to left bottom, #ffa500, #f1b800, #deca00, #c6db00, #a8eb12);
-}

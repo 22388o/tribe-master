@@ -1,0 +1,290 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-brand: 17 24 39;
+  }
+  html {
+    @apply bg-body font-body;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html.dark {
+    @apply bg-dark text-white;
+  }
+
+  html,
+  body {
+    @apply antialiased;
+  }
+
+  .dynamic-html h6 {
+    @apply font-medium uppercase;
+  }
+
+  .dynamic-html p {
+    @apply mb-3;
+  }
+}
+
+@layer utilities {
+  .text-case-inherit {
+    text-transform: inherit;
+  }
+
+  .letter-space-inherit {
+    letter-spacing: inherit;
+  }
+
+  .word-break-all {
+    word-break: break-all;
+  }
+
+  .animation-delay-200 {
+    animation-delay: 200ms;
+  }
+
+  .animation-delay-500 {
+    animation-delay: 500ms;
+  }
+
+  .animation-delay-700 {
+    animation-delay: 700ms;
+  }
+
+  .text-vertical {
+    writing-mode: tb;
+    text-orientation: upright;
+  }
+}
+
+/* Hide spin button for input type number */
+input.spin-button-hidden::-webkit-outer-spin-button,
+input.spin-button-hidden::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/*================================================================
+Styles for Swiper slider
+================================================================*/
+.swiper {
+  @apply flex flex-col;
+}
+
+.swiper-wrapper {
+  @apply order-first;
+}
+
+.swiper-scrollbar {
+  @apply relative rounded bg-gray-200 dark:bg-gray-600;
+}
+
+.swiper-horizontal > .swiper-scrollbar {
+  @apply z-10 mb-0 mt-4 h-0.5 w-full sm:mt-6;
+}
+
+.swiper-vertical > .swiper-scrollbar {
+  @apply absolute right-1 top-0 z-10 h-full w-0.5;
+}
+
+.swiper-scrollbar-drag {
+  @apply relative rounded bg-gray-900 dark:bg-light-dark;
+}
+
+.swiper-horizontal .swiper-scrollbar-drag {
+  @apply left-0 top-[-1px] h-[3px] w-full shadow-sm;
+}
+
+.swiper-vertical .swiper-scrollbar-drag {
+  @apply left-[-1px] top-0 h-full w-[3px] shadow-sm;
+}
+
+.swiper-scrollbar-cursor-drag {
+  @apply cursor-move;
+}
+
+.swiper-scrollbar-lock {
+  @apply hidden;
+}
+
+.transaction-table {
+  border-spacing: 0 12px;
+  margin-top: -12px;
+}
+
+.transaction-table > thead tr > th {
+  text-align: left;
+}
+
+.text-heading-style {
+  @apply text-sm font-medium tracking-wider;
+}
+
+/* React Share button custom styles */
+.product-share .react-share__ShareButton {
+  @apply flex flex-col items-center justify-center;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgb(214, 214, 214);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(var(--color-brand));
+  border-radius: 0px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(var(--color-brand));
+}
+
+/* .pricing-table-head th:nth-child(3),
+.pricing-table-body td:nth-child(3) {
+  max-width: 30px;
+  padding: 0;
+} */
+
+/* .pricing-table-head th:nth-child(4),
+.pricing-table-body td:nth-child(4) {
+  padding-left: 5px;
+} */
+
+.swiper-pagination-bullet {
+  --swiper-pagination-bullet-width: 8px;
+  --swiper-pagination-bullet-height: 8px;
+  --swiper-pagination-bullet-inactive-color: #e5e7eb;
+  --swiper-pagination-color: #9ca3af;
+  --swiper-pagination-bullet-inactive-opacity: 1;
+  border-radius: 10px;
+}
+
+.dark .swiper-pagination-bullet {
+  --swiper-pagination-bullet-inactive-color: #334155;
+  --swiper-pagination-color: #475569;
+}
+
+.swiper-pagination-bullet-active {
+  --swiper-pagination-bullet-width: 16px;
+}
+
+.swiper-horizontal > .swiper-pagination-bullets,
+.swiper-pagination-bullets.swiper-pagination-horizontal,
+.swiper-pagination-custom,
+.swiper-pagination-fraction {
+  bottom: 0;
+}
+
+.recharts-tooltip-wrapper .recharts-default-tooltip {
+  @apply rounded-sm !border-0 !bg-white !px-4 shadow-card dark:!bg-light-dark;
+}
+
+.recharts-tooltip-wrapper .recharts-default-tooltip .recharts-tooltip-item {
+  @apply text-xs uppercase dark:!text-gray-400 lg:text-sm;
+}
+
+.tippy-box {
+  @apply rounded-sm !border-0 !bg-white !text-brand shadow-card dark:!bg-gray-600 dark:!text-white;
+}
+
+.tippy-arrow {
+  @apply !text-white dark:!text-gray-600;
+}
+
+@media (max-width: 767px) {
+  .pricing-table-head th:is(:first-child, :nth-child(2), :nth-child(3)),
+  .pricing-table-body td:is(:first-child, :nth-child(2), :nth-child(3)) {
+    @apply !sticky z-10 ltr:left-0 ltr:pl-[10px] ltr:pr-0 rtl:right-0 rtl:pl-0 rtl:pr-[10px];
+  }
+
+  .pricing-table-head th:first-child,
+  .pricing-table-body td:first-child {
+    min-width: 28px !important;
+    width: 28px !important;
+  }
+
+  .pricing-table-head th:nth-child(2),
+  .pricing-table-body td:nth-child(2) {
+    min-width: 24px !important;
+  }
+
+  .pricing-table-head th:is(:first-child, :nth-child(2), :nth-child(3)),
+  .pricing-table-body td:is(:first-child, :nth-child(2), :nth-child(3)) {
+    @apply bg-white hover:bg-[#F3F4F6] dark:bg-light-dark dark:hover:bg-gray-700;
+  }
+
+  .pricing-table-head th:first-child {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .pricing-table-head th:nth-child(2),
+  .pricing-table-body td:nth-child(2) {
+    @apply flex items-center justify-center p-0 ltr:left-[28px] rtl:right-[28px];
+  }
+
+  .pricing-table-head th:nth-child(2) {
+    @apply ltr:pl-[15px] rtl:pr-[24px];
+  }
+
+  .pricing-table-head th:nth-child(3),
+  .pricing-table-body td:nth-child(3) {
+    @apply !w-[120px] px-0 py-5 ltr:left-[50px] ltr:shadow-[8px_9px_16px_rgba(17,24,39,0.05)] rtl:right-[50px] rtl:shadow-[-8px_9px_16px_rgba(17,24,39,0.05)];
+  }
+
+  .pricing-table-head th:nth-child(4),
+  .pricing-table-body td:nth-child(4) {
+    width: 100px !important;
+  }
+}
+
+@media (min-width: 1536px) {
+  .swiper-pagination-bullet {
+    --swiper-pagination-bullet-width: 10px;
+    --swiper-pagination-bullet-height: 10px;
+  }
+
+  .swiper-pagination-bullet-active {
+    --swiper-pagination-bullet-width: 20px;
+  }
+}
+
+/* remove input number arrows  */
+input.reset-password-pin-code::-webkit-outer-spin-button,
+input.reset-password-pin-code::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input.reset-password-pin-code[type='number'] {
+  -moz-appearance: textfield;
+}
+
+/* Custom scrollbar design starts from here */
+.custom-scrollbar::-webkit-scrollbar {
+  @apply hidden w-[5px];
+}
+
+.custom-scrollbar:hover::-webkit-scrollbar {
+  @apply block;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  @apply bg-transparent shadow-none;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  @apply rounded;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+/* for firefox */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.2) rgba(0, 0, 0, 0);
+}
