@@ -132,3 +132,10 @@ export interface NostrTribe {
   kind: number;
   tags: Array<[string, string]>;
 }
+
+
+export interface NostrMember {
+  picture?: string;
+  display_name: string;
+  pubkey: string;
+}
