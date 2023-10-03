@@ -1,5 +1,6 @@
 const SessionsStorageKeys = {
   TRIBE: 'TRIBE',
+  TRIBE_ID: 'TRIBE_ID',
 };
 
 const SessionStorage = {
@@ -22,7 +23,12 @@ const SessionStorage = {
       return undefined;
     }
 
-    return JSON.parse(value);
+    try {
+      return JSON.parse(value);
+    } catch (error) {
+      console.error('Failed to parse session storage item:', error);
+      return value;
+    }
   },
   remove: (id: string) => {
     if (typeof window === 'undefined') {

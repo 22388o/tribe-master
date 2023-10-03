@@ -170,12 +170,12 @@ export default function VoteDetailsCard({ vote }: any) {
                 dangerouslySetInnerHTML={{ __html: vote.description }}
               />
             </RevealContent>
-            <RevealContent
+            {vote?.action?.lenght && (<RevealContent
               defaultHeight={320}
               className="mt-6 border-t border-dashed border-gray-200 pt-6 dark:border-gray-700"
             >
               <VoteActions title={'Outputs'} action={vote?.action} />
-            </RevealContent>
+            </RevealContent>)}
           </motion.div>
         )}
       </AnimatePresence>

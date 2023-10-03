@@ -6,7 +6,7 @@ export default function CreateTribeScreen() {
   return (
     <>
       <h2 className="mb-12 text-lg font-medium uppercase tracking-wider text-gray-900 dark:text-white sm:text-2xl">
-        Create New Tribe
+        Create New Bitpac
       </h2>
       <CreateTribe />
     </>

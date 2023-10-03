@@ -8,21 +8,18 @@ import Button from '@/components/ui/button';
 import Image from '@/components/ui/image';
 import ParamTab, { TabPanel } from '@/components/ui/param-tab';
 import VoteList from '@/components/vote/vote-list';
-import { ExportIcon } from '@/components/icons/export-icon';
 // static data
 import { getVotesByStatus } from '@/data/static/vote-data';
 import votePool from '@/assets/images/vote-pool.svg';
-import { useLayout } from '@/lib/hooks/use-layout';
-import { LAYOUT_OPTIONS } from '@/lib/constants';
 import Loader from '@/components/ui/loader';
+import useProposals from '@/hooks/useProposal';
+import useBitpac from '@/hooks/useBitpac';
 
 const ProposalsPage = () => {
   const router = useRouter();
-  const { layout } = useLayout();
-  const { totalVote: totalActiveVote } = getVotesByStatus('active');
-  const { totalVote: totalOffChainVote } = getVotesByStatus('off-chain');
-  const { totalVote: totalExecutableVote } = getVotesByStatus('executable');
-  const { totalVote: totalPastVote } = getVotesByStatus('past');
+  const {bitpac } = useBitpac();
+  const { totalActiveVote, totalPastVote, current: votes = [], isLoading } = useProposals(bitpac);
+
   function goToCreateProposalPage() {
     setTimeout(() => {
       router.push(routes.createProposal);
@@ -42,7 +39,6 @@ const ProposalsPage = () => {
       ),
       path: 'active',
     },
-
     {
       title: (
         <>
@@ -93,11 +89,11 @@ const ProposalsPage = () => {
       <Suspense fallback={<Loader variant="blink" />}>
         <ParamTab tabMenu={tabMenuItems}>
           <TabPanel className="focus:outline-none">
-            <VoteList voteStatus={'active'} />
+            <VoteList votes={votes} isLoading={isLoading} />
           </TabPanel>
 
           <TabPanel className="focus:outline-none">
-            <VoteList voteStatus={'past'} />
+            {/* <VoteList voteStatus={'past'} /> */}
           </TabPanel>
         </ParamTab>
       </Suspense>

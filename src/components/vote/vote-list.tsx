@@ -1,15 +1,15 @@
 import { motion, LayoutGroup } from 'framer-motion';
 import VoteDetailsCard from '@/components/vote/vote-details/vote-details-card';
 import { ExportIcon } from '@/components/icons/export-icon';
-// static data
-import { getVotesByStatus } from '@/data/static/vote-data';
+import { Proposal } from '@/types';
 
-export default function VoteList({ voteStatus }: { voteStatus: string }) {
-  const { votes, totalVote } = getVotesByStatus(voteStatus);
+export default function  VoteList({votes, isLoading}: {votes: Proposal[], isLoading: boolean}) {
+  const totalVote = votes?.length || 0;
+
   return (
     <LayoutGroup>
       <motion.div layout initial={{ borderRadius: 16 }} className="rounded-2xl">
-        {totalVote > 0 ? (
+        {totalVote  > 0 ? (
           votes.map((vote: any) => (
             <VoteDetailsCard key={`${vote.title}-key-${vote.id}`} vote={vote} />
           ))

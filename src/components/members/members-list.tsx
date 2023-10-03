@@ -11,7 +11,6 @@ import useAuthors from '@/hooks/useMember';
 import { pubkeyFromNpub, shortenStr } from '@/utils/utils';
 import { useEffect, useState } from 'react';
 
-
 export default function MemberList({ tribe }: { tribe?: NostrTribe }) {
   // var bitpac = JSON.parse( tribe.content   );
   // const pubkeys = bitpac[ 1 ];
@@ -20,7 +19,7 @@ export default function MemberList({ tribe }: { tribe?: NostrTribe }) {
     '2b1a0ee1061cc6c9487f0aa265a302cdb81974dac7df26a9940f5a0731cdc81f',
     'd444754a8e19a90f628fbce17f92176b25436f94227a36bb1670870f12cc9771',
   ];
-  const { members } = useAuthors(pubkeys);  
+  const { members } = useAuthors(pubkeys);
 
   return (
     <LayoutGroup>

@@ -71,7 +71,7 @@ export default function CreateTribeTRForm() {
     const address = generateMultisigAddress(npubkeys, threshold);
     const pubkeys = npubkeys.map((p) => pubkeyFromNpub(p));
     const event = {
-      content: JSON.stringify([name, pubkeys]),
+      content: JSON.stringify([name, [threshold, ...pubkeys]]),
       created_at: Math.floor(Date.now() / 1000),
       kind: 2858,
       tags: [
@@ -94,7 +94,7 @@ export default function CreateTribeTRForm() {
         <InputLabel title="Name" />
         <Input
           type="text"
-          placeholder="Enter your tribe name"
+          placeholder="Enter your bitpac name"
           onChange={handleOnChangeName}
         />
       </div>

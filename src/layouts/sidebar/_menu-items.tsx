@@ -10,7 +10,7 @@ export const defaultMenuItems = [
     href: routes.home,
   },
   {
-    name: 'Create Tribe',
+    name: 'Create Bitpac',
     icon: <PlusCircle />,
     href: routes.createTribe,
   },

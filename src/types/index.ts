@@ -133,9 +133,40 @@ export interface NostrTribe {
   tags: Array<[string, string]>;
 }
 
-
 export interface NostrMember {
   picture?: string;
   display_name: string;
   pubkey: string;
+}
+
+export interface ProposedBy {
+  id: string;
+  link: string;
+}
+
+export interface VoteStatus {
+  vote: number;
+  percentage: number;
+}
+
+export interface Proposal {
+  id: string;
+  title: string;
+  description: string;
+  pubkey: string;
+  accepted: VoteStatus;
+  rejected: VoteStatus;
+  proposed_by: ProposedBy;
+  requiredVotesToPass: number;
+  requiredVotesToDeny: number;
+  status: 'active' | 'inactive'; // Add more status types as needed
+  votes: any[]; // Replace 'any' with the appropriate type
+  action: any[]; // Replace 'any' with the appropriate type
+}
+
+export interface Bitpac {
+  id: string;
+  name: string;
+  pubkeys: string[];
+  threshold: number;
 }
