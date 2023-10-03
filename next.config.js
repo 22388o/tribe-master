@@ -3,7 +3,7 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['assets.coingecko.com'],
+    domains: ['res.cloudinary.com'],
   },
   ...(process.env.NODE_ENV === 'production' && {
     typescript: {

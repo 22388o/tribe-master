@@ -1,4 +1,4 @@
 const NETWORK = 'testnet';
-const RELAYS = ['ws://localhost:7777'];
+const RELAYS = ['wss://relay.damus.io', 'wss://nos.lol', 'wss://booger.pro'];
 
 export { NETWORK, RELAYS };

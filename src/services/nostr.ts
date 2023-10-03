@@ -56,6 +56,16 @@ class NostrRelay {
     const pubs = this.pool.publish(this.relays, event);
     return Promise.all(pubs);
   }
+
+  async list(filter: any) {
+    const events = await this.pool.list([...this.relays], filter);
+
+    const sub = this.pool.sub([...this.relays], filter);
+    sub.on('event', (event) => {
+      console.log('new event', event);
+    });
+    return events;
+  }
 }
 
 const nostrPool = new NostrRelay();

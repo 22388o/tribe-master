@@ -16,11 +16,12 @@ import { NETWORK } from '@/config/config';
 import SessionStorage, {
   SessionsStorageKeys,
 } from '@/services/session-storage';
+import { pubkeyFromNpub } from '@/utils/utils';
 
 export default function CreateTribeTRForm() {
   const router = useRouter();
   const [inputs, setInputs] = useState(['']);
-  const [pubkeys, setPubKeys] = useState(['']);
+  const [npubkeys, setNPubKeys] = useState(['']);
   const [threshold, setTreshold] = useState(1);
   const [name, setName] = useState('');
 
@@ -49,7 +50,7 @@ export default function CreateTribeTRForm() {
     const newInputs = [...inputs];
     newInputs[index] = e.target.value;
     setInputs(newInputs);
-    setPubKeys(newInputs);
+    setNPubKeys(newInputs);
   };
 
   const handleOnChangeName = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -67,7 +68,8 @@ export default function CreateTribeTRForm() {
   async function handleSubmit(e: any) {
     e.preventDefault();
 
-    const address = generateMultisigAddress(pubkeys, threshold);
+    const address = generateMultisigAddress(npubkeys, threshold);
+    const pubkeys = npubkeys.map((p) => pubkeyFromNpub(p));
     const event = {
       content: JSON.stringify([name, pubkeys]),
       created_at: Math.floor(Date.now() / 1000),
@@ -163,7 +165,7 @@ export default function CreateTribeTRForm() {
         type="submit"
         className="mt-5 rounded-lg !text-sm uppercase tracking-[0.04em]"
       >
-        Create Tribe
+        Create Bitpac
       </Button>
     </form>
   );

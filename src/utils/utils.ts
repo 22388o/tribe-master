@@ -1,3 +1,5 @@
+import { bech32 } from 'bech32';
+
 const bytesToHex = (bytes: any) => {
   return bytes.reduce(
     (str: any, byte: any) => str + byte.toString(16).padStart(2, '0'),
@@ -39,10 +41,17 @@ const satsToFormattedDollarString = (sats: number, bitcoinPrice: number) => {
   });
 };
 
+function pubkeyFromNpub(npub: string) {
+  return Buffer.from(bech32.fromWords(bech32.decode(npub).words)).toString(
+    'hex'
+  );
+}
+
 export {
   bytesToHex,
   getNostrTagValue,
   shortenStr,
   satsToBtc,
   satsToFormattedDollarString,
+  pubkeyFromNpub,
 };

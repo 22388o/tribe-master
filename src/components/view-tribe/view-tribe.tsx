@@ -58,7 +58,7 @@ export default function ModernScreen({ tribe }: { tribe?: NostrTribe }) {
           </div>
         </div>
 
-        <MemberList />
+        <MemberList tribe={tribe} />
       </div>
 
       <div className="my-8 sm:my-10">

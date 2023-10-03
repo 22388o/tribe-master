@@ -20,6 +20,8 @@ export default function AuthorCard({ image, name, role }: AuthorCardProps) {
         image={image}
         alt={name ? name : ''}
         className="dark:border-gray-400"
+        width={300}
+        height={300}
       />
       <div className="ltr:pl-3 rtl:pr-3">
         <h3 className="text-sm font-medium uppercase tracking-wide text-gray-900 dark:text-white">
