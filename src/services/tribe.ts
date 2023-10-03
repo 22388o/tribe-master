@@ -36,3 +36,9 @@ export function generateMultisigAddress(
   // Return the generated address.
   return address;
 }
+// This function is used to generate proposal
+export function generateProposal (
+  proposal: Array<string>,
+  thereshold: String,
+  string {
+ 
