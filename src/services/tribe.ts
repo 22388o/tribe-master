@@ -41,4 +41,9 @@ export function generateProposal (
   proposal: Array<string>,
   thereshold: String,
   string {
- 
+ // Initialize proposal
+  const proposal: (string);
+// For each proposal, add it to the proposal
+  proposal.forEach((item) => {
+    proposal.push(item, proposal);
+    
