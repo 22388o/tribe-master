@@ -86,7 +86,7 @@ const useProposals = (bitpac?: Bitpac) => {
     let rejectedVotes = 0;
 
     votes?.forEach((vote: any) => {
-      const content = JSON.parse(vote.content);
+      const content = vote.content ? JSON.parse(vote.content) : 0;
 
       if (content) {
         approvedVotes += 1;
@@ -96,11 +96,16 @@ const useProposals = (bitpac?: Bitpac) => {
     });
 
     const totalVotes = approvedVotes + rejectedVotes;
-    const acceptedPercentage = (approvedVotes / totalVotes) * 100;
-    const rejectedPercentage = (rejectedVotes / totalVotes) * 100;
+    const acceptedPercentage = totalVotes
+      ? (approvedVotes / totalVotes) * 100
+      : 0;
+    const rejectedPercentage = totalVotes
+      ? (rejectedVotes / totalVotes) * 100
+      : 0;
+
     let status: 'active' | 'past' = 'active';
 
-    if (approvedVotes >= threshold) {
+    if (approvedVotes >= threshold || rejectedVotes >= threshold) {
       status = 'past';
       totalPastVote += 1;
     } else {
@@ -115,7 +120,7 @@ const useProposals = (bitpac?: Bitpac) => {
     const description = proposalContent[3];
 
     const voters = votes?.map((vote) => {
-      const content = JSON.parse(vote.content);
+      const content = vote.content ? JSON.parse(vote.content) : 0;
 
       return {
         voter: { id: vote.pubkey, link: '#' },
