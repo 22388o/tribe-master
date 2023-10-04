@@ -159,7 +159,7 @@ export interface Proposal {
   proposed_by: ProposedBy;
   requiredVotesToPass: number;
   requiredVotesToDeny: number;
-  status: 'active' | 'inactive'; // Add more status types as needed
+  status: 'active' | 'past'; // Add more status types as needed
   votes: any[]; // Replace 'any' with the appropriate type
   action: any[]; // Replace 'any' with the appropriate type
   inputs: any[]; // Replace 'any' with the appropriate type

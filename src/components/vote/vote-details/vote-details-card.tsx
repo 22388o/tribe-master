@@ -23,12 +23,12 @@ function VoteActionButton({
   vote,
   privateKey,
   pubkey,
-  disabled = false
+  disabled = false,
 }: {
   vote: Proposal;
   privateKey: string;
   pubkey: string;
-  disabled: boolean
+  disabled: boolean;
 }) {
   const onApprove = async () => {
     const { inputs, outputs, bitpac, id } = vote;
@@ -94,7 +94,7 @@ function VoteActionButton({
 export default function VoteDetailsCard({ vote }: { vote: Proposal }) {
   const [isExpand, setIsExpand] = useState(false);
   const { privateKey, pubkey, nsec } = useWallet();
-  const votesPubkeys = vote?.votes?.map(v => v.pubkey) || [];
+  const votesPubkeys = vote?.votes?.map((v) => v.pubkey) || [];
   const actionsDisabled = votesPubkeys.includes(pubkey);
 
   const { openModal } = useModal();
@@ -102,7 +102,12 @@ export default function VoteDetailsCard({ vote }: { vote: Proposal }) {
   const renderVotingActions = () => {
     if (privateKey) {
       return (
-        <VoteActionButton vote={vote} privateKey={privateKey} pubkey={pubkey}  disabled={actionsDisabled}/>
+        <VoteActionButton
+          vote={vote}
+          privateKey={privateKey}
+          pubkey={pubkey}
+          disabled={actionsDisabled}
+        />
       );
     }
 

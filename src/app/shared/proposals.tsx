@@ -8,8 +8,6 @@ import Button from '@/components/ui/button';
 import Image from '@/components/ui/image';
 import ParamTab, { TabPanel } from '@/components/ui/param-tab';
 import VoteList from '@/components/vote/vote-list';
-// static data
-import { getVotesByStatus } from '@/data/static/vote-data';
 import votePool from '@/assets/images/vote-pool.svg';
 import Loader from '@/components/ui/loader';
 import useProposals from '@/hooks/useProposal';
@@ -24,6 +22,9 @@ const ProposalsPage = () => {
     current: votes = [],
     isLoading,
   } = useProposals(bitpac);
+
+  const currentVotes = votes.filter((v) => v.status === 'active');
+  const pastVotes = votes.filter((v) => v.status === 'past');
 
   function goToCreateProposalPage() {
     setTimeout(() => {
@@ -94,11 +95,11 @@ const ProposalsPage = () => {
       <Suspense fallback={<Loader variant="blink" />}>
         <ParamTab tabMenu={tabMenuItems}>
           <TabPanel className="focus:outline-none">
-            <VoteList votes={votes} isLoading={isLoading} />
+            <VoteList votes={currentVotes} isLoading={isLoading} />
           </TabPanel>
 
           <TabPanel className="focus:outline-none">
-            {/* <VoteList voteStatus={'past'} /> */}
+            <VoteList votes={pastVotes} isLoading={isLoading} />
           </TabPanel>
         </ParamTab>
       </Suspense>

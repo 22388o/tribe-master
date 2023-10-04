@@ -40,8 +40,9 @@ const fetchVotes = async (proposalEventId: string): Promise<Event[]> => {
 
   // Order votes by created_at and filter out votes of the same pubkey, keeping only the first vote
   const orderedVotes = votes.sort((a, b) => a.created_at - b.created_at);
-  const filteredVotes = orderedVotes.filter((vote, index, self) =>
-    index === self.findIndex((v) => v.pubkey === vote.pubkey)
+  const filteredVotes = orderedVotes.filter(
+    (vote, index, self) =>
+      index === self.findIndex((v) => v.pubkey === vote.pubkey)
   );
 
   return filteredVotes;
@@ -75,6 +76,8 @@ const useProposals = (bitpac?: Bitpac) => {
 
   const { proposals } = data || {};
 
+  let totalActiveVote = 0;
+  let totalPastVote = 0;
   const proposalData = proposals?.map((proposal) => {
     const proposalContent = JSON.parse(proposal.content);
     const votes = proposal.votes;
@@ -91,10 +94,19 @@ const useProposals = (bitpac?: Bitpac) => {
         rejectedVotes += 1;
       }
     });
-    
+
     const totalVotes = approvedVotes + rejectedVotes;
     const acceptedPercentage = (approvedVotes / totalVotes) * 100;
     const rejectedPercentage = (rejectedVotes / totalVotes) * 100;
+    let status: 'active' | 'past' = 'active';
+
+    if (approvedVotes >= threshold) {
+      status = 'past';
+      totalPastVote += 1;
+    } else {
+      status = 'active';
+      totalActiveVote += 1;
+    }
 
     const { id, pubkey } = proposal;
     const title = proposalContent[0];
@@ -104,14 +116,17 @@ const useProposals = (bitpac?: Bitpac) => {
 
     const voters = votes?.map((vote) => {
       const content = JSON.parse(vote.content);
-      
+
       return {
         voter: { id: vote.pubkey, link: '#' },
-        voting_weight: new Date(vote.created_at * 1000).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
+        voting_weight: new Date(vote.created_at * 1000).toLocaleDateString(
+          'en-US',
+          { month: 'short', day: '2-digit', year: 'numeric' }
+        ),
         status: content ? 'accepted' : 'rejected',
-        pubkey: vote.pubkey
-      }
-    })
+        pubkey: vote.pubkey,
+      };
+    });
 
     const vote: Proposal = {
       id,
@@ -134,7 +149,7 @@ const useProposals = (bitpac?: Bitpac) => {
       },
       requiredVotesToPass: threshold,
       requiredVotesToDeny: pubkeys.length - threshold + 1,
-      status: 'active',
+      status,
       votes: voters || [],
       action: [],
       // @ts-ignore
@@ -146,8 +161,8 @@ const useProposals = (bitpac?: Bitpac) => {
 
   return {
     current: proposalData,
-    totalActiveVote: 1,
-    totalPastVote: 0,
+    totalActiveVote,
+    totalPastVote,
     isLoading,
     error,
   };
