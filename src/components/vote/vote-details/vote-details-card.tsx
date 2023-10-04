@@ -23,10 +23,12 @@ function VoteActionButton({
   vote,
   privateKey,
   pubkey,
+  disabled = false
 }: {
   vote: Proposal;
   privateKey: string;
   pubkey: string;
+  disabled: boolean
 }) {
   const onApprove = async () => {
     const { inputs, outputs, bitpac, id } = vote;
@@ -71,6 +73,7 @@ function VoteActionButton({
         color="success"
         className="flex-1 xs:flex-auto"
         onClick={onApprove}
+        disabled={disabled}
       >
         Accept
       </Button>
@@ -79,6 +82,7 @@ function VoteActionButton({
         color="danger"
         className="flex-1 xs:flex-auto"
         onClick={onDeny}
+        disabled={disabled}
       >
         Reject
       </Button>
@@ -90,13 +94,15 @@ function VoteActionButton({
 export default function VoteDetailsCard({ vote }: { vote: Proposal }) {
   const [isExpand, setIsExpand] = useState(false);
   const { privateKey, pubkey, nsec } = useWallet();
+  const votesPubkeys = vote?.votes?.map(v => v.pubkey) || [];
+  const actionsDisabled = votesPubkeys.includes(pubkey);
 
   const { openModal } = useModal();
 
   const renderVotingActions = () => {
     if (privateKey) {
       return (
-        <VoteActionButton vote={vote} privateKey={privateKey} pubkey={pubkey} />
+        <VoteActionButton vote={vote} privateKey={privateKey} pubkey={pubkey}  disabled={actionsDisabled}/>
       );
     }
 
@@ -105,6 +111,7 @@ export default function VoteDetailsCard({ vote }: { vote: Proposal }) {
         <Button
           onClick={() => openModal('WALLET_CONNECT_VIEW')}
           className={cn('shadow-main hover:shadow-large')}
+          disabled={actionsDisabled}
         >
           CONNECT TO VOTE
         </Button>

@@ -91,8 +91,7 @@ const useProposals = (bitpac?: Bitpac) => {
         rejectedVotes += 1;
       }
     });
-
-    const { threshold } = bitpac || { threshold: 0 };
+    
     const totalVotes = approvedVotes + rejectedVotes;
     const acceptedPercentage = (approvedVotes / totalVotes) * 100;
     const rejectedPercentage = (rejectedVotes / totalVotes) * 100;
@@ -110,6 +109,7 @@ const useProposals = (bitpac?: Bitpac) => {
         voter: { id: vote.pubkey, link: '#' },
         voting_weight: new Date(vote.created_at * 1000).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
         status: content ? 'accepted' : 'rejected',
+        pubkey: vote.pubkey
       }
     })
 
