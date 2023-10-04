@@ -2,11 +2,12 @@ import { useQuery } from 'react-query';
 import { nostrPool } from '@/services/nostr';
 import { Bitpac, NostrEvent, Proposal } from '@/types';
 import { Event } from 'nostr-tools';
-import { Address, Tx } from '@cmdcode/tapscript';
+import { Address, Tx, Script, Tap, Signer } from '@cmdcode/tapscript';
 import { NETWORK } from '@/config/config';
 import { uuid } from 'uuidv4';
 import { API_ENDPOINTS } from '@/data/utils/endpoints';
-import { checkIfTxHappened } from '@/utils/utils';
+import { bytesToHex, checkIfTxHappened } from '@/utils/utils';
+import * as nobleSecp256k1 from 'noble-secp256k1';
 
 interface EventWithVotes extends Event<number> {
   votes?: Event<number>[];
@@ -53,6 +54,47 @@ const fetchVotes = async (proposalEventId: string): Promise<Event[]> => {
   return filteredVotes;
 };
 
+const validateAllSignatures = async (
+  pubkeys: string[],
+  inputs: any[],
+  outputs: any[],
+  threshold: number,
+  allSigs: any[],
+  vote: any
+) => {
+  const script = [0];
+  pubkeys.forEach((item: any) => {
+    script.push(item, 'OP_CHECKSIGADD');
+  });
+  var pubkey = 'ab'.repeat(32);
+  script.push(threshold, 'OP_EQUAL');
+  var sbytes = Script.encode(script);
+  var tapleaf = Tap.tree.getLeaf(sbytes);
+  var [tpubkey, cblock] = Tap.getPubKey(pubkey, { target: tapleaf });
+  var txdata = Tx.create({
+    vin: inputs,
+    vout: outputs,
+  });
+
+  var i;
+  for (i = 0; i < inputs.length; i++) {
+    var sighash = Signer.taproot.hash(txdata, i, { extension: tapleaf });
+    try {
+      const isValid = await nobleSecp256k1.schnorr.verify(
+        allSigs[i],
+        bytesToHex(sighash),
+        vote.pubkey
+      );
+      if (!isValid) {
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
+    return true;
+  }
+};
+
 const getProposal = async (
   proposal: any,
   utxos: any[],
@@ -73,12 +115,26 @@ const getProposal = async (
   let rejectedVotes = 0;
 
   votes?.forEach(async (vote: any) => {
+    debugger;
     const content = vote.content ? JSON.parse(vote.content) : 0;
 
     if (content) {
       approvedVotes += 1;
     } else {
       rejectedVotes += 1;
+    }
+
+    // User approved the spend (content will be the signature)
+    if (content && content != '1') {
+      const areSigsValid = await validateAllSignatures(
+        pubkeys,
+        inputs,
+        outputs,
+        threshold,
+        content,
+        vote
+      );
+      console.log(areSigsValid);
     }
   });
 
