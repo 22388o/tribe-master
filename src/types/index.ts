@@ -162,6 +162,9 @@ export interface Proposal {
   status: 'active' | 'inactive'; // Add more status types as needed
   votes: any[]; // Replace 'any' with the appropriate type
   action: any[]; // Replace 'any' with the appropriate type
+  inputs: any[]; // Replace 'any' with the appropriate type
+  outputs: any[]; // Replace 'any' with the appropriate type
+  bitpac: Bitpac;
 }
 
 export interface Bitpac {

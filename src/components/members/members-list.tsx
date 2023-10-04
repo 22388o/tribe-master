@@ -1,15 +1,10 @@
 import { motion, LayoutGroup } from 'framer-motion';
-import VoteDetailsCard from '@/components/vote/vote-details/vote-details-card';
-import { ExportIcon } from '@/components/icons/export-icon';
-// static data
-import { getVotesByStatus } from '@/data/static/vote-data';
 import AuthorImage from '@/assets/images/author.jpg';
 import AuthorCard from '../ui/author-card';
 import { NostrTribe } from '@/types';
 
 import useAuthors from '@/hooks/useMember';
-import { pubkeyFromNpub, shortenStr } from '@/utils/utils';
-import { useEffect, useState } from 'react';
+import { shortenStr } from '@/utils/utils';
 
 export default function MemberList({ tribe }: { tribe?: NostrTribe }) {
   // var bitpac = JSON.parse( tribe.content   );

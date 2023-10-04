@@ -1,4 +1,5 @@
 import { bech32 } from 'bech32';
+import * as nobleSecp256k1 from 'noble-secp256k1';
 
 const bytesToHex = (bytes: any) => {
   return bytes.reduce(
@@ -52,6 +53,9 @@ function privkeyFromNsec(nsec: string) {
     'hex'
   );
 }
+function pubFromPriv(seckey: string): string {
+  return nobleSecp256k1.getPublicKey(seckey, true).substring(2);
+}
 
 export {
   bytesToHex,
@@ -61,4 +65,5 @@ export {
   satsToFormattedDollarString,
   pubkeyFromNpub,
   privkeyFromNsec,
+  pubFromPriv,
 };

@@ -17,7 +17,6 @@ export function TabItem({
   tabItemLayoutId?: string;
   disabled?: boolean;
 }>) {
-  console.log('is disabled', disabled);
   return (
     <Tab
       className={({ selected }) =>

@@ -18,6 +18,7 @@ const fetchProposals = async (pubkeys: string[], bitpacId: string) => {
   return proposals;
 };
 
+// TODO: BITPAC IS REQUIRED, I SET IT UP AS OPTIONAL TO HACK THE LINTING.
 const useProposals = (bitpac?: Bitpac) => {
   const { pubkeys = [], id = '', threshold = 1 } = bitpac || {};
   const {
@@ -31,6 +32,8 @@ const useProposals = (bitpac?: Bitpac) => {
 
     const { id, pubkey } = proposal;
     const title = proposalContent[0];
+    const inputs = proposalContent[1];
+    const outputs = proposalContent[2];
     const description = proposalContent[3];
 
     const vote: Proposal = {
@@ -38,6 +41,8 @@ const useProposals = (bitpac?: Bitpac) => {
       title,
       description,
       pubkey,
+      inputs,
+      outputs,
       accepted: {
         vote: 0,
         percentage: 0,
@@ -55,6 +60,8 @@ const useProposals = (bitpac?: Bitpac) => {
       status: 'active',
       votes: [],
       action: [],
+      // @ts-ignore
+      bitpac,
     };
 
     return vote;

@@ -7,7 +7,7 @@ import Button from '@/components/ui/button/button';
 import Input from '@/components/ui/forms/input';
 import InputLabel from '@/components/ui/input-label';
 import usePrivateKey from '@/hooks/useWallet';
-import { privkeyFromNsec } from '@/utils/utils';
+import { privkeyFromNsec, pubFromPriv } from '@/utils/utils';
 import { useState } from 'react';
 import { useModal } from '../modal-views/context';
 
@@ -21,8 +21,10 @@ export default function SelectWallet({ ...props }) {
     e.preventDefault();
     setHasError(false);
     try {
-      const npub = privkeyFromNsec(name);
-      storePrivateKey({ priv: name, pub: npub });
+      const priv = privkeyFromNsec(name);
+      const pub = pubFromPriv(priv);
+
+      storePrivateKey({ nsec: name, priv, pub });
       closeModal();
     } catch (e) {
       console.error('Invalid nsec');

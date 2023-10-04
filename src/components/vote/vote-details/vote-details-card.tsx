@@ -6,7 +6,6 @@ import dayjs from 'dayjs';
 import cn from 'classnames';
 import Button from '@/components/ui/button';
 import RevealContent from '@/components/ui/reveal-content';
-import AuctionCountdown from '@/components/nft/auction-countdown';
 import { Switch } from '@/components/ui/switch';
 import { ExportIcon } from '@/components/icons/export-icon';
 import VotePoll from '@/components/vote/vote-details/vote-poll';
@@ -14,15 +13,71 @@ import VoteActions from '@/components/vote/vote-details/vote-outputs';
 import VoterTable from '@/components/vote/vote-details/voter-table';
 import { fadeInBottom } from '@/lib/framer-motion/fade-in-bottom';
 import { useLayout } from '@/lib/hooks/use-layout';
-import { LAYOUT_OPTIONS } from '@/lib/constants';
+import useWallet from '@/hooks/useWallet';
+import { useModal } from '@/components/modal-views/context';
+import { getApprovalSigs } from '@/services/tribe';
+import { Proposal } from '@/types';
+import { nostrPool } from '@/services/nostr';
 
-function VoteActionButton() {
+function VoteActionButton({
+  vote,
+  privateKey,
+  pubkey,
+}: {
+  vote: Proposal;
+  privateKey: string;
+  pubkey: string;
+}) {
+  const onApprove = async() => {
+    const { inputs, outputs, bitpac, id } = vote;
+
+    const allSigs = getApprovalSigs({
+      inputs,
+      outputs,
+      seckey: privateKey,
+      multisig: bitpac.pubkeys,
+    });
+
+    const reply = {
+      content: JSON.stringify(allSigs),
+      created_at: Math.floor(Date.now() / 1000),
+      kind: 2860,
+      tags: [['e', id]],
+      pubkey: pubkey,
+    };
+
+   
+    const signedEvent = await nostrPool.sign(reply, privateKey, pubkey);
+    await nostrPool.publish(signedEvent);
+  };
+
+  const onDeny = async() => {
+    const { id } = vote;
+
+    const reply = {
+      content: "",
+      created_at: Math.floor(Date.now() / 1000),
+      kind: 2860,
+      tags: [['e', id]],
+      pubkey: pubkey,
+    };
+
+   
+    const signedEvent = await nostrPool.sign(reply, privateKey, pubkey);
+    await nostrPool.publish(signedEvent);
+  };
+
   return (
     <div className="mt-4 flex items-center gap-3 xs:mt-6 xs:inline-flex md:mt-10">
-      <Button shape="rounded" color="success" className="flex-1 xs:flex-auto">
+      <Button
+        shape="rounded"
+        color="success"
+        className="flex-1 xs:flex-auto"
+        onClick={onApprove}
+      >
         Accept
       </Button>
-      <Button shape="rounded" color="danger" className="flex-1 xs:flex-auto">
+      <Button shape="rounded" color="danger" className="flex-1 xs:flex-auto" onClick={onDeny}>
         Reject
       </Button>
     </div>
@@ -30,9 +85,30 @@ function VoteActionButton() {
 }
 
 // FIXME: need to add vote type
-export default function VoteDetailsCard({ vote }: any) {
+export default function VoteDetailsCard({ vote }: { vote: Proposal }) {
   const [isExpand, setIsExpand] = useState(false);
-  const { layout } = useLayout();
+  const { privateKey, pubkey, nsec } = useWallet();
+  console.log(" { privateKey, pubkey, nsec }",  { privateKey, pubkey, nsec })
+  const { openModal } = useModal();
+
+  const renderVotingActions = () => {
+    if (privateKey) {
+      return (
+        <VoteActionButton vote={vote} privateKey={privateKey} pubkey={pubkey} />
+      );
+    }
+
+    return (
+      <div className="mt-4 flex items-center gap-3 xs:mt-6 xs:inline-flex md:mt-10">
+        <Button
+          onClick={() => openModal('WALLET_CONNECT_VIEW')}
+          className={cn('shadow-main hover:shadow-large')}
+        >
+          CONNECT TO VOTE
+        </Button>
+      </div>
+    );
+  };
 
   return (
     <motion.div
@@ -73,7 +149,7 @@ export default function VoteDetailsCard({ vote }: any) {
                   Vote Now
                 </Button>
               ) : (
-                <VoteActionButton />
+                renderVotingActions()
               )}
             </>
           )}
