@@ -47,6 +47,12 @@ function pubkeyFromNpub(npub: string) {
   );
 }
 
+function privkeyFromNsec(nsec: string) {
+  return Buffer.from(bech32.fromWords(bech32.decode(nsec).words)).toString(
+    'hex'
+  );
+}
+
 export {
   bytesToHex,
   getNostrTagValue,
@@ -54,4 +60,5 @@ export {
   satsToBtc,
   satsToFormattedDollarString,
   pubkeyFromNpub,
+  privkeyFromNsec,
 };

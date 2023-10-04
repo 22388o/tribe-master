@@ -8,6 +8,7 @@ import SessionStorage, {
 } from '@/services/session-storage';
 import { NostrTribe } from '@/types';
 import { getNostrTagValue } from '@/utils/utils';
+import usePrivateKey from '@/hooks/useWallet';
 // Make this dynamic, if user has wallet connected, we must display another view.
 export default function ViewTribeScreen() {
   const router = useRouter();

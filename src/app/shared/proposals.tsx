@@ -17,8 +17,13 @@ import useBitpac from '@/hooks/useBitpac';
 
 const ProposalsPage = () => {
   const router = useRouter();
-  const {bitpac } = useBitpac();
-  const { totalActiveVote, totalPastVote, current: votes = [], isLoading } = useProposals(bitpac);
+  const { bitpac } = useBitpac();
+  const {
+    totalActiveVote,
+    totalPastVote,
+    current: votes = [],
+    isLoading,
+  } = useProposals(bitpac);
 
   function goToCreateProposalPage() {
     setTimeout(() => {

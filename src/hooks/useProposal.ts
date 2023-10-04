@@ -4,13 +4,13 @@ import { Bitpac, Proposal } from '@/types';
 
 const fetchProposals = async (pubkeys: string[], bitpacId: string) => {
   if (!bitpacId) return [];
-  
+
   const filter = [
     {
       authors: pubkeys,
       kinds: [2859],
       '#e': [bitpacId],
-      since: Math.floor( Date.now() / 1000 ) - ( 60 * 60 * 24 * 30 ) // a month ago
+      since: Math.floor(Date.now() / 1000) - 60 * 60 * 24 * 30, // a month ago
     },
   ];
 
@@ -19,9 +19,7 @@ const fetchProposals = async (pubkeys: string[], bitpacId: string) => {
 };
 
 const useProposals = (bitpac?: Bitpac) => {
-  
-
-  const {pubkeys = [], id = '', threshold = 1} = bitpac || {};
+  const { pubkeys = [], id = '', threshold = 1 } = bitpac || {};
   const {
     data: proposals,
     isLoading,

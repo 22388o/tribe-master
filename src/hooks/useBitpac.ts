@@ -6,13 +6,12 @@ import { Bitpac, NostrTribe } from '@/types';
 import { nostrPool } from '@/services/nostr';
 
 const useBitpac = () => {
-
   const [tribe, setTribe] = useState<NostrTribe | undefined>();
   const [name, setName] = useState('');
   const [threshold, setTreshold] = useState(1);
   const [pubkeys, setPubkeys] = useState([]);
-  const [id, setId] = useState('')
-  const [bitpac, setBitpac] = useState<Bitpac>()
+  const [id, setId] = useState('');
+  const [bitpac, setBitpac] = useState<Bitpac>();
 
   const fetchPac = async (bitpacId: string) => {
     const filter = [
@@ -29,29 +28,28 @@ const useBitpac = () => {
     const content = JSON.parse(bitpac.content);
 
     const _name = content[0];
-    const [_threshold, ..._pubkeys ] = content[1];
+    const [_threshold, ..._pubkeys] = content[1];
 
     const pac = {
       id: bitpac.id,
       name: _name,
       pubkeys: _pubkeys,
-      threshold: _threshold
-    }
+      threshold: _threshold,
+    };
 
     setTribe(bitpac);
     setId(bitpac.id);
-    setName(_name)
+    setName(_name);
     setTreshold(_threshold);
     setPubkeys(_pubkeys);
     setBitpac(pac);
-    
+
     // Allow for faster query instead of going to nostr.
     SessionStorage.set(SessionsStorageKeys.TRIBE, bitpac);
   };
 
   useEffect(() => {
     const fetchData = async () => {
-
       const sessionTribe: NostrTribe | undefined = SessionStorage.get(
         SessionsStorageKeys.TRIBE
       );
@@ -67,7 +65,7 @@ const useBitpac = () => {
 
       if (sessionTribeId) {
         const bitpacs = await fetchPac(sessionTribeId);
-    
+
         if (bitpacs && bitpacs.length > 0) {
           const bitpac = bitpacs[0];
           handleMessage(bitpac);
