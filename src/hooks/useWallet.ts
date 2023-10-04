@@ -20,7 +20,6 @@ const usePrivateKey = () => {
     nsec: string;
     pub: string;
   }) => {
-    console.log({ priv, nsec, pub });
     // @ts-ignore
     setPrivateKey(`${priv}`);
     // @ts-ignore

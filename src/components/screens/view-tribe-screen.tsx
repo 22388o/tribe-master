@@ -6,13 +6,13 @@ import routes from '@/config/routes';
 import SessionStorage, {
   SessionsStorageKeys,
 } from '@/services/session-storage';
-import { NostrTribe } from '@/types';
+import { NostrEvent } from '@/types';
 import { getNostrTagValue } from '@/utils/utils';
 import usePrivateKey from '@/hooks/useWallet';
 // Make this dynamic, if user has wallet connected, we must display another view.
 export default function ViewTribeScreen() {
   const router = useRouter();
-  const [tribe, setTribe] = useState<NostrTribe | undefined>();
+  const [tribe, setTribe] = useState<NostrEvent | undefined>();
   const [name, setName] = useState('');
 
   function goToCreateTribePage() {
@@ -23,7 +23,7 @@ export default function ViewTribeScreen() {
 
   useEffect(() => {
     // Check if TRIBE key is available in session storage
-    const sessionTribe: NostrTribe | undefined = SessionStorage.get(
+    const sessionTribe: NostrEvent | undefined = SessionStorage.get(
       SessionsStorageKeys.TRIBE
     );
     if (!sessionTribe) {

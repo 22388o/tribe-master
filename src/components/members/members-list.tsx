@@ -1,12 +1,12 @@
 import { motion, LayoutGroup } from 'framer-motion';
 import AuthorImage from '@/assets/images/author.jpg';
 import AuthorCard from '../ui/author-card';
-import { NostrTribe } from '@/types';
+import { NostrEvent } from '@/types';
 
 import useAuthors from '@/hooks/useMember';
 import { shortenStr } from '@/utils/utils';
 
-export default function MemberList({ tribe }: { tribe?: NostrTribe }) {
+export default function MemberList({ tribe }: { tribe?: NostrEvent }) {
   // var bitpac = JSON.parse( tribe.content   );
   // const pubkeys = bitpac[ 1 ];
   const pubkeys = [

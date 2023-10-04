@@ -125,7 +125,7 @@ export interface ContactDetails {
   website: string;
 }
 
-export interface NostrTribe {
+export interface NostrEvent {
   id: string;
   content: string;
   created_at: number;

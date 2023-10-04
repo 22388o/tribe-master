@@ -12,7 +12,7 @@ import VotePoll from '@/components/vote/vote-details/vote-poll';
 import VoteActions from '@/components/vote/vote-details/vote-outputs';
 import VoterTable from '@/components/vote/vote-details/voter-table';
 import { fadeInBottom } from '@/lib/framer-motion/fade-in-bottom';
-import { useLayout } from '@/lib/hooks/use-layout';
+
 import useWallet from '@/hooks/useWallet';
 import { useModal } from '@/components/modal-views/context';
 import { getApprovalSigs } from '@/services/tribe';
@@ -28,9 +28,8 @@ function VoteActionButton({
   privateKey: string;
   pubkey: string;
 }) {
-  const onApprove = async() => {
+  const onApprove = async () => {
     const { inputs, outputs, bitpac, id } = vote;
-
     const allSigs = getApprovalSigs({
       inputs,
       outputs,
@@ -46,23 +45,21 @@ function VoteActionButton({
       pubkey: pubkey,
     };
 
-   
     const signedEvent = await nostrPool.sign(reply, privateKey, pubkey);
     await nostrPool.publish(signedEvent);
   };
 
-  const onDeny = async() => {
+  const onDeny = async () => {
     const { id } = vote;
 
     const reply = {
-      content: "",
+      content: '',
       created_at: Math.floor(Date.now() / 1000),
       kind: 2860,
       tags: [['e', id]],
       pubkey: pubkey,
     };
 
-   
     const signedEvent = await nostrPool.sign(reply, privateKey, pubkey);
     await nostrPool.publish(signedEvent);
   };
@@ -77,7 +74,12 @@ function VoteActionButton({
       >
         Accept
       </Button>
-      <Button shape="rounded" color="danger" className="flex-1 xs:flex-auto" onClick={onDeny}>
+      <Button
+        shape="rounded"
+        color="danger"
+        className="flex-1 xs:flex-auto"
+        onClick={onDeny}
+      >
         Reject
       </Button>
     </div>
@@ -88,7 +90,7 @@ function VoteActionButton({
 export default function VoteDetailsCard({ vote }: { vote: Proposal }) {
   const [isExpand, setIsExpand] = useState(false);
   const { privateKey, pubkey, nsec } = useWallet();
-  console.log(" { privateKey, pubkey, nsec }",  { privateKey, pubkey, nsec })
+
   const { openModal } = useModal();
 
   const renderVotingActions = () => {

@@ -4,7 +4,7 @@ import CoinSlider from '@/components/ui/coin-card';
 import TransactionTable from '@/components/transaction/transaction-table';
 import VoteList from '@/components/vote/vote-list';
 import MemberList from '@/components/members/members-list';
-import { NostrTribe } from '@/types';
+import { NostrEvent } from '@/types';
 import BitcoinImage from '@/assets/images/coin/bitcoin.svg';
 import {
   getNostrTagValue,
@@ -14,7 +14,7 @@ import {
 import useAddress from '@/hooks/useAddress';
 import useBitcoinPrice from '@/hooks/useBitcoinPrice';
 
-export default function ModernScreen({ tribe }: { tribe?: NostrTribe }) {
+export default function ModernScreen({ tribe }: { tribe?: NostrEvent }) {
   const getAddress = () => {
     if (!tribe) {
       // TODO: REMOVE

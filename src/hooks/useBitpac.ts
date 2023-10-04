@@ -2,11 +2,11 @@ import { useState, useEffect } from 'react';
 import SessionStorage, {
   SessionsStorageKeys,
 } from '@/services/session-storage';
-import { Bitpac, NostrTribe } from '@/types';
+import { Bitpac, NostrEvent } from '@/types';
 import { nostrPool } from '@/services/nostr';
 
 const useBitpac = () => {
-  const [tribe, setTribe] = useState<NostrTribe | undefined>();
+  const [tribe, setTribe] = useState<NostrEvent | undefined>();
   const [name, setName] = useState('');
   const [threshold, setTreshold] = useState(1);
   const [pubkeys, setPubkeys] = useState([]);
@@ -50,7 +50,7 @@ const useBitpac = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const sessionTribe: NostrTribe | undefined = SessionStorage.get(
+      const sessionTribe: NostrEvent | undefined = SessionStorage.get(
         SessionsStorageKeys.TRIBE
       );
 

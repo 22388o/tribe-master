@@ -30,9 +30,11 @@ class NostrRelay {
   }
 
   async sign(event: any, privKey?: string, pubKey?: string) {
-    const privkey = privKey || bytesToHex(nobleSecp256k1.utils.randomPrivateKey());
+    const privkey =
+      privKey || bytesToHex(nobleSecp256k1.utils.randomPrivateKey());
     // @ts-ignore
-    const pubkey = pubKey || nobleSecp256k1.getPublicKey(privKey, true).substring(2);
+    const pubkey =
+      pubKey || nobleSecp256k1.getPublicKey(privKey, true).substring(2);
 
     const eventBase = {
       ...event,
