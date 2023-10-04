@@ -4,6 +4,9 @@ import { satsToBtc } from '@/utils/utils';
 import { useQuery } from 'react-query';
 
 const fetchAddress = async (address: string) => {
+  if (!address) {
+    return;
+  }
   const response = await fetch(
     `${API_ENDPOINTS.MEMPOOL_API}/address/${address}/utxo`
   );
@@ -22,7 +25,7 @@ const useAddress = (address: string) => {
   const sats =
     data?.reduce((acc: number, utxo: any) => acc + utxo.value, 0) || 0;
 
-  return { sats, balance: satsToBtc(sats), isLoading, error };
+  return { sats, balance: satsToBtc(sats), utxos: data, isLoading, error };
 };
 
 export default useAddress;

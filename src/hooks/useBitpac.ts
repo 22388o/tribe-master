@@ -4,6 +4,7 @@ import SessionStorage, {
 } from '@/services/session-storage';
 import { Bitpac, NostrEvent } from '@/types';
 import { nostrPool } from '@/services/nostr';
+import { generateMultisigAddress } from '@/services/tribe';
 
 const useBitpac = () => {
   const [tribe, setTribe] = useState<NostrEvent | undefined>();
@@ -11,6 +12,7 @@ const useBitpac = () => {
   const [threshold, setTreshold] = useState(1);
   const [pubkeys, setPubkeys] = useState([]);
   const [id, setId] = useState('');
+  const [address, setAddress] = useState('');
   const [bitpac, setBitpac] = useState<Bitpac>();
 
   const fetchPac = async (bitpacId: string) => {
@@ -29,15 +31,18 @@ const useBitpac = () => {
 
     const _name = content[0];
     const [_threshold, ..._pubkeys] = content[1];
+    const _address = generateMultisigAddress(_pubkeys, _threshold);
 
     const pac = {
       id: bitpac.id,
       name: _name,
       pubkeys: _pubkeys,
       threshold: _threshold,
+      address: _address,
     };
 
     setTribe(bitpac);
+    setAddress(_address);
     setId(bitpac.id);
     setName(_name);
     setTreshold(_threshold);
@@ -78,7 +83,7 @@ const useBitpac = () => {
     fetchData();
   }, []);
 
-  return { tribe, name, threshold, pubkeys, id, bitpac };
+  return { tribe, name, threshold, pubkeys, id, bitpac, address };
 };
 
 export default useBitpac;

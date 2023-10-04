@@ -12,16 +12,19 @@ import votePool from '@/assets/images/vote-pool.svg';
 import Loader from '@/components/ui/loader';
 import useProposals from '@/hooks/useProposal';
 import useBitpac from '@/hooks/useBitpac';
+import useAddress from '@/hooks/useAddress';
 
 const ProposalsPage = () => {
   const router = useRouter();
-  const { bitpac } = useBitpac();
+  const { bitpac, address } = useBitpac();
+
+  const { utxos } = useAddress(address);
   const {
     totalActiveVote,
     totalPastVote,
     current: votes = [],
     isLoading,
-  } = useProposals(bitpac);
+  } = useProposals(bitpac, utxos);
 
   const currentVotes = votes.filter((v) => v.status === 'active');
   const pastVotes = votes.filter((v) => v.status === 'past');

@@ -67,8 +67,23 @@ const fetchProposalsAndVotes = async (
   return { proposals };
 };
 
+const checkInputUtxos = (inputs: any, utxos: any) => {
+  const stringifiedUtxos: string[] = [];
+  utxos.forEach((item: any) => {
+    stringifiedUtxos.push(JSON.stringify(item));
+  });
+
+  return inputs.some((input: any) => {
+    const txid = input['txid'];
+    const vout = input['vout'];
+    const amt = input['prevout']['value'];
+    const stringifiedInput = JSON.stringify([txid, vout, amt]);
+    return !stringifiedUtxos.includes(stringifiedInput);
+  });
+};
+
 // TODO: BITPAC IS REQUIRED, I SET IT UP AS OPTIONAL TO HACK THE LINTING.
-const useProposals = (bitpac?: Bitpac) => {
+const useProposals = (bitpac?: Bitpac, utxos?: any) => {
   const { pubkeys = [], id = '', threshold = 1 } = bitpac || {};
   const { data, isLoading, error } = useQuery(['proposals', pubkeys, id], () =>
     fetchProposalsAndVotes(pubkeys, id)
@@ -81,6 +96,12 @@ const useProposals = (bitpac?: Bitpac) => {
   const proposalData = proposals?.map((proposal) => {
     const proposalContent = JSON.parse(proposal.content);
     const votes = proposal.votes;
+
+    const { id, pubkey } = proposal;
+    const title = proposalContent[0];
+    const inputs = proposalContent[1];
+    const outputs = proposalContent[2];
+    const description = proposalContent[3];
 
     let approvedVotes = 0;
     let rejectedVotes = 0;
@@ -105,19 +126,15 @@ const useProposals = (bitpac?: Bitpac) => {
 
     let status: 'active' | 'past' = 'active';
 
-    if (approvedVotes >= threshold || rejectedVotes >= threshold) {
+    // if inputs are spend, they should go to past proposals
+    const inputUtxosAreOurs = checkInputUtxos(inputs, utxos);
+    if (approvedVotes >= threshold || rejectedVotes >= threshold || !inputUtxosAreOurs) {
       status = 'past';
       totalPastVote += 1;
     } else {
       status = 'active';
       totalActiveVote += 1;
     }
-
-    const { id, pubkey } = proposal;
-    const title = proposalContent[0];
-    const inputs = proposalContent[1];
-    const outputs = proposalContent[2];
-    const description = proposalContent[3];
 
     const voters = votes?.map((vote) => {
       const content = vote.content ? JSON.parse(vote.content) : 0;
