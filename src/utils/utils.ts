@@ -1,3 +1,4 @@
+import { API_ENDPOINTS } from '@/data/utils/endpoints';
 import { bech32 } from 'bech32';
 import * as nobleSecp256k1 from 'noble-secp256k1';
 
@@ -57,6 +58,15 @@ function pubFromPriv(seckey: string): string {
   return nobleSecp256k1.getPublicKey(seckey, true).substring(2);
 }
 
+async function checkIfTxHappened(txid: string) {
+  const response = await fetch(`${API_ENDPOINTS.MEMPOOL_API}/tx/${txid}`);
+  if (!response.ok) {
+    throw new Error('Network response was not ok');
+  }
+  const responseData = response.json();
+  return responseData;
+}
+
 export {
   bytesToHex,
   getNostrTagValue,
@@ -66,4 +76,5 @@ export {
   pubkeyFromNpub,
   privkeyFromNsec,
   pubFromPriv,
+  checkIfTxHappened,
 };

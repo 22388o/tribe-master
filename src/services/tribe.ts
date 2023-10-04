@@ -1,5 +1,5 @@
 // All required business logic for tribe.
-import { Script, Tap, Address, Tx, Signer } from '@cmdcode/tapscript'; // Assuming you're using bitcoinjs-lib
+import { Script, Tap, Address, Tx, Signer } from '@cmdcode/tapscript';
 import { NETWORK } from '@/config/config';
 
 // This function is used to generate a multisig address.

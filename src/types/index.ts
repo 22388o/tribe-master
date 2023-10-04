@@ -172,4 +172,5 @@ export interface Bitpac {
   name: string;
   pubkeys: string[];
   threshold: number;
+  address: string;
 }

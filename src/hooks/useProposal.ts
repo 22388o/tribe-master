@@ -2,6 +2,11 @@ import { useQuery } from 'react-query';
 import { nostrPool } from '@/services/nostr';
 import { Bitpac, NostrEvent, Proposal } from '@/types';
 import { Event } from 'nostr-tools';
+import { Address, Tx } from '@cmdcode/tapscript';
+import { NETWORK } from '@/config/config';
+import { uuid } from 'uuidv4';
+import { API_ENDPOINTS } from '@/data/utils/endpoints';
+import { checkIfTxHappened } from '@/utils/utils';
 
 interface EventWithVotes extends Event<number> {
   votes?: Event<number>[];
@@ -48,10 +53,130 @@ const fetchVotes = async (proposalEventId: string): Promise<Event[]> => {
   return filteredVotes;
 };
 
+const getProposal = async (
+  proposal: any,
+  utxos: any[],
+  pubkeys: string[],
+  threshold: number = 1,
+  bitpac: Bitpac
+) => {
+  const proposalContent = JSON.parse(proposal.content);
+  const votes = proposal.votes;
+
+  const { id, pubkey } = proposal;
+  const title = proposalContent[0];
+  const inputs = proposalContent[1];
+  const outputs = proposalContent[2];
+  const description = proposalContent[3];
+
+  let approvedVotes = 0;
+  let rejectedVotes = 0;
+
+  votes?.forEach(async (vote: any) => {
+    const content = vote.content ? JSON.parse(vote.content) : 0;
+
+    if (content) {
+      approvedVotes += 1;
+    } else {
+      rejectedVotes += 1;
+    }
+  });
+
+  const totalVotes = approvedVotes + rejectedVotes;
+  const acceptedPercentage = totalVotes
+    ? (approvedVotes / totalVotes) * 100
+    : 0;
+  const rejectedPercentage = totalVotes
+    ? (rejectedVotes / totalVotes) * 100
+    : 0;
+
+  let status: 'active' | 'past' = 'active';
+
+  // if inputs are spend, they should go to past proposals
+  const inputUtxosAreOurs = checkInputUtxos(inputs, utxos);
+  // if transaction exists, it should go into past proposals
+  const txExists = await checkTx(inputs, outputs);
+  if (
+    approvedVotes >= threshold ||
+    rejectedVotes >= threshold ||
+    !inputUtxosAreOurs ||
+    txExists
+  ) {
+    status = 'past';
+  } else {
+    status = 'active';
+  }
+
+  let totalAmount = 0;
+
+  const outputActions =
+    outputs?.slice(0, -1).map((output: any) => {
+      totalAmount += output.value;
+      const address = Address.fromScriptPubKey(output.scriptPubKey, NETWORK);
+      const action = {
+        id: uuid(),
+        contract: {
+          id: address,
+          link: `${API_ENDPOINTS.MEMPOOL_API}/address/${address}`,
+        },
+        amount: output.value,
+      };
+
+      return action;
+    }) || [];
+
+  const voters = votes?.map((vote: any) => {
+    const content = vote.content ? JSON.parse(vote.content) : 0;
+
+    return {
+      voter: { id: vote.pubkey, link: '#' },
+      voting_weight: new Date(vote.created_at * 1000).toLocaleDateString(
+        'en-US',
+        { month: 'short', day: '2-digit', year: 'numeric' }
+      ),
+      status: content ? 'accepted' : 'rejected',
+      pubkey: vote.pubkey,
+    };
+  });
+
+  const vote: Proposal = {
+    id,
+    title,
+    description,
+    pubkey,
+    inputs,
+    outputs,
+    accepted: {
+      vote: approvedVotes,
+      percentage: acceptedPercentage,
+    },
+    rejected: {
+      vote: rejectedVotes,
+      percentage: rejectedPercentage,
+    },
+    proposed_by: {
+      id: pubkey,
+      link: '#',
+    },
+    requiredVotesToPass: threshold,
+    requiredVotesToDeny: pubkeys.length - threshold + 1,
+    status,
+    votes: voters || [],
+    action: outputActions || [],
+    // @ts-ignore
+    bitpac,
+  };
+
+  return vote;
+};
+
 const fetchProposalsAndVotes = async (
   pubkeys: string[],
-  bitpacId: string
-): Promise<{ proposals: EventWithVotes[] }> => {
+  bitpacId: string,
+  utxos: any[],
+  threshold: number,
+  bitpac: Bitpac
+): Promise<{ proposals: any[] }> => {
   const proposals = await fetchProposals(pubkeys, bitpacId);
   const proposalVotes = await Promise.all(
     proposals.map((proposal) => fetchVotes(proposal.id))
@@ -64,12 +189,20 @@ const fetchProposalsAndVotes = async (
     proposal.votes = matchingVotes;
   });
 
-  return { proposals };
+  const proposalsData = await Promise.all(
+    proposals.map((proposal) =>
+      getProposal(proposal, utxos, pubkeys, threshold, bitpac)
+    )
+  );
+
+  return { proposals: proposalsData };
 };
 
+// Move away from here
 const checkInputUtxos = (inputs: any, utxos: any) => {
+  if (!inputs || !utxos) return true;
   const stringifiedUtxos: string[] = [];
-  utxos.forEach((item: any) => {
+  utxos?.forEach((item: any) => {
     stringifiedUtxos.push(JSON.stringify(item));
   });
 
@@ -82,109 +215,55 @@ const checkInputUtxos = (inputs: any, utxos: any) => {
   });
 };
 
+// Move away from here
+const getChange = (outputs: any[], address?: string) => {
+  if (!address || !outputs.length) return 0;
+
+  const lastOutput = outputs[outputs.length - 1];
+  var hasChange =
+    Address.fromScriptPubKey(lastOutput['scriptPubKey']) ==
+    Address.fromScriptPubKey(Address.toScriptPubKey(address));
+  if (hasChange) {
+    return lastOutput['value'];
+  } else {
+    return 0;
+  }
+};
+
+const checkTx = async (inputs: any[], outputs: any[]) => {
+  if (!inputs.length || !outputs.length) {
+    return false;
+  }
+  try {
+    var txdata = Tx.create({
+      vin: inputs,
+      vout: outputs,
+    });
+    var txid = Tx.util.getTxid(txdata);
+    await checkIfTxHappened(txid);
+    return true;
+  } catch (e) {}
+
+  return false;
+};
+
 // TODO: BITPAC IS REQUIRED, I SET IT UP AS OPTIONAL TO HACK THE LINTING.
-const useProposals = (bitpac?: Bitpac, utxos?: any) => {
+const useProposals = (bitpac: Bitpac, utxos?: any) => {
   const { pubkeys = [], id = '', threshold = 1 } = bitpac || {};
   const { data, isLoading, error } = useQuery(['proposals', pubkeys, id], () =>
-    fetchProposalsAndVotes(pubkeys, id)
+    fetchProposalsAndVotes(pubkeys, id, utxos, threshold, bitpac)
   );
 
   const { proposals } = data || {};
 
-  let totalActiveVote = 0;
-  let totalPastVote = 0;
-  const proposalData = proposals?.map((proposal) => {
-    const proposalContent = JSON.parse(proposal.content);
-    const votes = proposal.votes;
-
-    const { id, pubkey } = proposal;
-    const title = proposalContent[0];
-    const inputs = proposalContent[1];
-    const outputs = proposalContent[2];
-    const description = proposalContent[3];
-
-    let approvedVotes = 0;
-    let rejectedVotes = 0;
-
-    votes?.forEach((vote: any) => {
-      const content = vote.content ? JSON.parse(vote.content) : 0;
-
-      if (content) {
-        approvedVotes += 1;
-      } else {
-        rejectedVotes += 1;
-      }
-    });
-
-    const totalVotes = approvedVotes + rejectedVotes;
-    const acceptedPercentage = totalVotes
-      ? (approvedVotes / totalVotes) * 100
-      : 0;
-    const rejectedPercentage = totalVotes
-      ? (rejectedVotes / totalVotes) * 100
-      : 0;
-
-    let status: 'active' | 'past' = 'active';
-
-    // if inputs are spend, they should go to past proposals
-    const inputUtxosAreOurs = checkInputUtxos(inputs, utxos);
-    if (approvedVotes >= threshold || rejectedVotes >= threshold || !inputUtxosAreOurs) {
-      status = 'past';
-      totalPastVote += 1;
-    } else {
-      status = 'active';
-      totalActiveVote += 1;
-    }
-
-    const voters = votes?.map((vote) => {
-      const content = vote.content ? JSON.parse(vote.content) : 0;
-
-      return {
-        voter: { id: vote.pubkey, link: '#' },
-        voting_weight: new Date(vote.created_at * 1000).toLocaleDateString(
-          'en-US',
-          { month: 'short', day: '2-digit', year: 'numeric' }
-        ),
-        status: content ? 'accepted' : 'rejected',
-        pubkey: vote.pubkey,
-      };
-    });
-
-    const vote: Proposal = {
-      id,
-      title,
-      description,
-      pubkey,
-      inputs,
-      outputs,
-      accepted: {
-        vote: approvedVotes,
-        percentage: acceptedPercentage,
-      },
-      rejected: {
-        vote: rejectedVotes,
-        percentage: rejectedPercentage,
-      },
-      proposed_by: {
-        id: pubkey,
-        link: '#',
-      },
-      requiredVotesToPass: threshold,
-      requiredVotesToDeny: pubkeys.length - threshold + 1,
-      status,
-      votes: voters || [],
-      action: [],
-      // @ts-ignore
-      bitpac,
-    };
-
-    return vote;
-  });
-
   return {
-    current: proposalData,
-    totalActiveVote,
-    totalPastVote,
+    current: proposals,
+    totalActiveVote:
+      proposals?.filter((proposal: Proposal) => proposal.status === 'active')
+        .length || 0,
+    totalPastVote:
+      proposals?.filter((proposal: Proposal) => proposal.status === 'active')
+        .length || 0,
     isLoading,
     error,
   };

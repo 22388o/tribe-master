@@ -260,7 +260,7 @@ export default function VoteDetailsCard({ vote }: { vote: Proposal }) {
                 dangerouslySetInnerHTML={{ __html: vote.description }}
               />
             </RevealContent>
-            {vote?.action?.lenght && (
+            {vote?.action?.length && (
               <RevealContent
                 defaultHeight={320}
                 className="mt-6 border-t border-dashed border-gray-200 pt-6 dark:border-gray-700"

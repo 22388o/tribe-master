@@ -31,7 +31,6 @@ export function TabItem({
         )
       }
       onClick={(e) => {
-        console.log('on click');
         if (disabled) {
           e.preventDefault();
         }
