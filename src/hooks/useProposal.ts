@@ -6,7 +6,7 @@ import { Address, Tx, Script, Tap, Signer } from '@cmdcode/tapscript';
 import { NETWORK } from '@/config/config';
 import { uuid } from 'uuidv4';
 import { API_ENDPOINTS } from '@/data/utils/endpoints';
-import { bytesToHex, checkIfTxHappened } from '@/utils/utils';
+import { bytesToHex, checkIfTxHappened, pushTx } from '@/utils/utils';
 import * as nobleSecp256k1 from 'noble-secp256k1';
 
 interface EventWithVotes extends Event<number> {
@@ -54,47 +54,6 @@ const fetchVotes = async (proposalEventId: string): Promise<Event[]> => {
   return filteredVotes;
 };
 
-const validateAllSignatures = async (
-  pubkeys: string[],
-  inputs: any[],
-  outputs: any[],
-  threshold: number,
-  allSigs: any[],
-  vote: any
-) => {
-  const script = [0];
-  pubkeys.forEach((item: any) => {
-    script.push(item, 'OP_CHECKSIGADD');
-  });
-  var pubkey = 'ab'.repeat(32);
-  script.push(threshold, 'OP_EQUAL');
-  var sbytes = Script.encode(script);
-  var tapleaf = Tap.tree.getLeaf(sbytes);
-  var [tpubkey, cblock] = Tap.getPubKey(pubkey, { target: tapleaf });
-  var txdata = Tx.create({
-    vin: inputs,
-    vout: outputs,
-  });
-
-  var i;
-  for (i = 0; i < inputs.length; i++) {
-    var sighash = Signer.taproot.hash(txdata, i, { extension: tapleaf });
-    try {
-      const isValid = await nobleSecp256k1.schnorr.verify(
-        allSigs[i],
-        bytesToHex(sighash),
-        vote.pubkey
-      );
-      if (!isValid) {
-        return false;
-      }
-    } catch (e) {
-      return false;
-    }
-    return true;
-  }
-};
-
 const getProposal = async (
   proposal: any,
   utxos: any[],
@@ -115,26 +74,12 @@ const getProposal = async (
   let rejectedVotes = 0;
 
   votes?.forEach(async (vote: any) => {
-    debugger;
     const content = vote.content ? JSON.parse(vote.content) : 0;
 
     if (content) {
       approvedVotes += 1;
     } else {
       rejectedVotes += 1;
-    }
-
-    // User approved the spend (content will be the signature)
-    if (content && content != '1') {
-      const areSigsValid = await validateAllSignatures(
-        pubkeys,
-        inputs,
-        outputs,
-        threshold,
-        content,
-        vote
-      );
-      console.log(areSigsValid);
     }
   });
 
@@ -161,6 +106,99 @@ const getProposal = async (
     status = 'past';
   } else {
     status = 'active';
+  }
+
+  // Let's try to send the transaction
+  if (
+    inputUtxosAreOurs &&
+    !txExists &&
+    inputs.length &&
+    outputs.length &&
+    approvedVotes >= threshold
+  ) {
+    const votesWithSignatures = votes?.filter(
+      (vote: any) => vote.content && vote.content !== '1'
+    );
+    // All votes with signatures
+    const allSignatures: { sigs: any[]; pubkey: string }[] = [];
+    votesWithSignatures?.forEach((vote: any) => {
+      const voteSignatures = JSON.parse(vote.content);
+      allSignatures.push({ sigs: voteSignatures, pubkey: vote.pubkey });
+    });
+
+    // We are ready to send, since we have all the signatures ready
+    if (allSignatures.length >= threshold) {
+      const script = [0];
+      pubkeys.forEach((item: any) => {
+        script.push(item, 'OP_CHECKSIGADD');
+      });
+      script.push(threshold, 'OP_EQUAL');
+
+      const placeholderPubkey = 'ab'.repeat(32);
+      const sbytes = Script.encode(script);
+      const tapleaf = Tap.tree.getLeaf(sbytes);
+      const [tpubkey, cblock] = Tap.getPubKey(placeholderPubkey, {
+        target: tapleaf,
+      });
+      const txdata = Tx.create({
+        vin: inputs,
+        vout: outputs,
+      });
+
+      const validSigs = [];
+      for (let i = 0; i < inputs.length; i++) {
+        const sighash = Signer.taproot.hash(txdata, i, { extension: tapleaf });
+        try {
+          const isValid = await nobleSecp256k1.schnorr.verify(
+            // @ts-ignore
+            allSignatures[i].sigs[i],
+            bytesToHex(sighash),
+            allSignatures[i].pubkey
+          );
+          if (!isValid) {
+            return false;
+          }
+        } catch (e) {
+          return false;
+        }
+
+        validSigs.push(allSignatures[i]);
+      }
+
+      // So far everything looks good. Let's continue broadcasting the transaction
+      if (validSigs.length >= threshold) {
+        // loop through event content
+        for (let i = 0; i < allSignatures[0].sigs.length; i++) {
+          pubkeys.reverse();
+
+          const sigsArray: any[] = [];
+          pubkeys.forEach((item) => {
+            if (votes.some((vote: any) => vote.pubkey === item)) {
+              sigsArray.push(allSignatures[0].sigs[i]);
+            } else {
+              sigsArray.push('');
+            }
+          });
+
+          let sigCounter = 0;
+          sigsArray.forEach((item, index) => {
+            if (sigCounter == threshold) sigsArray[index] = '';
+            if (sigsArray[index]) {
+              sigCounter = sigCounter + 1;
+            }
+          });
+
+          pubkeys.reverse();
+          if (txdata) txdata.vin[i].witness = [...sigsArray, script, cblock];
+        }
+
+        if (txdata) {
+          const txid = await pushTx(Tx.encode(txdata).hex);
+
+          console.log('pushing ', Tx.encode(txdata).hex, txid);
+        }
+      }
+    }
   }
 
   let totalAmount = 0;
@@ -233,6 +271,7 @@ const fetchProposalsAndVotes = async (
   threshold: number,
   bitpac: Bitpac
 ): Promise<{ proposals: any[] }> => {
+  console.log('GETTING PROPOSALS AND VOTES');
   const proposals = await fetchProposals(pubkeys, bitpacId);
   const proposalVotes = await Promise.all(
     proposals.map((proposal) => fetchVotes(proposal.id))

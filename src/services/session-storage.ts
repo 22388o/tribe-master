@@ -26,7 +26,7 @@ const SessionStorage = {
     try {
       return JSON.parse(value);
     } catch (error) {
-      console.error('Failed to parse session storage item:', error);
+      // console.error('Failed to parse session storage item:', error);
       return value;
     }
   },
