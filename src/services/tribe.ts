@@ -54,8 +54,8 @@ export function createProposal(sender: string, receiver: string, amount: number)
 // Function to submit a proposal
 export function submitProposal(proposal: Proposal): void {
   // Logic to submit the proposal
-  proposal.status = 'submited'
-  proposal.submited = submited;
+  proposal.status = 'submitted';
+  proposal.submitted = submitted;
   console.log('Proposal submitted:', proposal);
 }
 
