@@ -20,6 +20,6 @@ const Logo: React.FC<React.SVGAttributes<{}>> = (props) => {
       </span>
     </div>
   );
-};
+};``
 
 export default Logo;

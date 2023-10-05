@@ -24,14 +24,13 @@ Both participants can make proposals and submit votes to existing proposals, pas
 
 ## Roadmap
 
-- [ ] Add Nostr multisig (WIP)
-- [ ] Add BTC address (WIP)
-- [ ] Add Xverse wallet (WIP)
-- [ ] Add Ordinals support (WIP)
+- [x] Add Nostr multisig (WIP)
+- [x] Add BTC address (WIP)
+- [x] Add Xverse wallet (WIP)
+- [x] Add Ordinals support (WIP)
 - [ ] Fix potential bugs found
-- [ ] API for DAOs done
-- [ ] Search bar for Ordinals
-- [ ] React code complete
+- [x] API for DAOs done (WIP)
+- [x] React code complete (WIP)
 - [ ] Stable software to Alpha
 
 ## Status

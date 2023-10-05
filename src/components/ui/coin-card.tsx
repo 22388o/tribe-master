@@ -5,7 +5,8 @@ import { ArrowUp } from '@/components/icons/arrow-up';
 import { Scrollbar, A11y } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { StaticImageData } from 'next/image';
-import qr from '@/assets/images/qr.png';
+// import qr from '@/assets/images/qr.png';
+import QRCode from "react-qr-code"; //QR code generator
 type CoinCardProps = {
   id: string;
   name: string;
@@ -47,7 +48,13 @@ export function CoinCard({
         </div>
       </div>
       <div className="flex flex-col items-center justify-center text-xs font-medium 2xl:text-sm">
-        <Image src={qr} alt={'QR'} height={200} priority />
+        {/* <Image src={qr} alt={'QR'} height={200} priority /> */}
+        <QRCode
+        size={220}
+        style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+        value={address?address:''}
+        viewBox={`0 0 256 256`}
+  />
         <span className="mt-8 tracking-wider text-gray-600">{address}</span>
       </div>
     </div>
