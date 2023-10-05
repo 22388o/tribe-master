@@ -24,10 +24,16 @@ const ProposalsPage = () => {
     totalPastVote,
     current: votes = [],
     isLoading,
+    refetch
   } = useProposals(bitpac, utxos);
 
   const currentVotes = votes?.filter((v) => v.status === 'active') || [];
   const pastVotes = votes?.filter((v) => v.status === 'past') || [];
+  
+  const onChange =() => {
+    refetch();
+  }
+
 
   function goToCreateProposalPage() {
     setTimeout(() => {
@@ -98,11 +104,11 @@ const ProposalsPage = () => {
       <Suspense fallback={<Loader variant="blink" />}>
         <ParamTab tabMenu={tabMenuItems}>
           <TabPanel className="focus:outline-none">
-            <VoteList votes={currentVotes} isLoading={isLoading} />
+            <VoteList votes={currentVotes} isLoading={isLoading} onChange={onChange} />
           </TabPanel>
 
           <TabPanel className="focus:outline-none">
-            <VoteList votes={pastVotes} isLoading={isLoading} />
+            <VoteList votes={pastVotes} isLoading={isLoading} onChange={onChange}/>
           </TabPanel>
         </ParamTab>
       </Suspense>

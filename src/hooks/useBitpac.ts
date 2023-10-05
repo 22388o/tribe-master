@@ -13,7 +13,7 @@ const useBitpac = () => {
   const [pubkeys, setPubkeys] = useState([]);
   const [id, setId] = useState('');
   const [address, setAddress] = useState('');
-  const [bitpac, setBitpac] = useState<Bitpac>();
+  const [bitpac, setBitpac] = useState<Bitpac>({});
 
   const fetchPac = async (bitpacId: string) => {
     const filter = [

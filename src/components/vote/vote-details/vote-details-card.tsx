@@ -24,14 +24,18 @@ function VoteActionButton({
   privateKey,
   pubkey,
   disabled = false,
+  onChange,
 }: {
   vote: Proposal;
   privateKey: string;
   pubkey: string;
   disabled: boolean;
+  onChange?: () => {} 
 }) {
   const [isLoading, setIsLoading] = useState(false);
+  
   const onApprove = async () => {
+    // We don't turn on the button again, since we want to have the button disabled from now on.
     setIsLoading(true);
     const { inputs, outputs, bitpac, id } = vote;
     const allSigs = getApprovalSigs({
@@ -52,8 +56,10 @@ function VoteActionButton({
 
     const signedEvent = await nostrPool.sign(reply, privateKey, pubkey);
     await nostrPool.publish(signedEvent);
-
-    setIsLoading(false);
+    // Update proposal
+    if (onChange) {
+      onChange();
+    }
   };
 
   const onDeny = async () => {
@@ -70,8 +76,10 @@ function VoteActionButton({
 
     const signedEvent = await nostrPool.sign(reply, privateKey, pubkey);
     await nostrPool.publish(signedEvent);
-
-    setIsLoading(true);
+    // Update proposal
+    if (onChange) {
+      onChange();
+    }
   };
 
   return (
@@ -99,9 +107,9 @@ function VoteActionButton({
 }
 
 // FIXME: need to add vote type
-export default function VoteDetailsCard({ vote }: { vote: Proposal }) {
+export default function VoteDetailsCard({ vote , onChange }: { vote: Proposal,  onChange?: () => {}, }) {
   const [isExpand, setIsExpand] = useState(false);
-  const { privateKey, pubkey, nsec } = useWallet();
+  const { privateKey, pubkey } = useWallet();
   const votesPubkeys = vote?.votes?.map((v) => v.pubkey) || [];
   const actionsDisabled = votesPubkeys.includes(pubkey);
 
@@ -115,6 +123,7 @@ export default function VoteDetailsCard({ vote }: { vote: Proposal }) {
           privateKey={privateKey}
           pubkey={pubkey}
           disabled={actionsDisabled}
+          onChange={onChange}
         />
       );
     }

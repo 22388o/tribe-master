@@ -1,9 +1,9 @@
 import { atom, useAtom } from 'jotai';
 
 // Create an atom to store the private key
-const privateKeyAtom = atom(null);
-const pubKeyAtom = atom(null);
-const nsecAtom = atom(null);
+const privateKeyAtom = atom('');
+const pubKeyAtom = atom('');
+const nsecAtom = atom('');
 
 // Create a custom hook to use the atom
 const usePrivateKey = () => {
