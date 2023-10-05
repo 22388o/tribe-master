@@ -96,12 +96,12 @@ const getProposal = async (
   // if inputs are spend, they should go to past proposals
   const inputUtxosAreOurs = checkInputUtxos(inputs, utxos);
   // if transaction exists, it should go into past proposals
-  const txExists = await checkTx(inputs, outputs);
+  let txId = await checkTx(inputs, outputs);
   if (
     approvedVotes >= threshold ||
     rejectedVotes >= threshold ||
     !inputUtxosAreOurs ||
-    txExists
+    txId
   ) {
     status = 'past';
   } else {
@@ -109,9 +109,10 @@ const getProposal = async (
   }
 
   // Let's try to send the transaction
+
   if (
     inputUtxosAreOurs &&
-    !txExists &&
+    !txId &&
     inputs.length &&
     outputs.length &&
     approvedVotes >= threshold
@@ -193,9 +194,9 @@ const getProposal = async (
         }
 
         if (txdata) {
-          const txid = await pushTx(Tx.encode(txdata).hex);
+          txId = await pushTx(Tx.encode(txdata).hex);
 
-          console.log('pushing ', Tx.encode(txdata).hex, txid);
+          console.log('pushing ', Tx.encode(txdata).hex, txId);
         }
       }
     }
@@ -233,6 +234,7 @@ const getProposal = async (
     };
   });
 
+  const txid = !txId ? undefined : `${txId}`;
   const vote: Proposal = {
     id,
     title,
@@ -240,6 +242,10 @@ const getProposal = async (
     pubkey,
     inputs,
     outputs,
+    tx: {
+      txid: txid,
+      link: txid ? `${API_ENDPOINTS.MEMPOOL}/tx/${txid}` : undefined,
+    },
     accepted: {
       vote: approvedVotes,
       percentage: acceptedPercentage,
@@ -336,7 +342,7 @@ const checkTx = async (inputs: any[], outputs: any[]) => {
     });
     var txid = Tx.util.getTxid(txdata);
     await checkIfTxHappened(txid);
-    return true;
+    return txid;
   } catch (e) {}
 
   return false;

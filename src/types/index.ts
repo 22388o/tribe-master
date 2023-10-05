@@ -165,6 +165,10 @@ export interface Proposal {
   inputs: any[]; // Replace 'any' with the appropriate type
   outputs: any[]; // Replace 'any' with the appropriate type
   bitpac: Bitpac;
+  tx?: {
+    txid?: string;
+    link?: string;
+  };
 }
 
 export interface Bitpac {

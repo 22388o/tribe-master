@@ -151,6 +151,19 @@ export default function VoteDetailsCard({ vote }: { vote: Proposal }) {
             Proposal #{vote.id}
           </p>
 
+          {vote.tx && vote.tx.txid && (
+            <div>
+              Transaction:{' '}
+              <a
+                href={vote.tx.link}
+                target="_blank"
+                className="ml-1 inline-flex items-center gap-3 font-medium text-gray-900 hover:underline hover:opacity-90 focus:underline focus:opacity-90 dark:text-gray-100"
+              >
+                {vote.tx.txid} <ExportIcon className="h-auto w-3" />
+              </a>
+            </div>
+          )}
+
           {/* show only when vote is active */}
           {vote.status === 'active' && (
             <>
