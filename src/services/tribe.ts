@@ -35,6 +35,7 @@ export function generateMultisigAddress(
 
   // Return the generated address.
   return address;
+<feat/voting
 }
 
 // Function to get all signatures for a transaction
@@ -84,4 +85,41 @@ export function getApprovalSigs({ inputs, outputs, seckey, multisig }: any) {
   return inputs.length && outputs.length
     ? getAllSigs({ inputs, outputs, seckey, multisig })
     : 1;
+
+
+// Function to create a proposal
+export function createProposal(sender: string, receiver: string, amount: number): Proposal {
+  const proposal: Proposal = {
+    sender,
+    receiver,
+    amount,
+    status: 'pending',
+    timestamp: Date.now(),
+  };
+
+  return proposal;
+}
+
+// Function to submit a proposal
+export function submitProposal(proposal: Proposal): void {
+  // Logic to submit the proposal
+  proposal.status = 'submitted';
+  proposal.submitted = submitted;
+  console.log('Proposal submitted:', proposal);
+}
+
+// Function to approve a proposal
+export function approveProposal(proposal: Proposal, approver: string): void {
+  // Logic to approve the proposal
+  proposal.status = 'approved';
+  proposal.approver = approver;
+  console.log('Proposal approved:', proposal);
+}
+
+// Function to reject a proposal
+export function rejectProposal(proposal: Proposal, rejecter: string): void {
+  // Logic to reject the proposal
+  proposal.status = 'rejected';
+  proposal.rejecter = rejecter;
+  console.log('Proposal rejected:', proposal);
 }
