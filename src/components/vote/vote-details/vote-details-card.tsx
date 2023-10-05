@@ -30,13 +30,16 @@ function VoteActionButton({
   pubkey: string;
   disabled: boolean;
 }) {
+  const [isLoading, setIsLoading] = useState(false);
   const onApprove = async () => {
+    setIsLoading(true);
     const { inputs, outputs, bitpac, id } = vote;
     const allSigs = getApprovalSigs({
       inputs,
       outputs,
       seckey: privateKey,
-      multisig: bitpac.pubkeys,
+      pubkeys: bitpac.pubkeys,
+      threshold: bitpac.threshold,
     });
 
     const reply = {
@@ -49,10 +52,13 @@ function VoteActionButton({
 
     const signedEvent = await nostrPool.sign(reply, privateKey, pubkey);
     await nostrPool.publish(signedEvent);
+
+    setIsLoading(false);
   };
 
   const onDeny = async () => {
     const { id } = vote;
+    setIsLoading(true);
 
     const reply = {
       content: '',
@@ -64,6 +70,8 @@ function VoteActionButton({
 
     const signedEvent = await nostrPool.sign(reply, privateKey, pubkey);
     await nostrPool.publish(signedEvent);
+
+    setIsLoading(true);
   };
 
   return (
@@ -73,7 +81,7 @@ function VoteActionButton({
         color="success"
         className="flex-1 xs:flex-auto"
         onClick={onApprove}
-        disabled={disabled}
+        disabled={disabled || isLoading}
       >
         Accept
       </Button>
@@ -82,7 +90,7 @@ function VoteActionButton({
         color="danger"
         className="flex-1 xs:flex-auto"
         onClick={onDeny}
-        disabled={disabled}
+        disabled={disabled || isLoading}
       >
         Reject
       </Button>

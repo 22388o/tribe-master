@@ -38,22 +38,17 @@ export function generateMultisigAddress(
 }
 
 // Function to get all signatures for a transaction
-const getAllSigs = ({ inputs, outputs, seckey, multisig }: any) => {
+const getAllSigs = ({ inputs, outputs, seckey, pubkeys, threshold }: any) => {
   // Create a transaction with the provided inputs and outputs
   const txdata = Tx.create({
     vin: inputs,
     vout: outputs,
   });
-  // Create a copy of the multisig array
-  const temp_multisig = [...multisig];
-  // Get the threshold value from the first element of the array
-  const threshold = temp_multisig[0];
-  // Remove the first element from the array
-  temp_multisig.splice(0, 1);
+
   // Initialize the script with the first opcode as 0
   const script = [0];
   // For each item in the multisig array, add it to the script along with the OP_CHECKSIGADD opcode
-  temp_multisig.forEach((item) => {
+  pubkeys.forEach((item) => {
     script.push(item, 'OP_CHECKSIGADD');
   });
   // Generate a placeholder public key
@@ -80,9 +75,15 @@ const getAllSigs = ({ inputs, outputs, seckey, multisig }: any) => {
   return all_sigs;
 };
 
-export function getApprovalSigs({ inputs, outputs, seckey, multisig }: any) {
+export function getApprovalSigs({
+  inputs,
+  outputs,
+  seckey,
+  pubkeys,
+  threshold,
+}: any) {
   return inputs.length && outputs.length
-    ? getAllSigs({ inputs, outputs, seckey, multisig })
+    ? getAllSigs({ inputs, outputs, seckey, pubkeys, threshold })
     : 1;
 }
 // // This is for generate proposal
