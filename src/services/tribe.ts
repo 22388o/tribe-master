@@ -53,13 +53,15 @@ export function createProposal(sender: string, receiver: string, amount: number)
 
 // Function to submit a proposal
 export function submitProposal(proposal: Proposal): void {
-  // Logic to submit the proposal, e.g., store it in a database
+  // Logic to submit the proposal
+  proposal.status = 'submited'
+  proposal.submited = submited;
   console.log('Proposal submitted:', proposal);
 }
 
 // Function to approve a proposal
 export function approveProposal(proposal: Proposal, approver: string): void {
-  // Logic to approve the proposal, e.g., update its status and record the approver
+  // Logic to approve the proposal
   proposal.status = 'approved';
   proposal.approver = approver;
   console.log('Proposal approved:', proposal);
@@ -67,7 +69,7 @@ export function approveProposal(proposal: Proposal, approver: string): void {
 
 // Function to reject a proposal
 export function rejectProposal(proposal: Proposal, rejecter: string): void {
-  // Logic to reject the proposal, e.g., update its status and record the rejecter
+  // Logic to reject the proposal
   proposal.status = 'rejected';
   proposal.rejecter = rejecter;
   console.log('Proposal rejected:', proposal);
