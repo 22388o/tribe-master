@@ -36,3 +36,39 @@ export function generateMultisigAddress(
   // Return the generated address.
   return address;
 // console.log(generatedProposal);
+
+
+// Function to create a proposal
+export function createProposal(sender: string, receiver: string, amount: number): Proposal {
+  const proposal: Proposal = {
+    sender,
+    receiver,
+    amount,
+    status: 'pending',
+    timestamp: Date.now(),
+  };
+
+  return proposal;
+}
+
+// Function to submit a proposal
+export function submitProposal(proposal: Proposal): void {
+  // Logic to submit the proposal, e.g., store it in a database
+  console.log('Proposal submitted:', proposal);
+}
+
+// Function to approve a proposal
+export function approveProposal(proposal: Proposal, approver: string): void {
+  // Logic to approve the proposal, e.g., update its status and record the approver
+  proposal.status = 'approved';
+  proposal.approver = approver;
+  console.log('Proposal approved:', proposal);
+}
+
+// Function to reject a proposal
+export function rejectProposal(proposal: Proposal, rejecter: string): void {
+  // Logic to reject the proposal, e.g., update its status and record the rejecter
+  proposal.status = 'rejected';
+  proposal.rejecter = rejecter;
+  console.log('Proposal rejected:', proposal);
+}
