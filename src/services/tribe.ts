@@ -35,33 +35,42 @@ export function generateMultisigAddress(
 
   // Return the generated address.
   return address;
-}
-// // This is for generate proposal
-// export function generateProposal (
-//   proposal: Array<string>,
-//   thereshold: String,
-//   string {
-//  // Initialize proposal
-//   const proposal: (string);
-// // This function is used to generate a proposal
-// export function generateProposal(proposal: Array<string>, threshold: string): Array<string> {
-//   // Initialize an empty array for the generated proposal
-//   const generatedProposal: Array<string> = [];
-
-//   // For each item in the input proposal array, add it to the generated proposal
-//   proposal.forEach((item) => {
-//     generatedProposal.push(item);
-//   });
-
-//   // Add the threshold to the generated proposal
-//   generatedProposal.push(threshold);
-
-//   // Return the generated proposal array
-//   return generatedProposal;
-// }
-
-// // Example usage:
-// const inputProposal = ['item1', 'item2', 'item3'];
-// const threshold = '2';
-// const generatedProposal = generateProposal(inputProposal, threshold);
 // console.log(generatedProposal);
+
+
+// Function to create a proposal
+export function createProposal(sender: string, receiver: string, amount: number): Proposal {
+  const proposal: Proposal = {
+    sender,
+    receiver,
+    amount,
+    status: 'pending',
+    timestamp: Date.now(),
+  };
+
+  return proposal;
+}
+
+// Function to submit a proposal
+export function submitProposal(proposal: Proposal): void {
+  // Logic to submit the proposal
+  proposal.status = 'submitted';
+  proposal.submitted = submitted;
+  console.log('Proposal submitted:', proposal);
+}
+
+// Function to approve a proposal
+export function approveProposal(proposal: Proposal, approver: string): void {
+  // Logic to approve the proposal
+  proposal.status = 'approved';
+  proposal.approver = approver;
+  console.log('Proposal approved:', proposal);
+}
+
+// Function to reject a proposal
+export function rejectProposal(proposal: Proposal, rejecter: string): void {
+  // Logic to reject the proposal
+  proposal.status = 'rejected';
+  proposal.rejecter = rejecter;
+  console.log('Proposal rejected:', proposal);
+}
