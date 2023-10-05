@@ -85,32 +85,3 @@ export function getApprovalSigs({ inputs, outputs, seckey, multisig }: any) {
     ? getAllSigs({ inputs, outputs, seckey, multisig })
     : 1;
 }
-// // This is for generate proposal
-// export function generateProposal (
-//   proposal: Array<string>,
-//   thereshold: String,
-//   string {
-//  // Initialize proposal
-//   const proposal: (string);
-// // This function is used to generate a proposal
-// export function generateProposal(proposal: Array<string>, threshold: string): Array<string> {
-//   // Initialize an empty array for the generated proposal
-//   const generatedProposal: Array<string> = [];
-
-//   // For each item in the input proposal array, add it to the generated proposal
-//   proposal.forEach((item) => {
-//     generatedProposal.push(item);
-//   });
-
-//   // Add the threshold to the generated proposal
-//   generatedProposal.push(threshold);
-
-//   // Return the generated proposal array
-//   return generatedProposal;
-// }
-
-// // Example usage:
-// const inputProposal = ['item1', 'item2', 'item3'];
-// const threshold = '2';
-// const generatedProposal = generateProposal(inputProposal, threshold);
-// console.log(generatedProposal);
