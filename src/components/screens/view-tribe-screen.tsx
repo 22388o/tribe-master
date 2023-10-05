@@ -7,13 +7,11 @@ import SessionStorage, {
   SessionsStorageKeys,
 } from '@/services/session-storage';
 import { NostrEvent } from '@/types';
-import { getNostrTagValue } from '@/utils/utils';
-import usePrivateKey from '@/hooks/useWallet';
+import useBitpac from '@/hooks/useBitpac';
 // Make this dynamic, if user has wallet connected, we must display another view.
 export default function ViewTribeScreen() {
   const router = useRouter();
-  const [tribe, setTribe] = useState<NostrEvent | undefined>();
-  const [name, setName] = useState('');
+  const { bitpac, name } = useBitpac();
 
   function goToCreateTribePage() {
     setTimeout(() => {
@@ -29,13 +27,6 @@ export default function ViewTribeScreen() {
     if (!sessionTribe) {
       // If not, redirect to create tribe page
       goToCreateTribePage();
-    } else {
-      const name = getNostrTagValue('t', sessionTribe.tags); // get the tribe attribute that contains the name
-
-      setTribe(sessionTribe);
-      if (name) {
-        setName(name);
-      }
     }
   }, []);
 
@@ -46,11 +37,13 @@ export default function ViewTribeScreen() {
           Bitpac: {name}
         </h2>
         <span className="mt-8 text-xs font-medium tracking-wider text-gray-600 2xl:text-sm">
-          {tribe?.id}
+          {bitpac?.id}
         </span>
       </div>
 
-      <ViewTribe tribe={tribe} />
+      {bitpac && (
+        <ViewTribe bitpac={bitpac} />
+      )}
     </>
   );
 }

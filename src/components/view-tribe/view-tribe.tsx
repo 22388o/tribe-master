@@ -4,30 +4,26 @@ import CoinSlider from '@/components/ui/coin-card';
 import TransactionTable from '@/components/transaction/transaction-table';
 import VoteList from '@/components/vote/vote-list';
 import MemberList from '@/components/members/members-list';
-import { NostrEvent } from '@/types';
+import { Bitpac } from '@/types';
 import BitcoinImage from '@/assets/images/coin/bitcoin.svg';
 import {
-  getNostrTagValue,
   shortenStr,
   satsToFormattedDollarString,
 } from '@/utils/utils';
 import useAddress from '@/hooks/useAddress';
 import useBitcoinPrice from '@/hooks/useBitcoinPrice';
+import useProposals from '@/hooks/useProposal';
 
-export default function ModernScreen({ tribe }: { tribe?: NostrEvent }) {
-  const getAddress = () => {
-    if (!tribe) {
-      // TODO: REMOVE
-      return 'tb1qp23xcmwrhwh8gu7jm6826xcfck7c8t00zgyypn';
-    }
-
-    return getNostrTagValue('a', tribe.tags) || '';
-  };
-
-  const address = getAddress();
-  const { balance, sats } = useAddress(address);
+export default function ModernScreen({ bitpac }: { bitpac: Bitpac }) {
+  const address = bitpac.address;
+  const { balance, sats, utxos } = useAddress(address);
   const { price } = useBitcoinPrice();
-
+  const {
+    current: votes = [],
+    isLoading,
+  } = useProposals(bitpac, utxos);
+  
+  const approved = votes?.filter((v) => v.status === 'past' && v.accepted.vote >= v.requiredVotesToPass) || [];
   const usdBalance = satsToFormattedDollarString(sats, price);
 
   const treasury = {
@@ -57,7 +53,7 @@ export default function ModernScreen({ tribe }: { tribe?: NostrEvent }) {
             </h2>
           </div>
 
-          <MemberList tribe={tribe} />
+          <MemberList pubkeys={bitpac.pubkeys} />
         </div>
       </div>
 
@@ -70,7 +66,7 @@ export default function ModernScreen({ tribe }: { tribe?: NostrEvent }) {
           </div>
         </div>
 
-        <VoteList voteStatus={'past'} />
+        <VoteList votes={approved} isLoading={isLoading} />
       </div>
 
       <div className="my-8 sm:my-10">
