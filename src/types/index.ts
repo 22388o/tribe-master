@@ -1,5 +1,6 @@
 import type { NextPage } from 'next';
 import type { ReactElement, ReactNode } from 'react';
+import { Event } from 'nostr-tools';
 
 export type NextPageWithLayout<P = {}> = NextPage<P> & {
   authorization?: boolean;
@@ -177,4 +178,8 @@ export interface Bitpac {
   pubkeys: string[];
   threshold: number;
   address: string;
+}
+
+export interface EventWithVotes extends Event<number> {
+  votes?: Event<number>[];
 }
