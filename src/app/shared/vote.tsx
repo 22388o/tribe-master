@@ -13,10 +13,12 @@ import bank from '@/assets/images/bank.svg';
 import mirror from '@/assets/images/mirror.svg';
 import { useLayout } from '@/lib/hooks/use-layout';
 import { LAYOUT_OPTIONS } from '@/lib/constants';
+import { useWithBitpac } from '@/hooks/useWithBitpac';
 
 const VotePage = () => {
   const router = useRouter();
-  const { layout } = useLayout();
+  useWithBitpac();
+
   return (
     <div className="mx-auto w-full max-w-[1160px] text-sm md:pt-14 4xl:pt-24">
       <div

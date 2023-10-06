@@ -13,10 +13,12 @@ import Loader from '@/components/ui/loader';
 import useProposals from '@/hooks/useProposal';
 import useBitpac from '@/hooks/useBitpac';
 import useAddress from '@/hooks/useAddress';
+import { useWithBitpac } from '@/hooks/useWithBitpac';
 
 const ProposalsPage = () => {
   const router = useRouter();
   const { bitpac, address } = useBitpac();
+  useWithBitpac()
 
   const { utxos } = useAddress(address);
   const {
