@@ -41,9 +41,7 @@ export default function ViewTribeScreen() {
         </span>
       </div>
 
-      {bitpac && (
-        <ViewTribe bitpac={bitpac} />
-      )}
+      {bitpac && <ViewTribe bitpac={bitpac} />}
     </>
   );
 }

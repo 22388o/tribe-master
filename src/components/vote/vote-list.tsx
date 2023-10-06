@@ -9,7 +9,7 @@ export default function VoteList({
   isLoading,
 }: {
   votes: Proposal[];
-  onChange?: () => {},
+  onChange?: () => {};
   isLoading: boolean;
 }) {
   const totalVote = votes?.length || 0;
@@ -19,7 +19,11 @@ export default function VoteList({
       <motion.div layout initial={{ borderRadius: 16 }} className="rounded-2xl">
         {totalVote > 0 ? (
           votes.map((vote: any) => (
-            <VoteDetailsCard key={`${vote.title}-key-${vote.id}`} vote={vote} onChange={onChange}/>
+            <VoteDetailsCard
+              key={`${vote.title}-key-${vote.id}`}
+              vote={vote}
+              onChange={onChange}
+            />
           ))
         ) : (
           <div className="flex flex-col items-center justify-center rounded-lg bg-white px-4 py-16 text-center shadow-card dark:bg-light-dark xs:px-6 md:px-5 md:py-24">

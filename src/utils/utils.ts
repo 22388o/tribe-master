@@ -64,7 +64,7 @@ async function checkIfTxHappened(txid: string) {
   if (!response.ok) {
     throw new Error('Network response was not ok');
   }
-  const responseData = response.json();
+  const responseData = await response.json();
   return responseData;
 }
 

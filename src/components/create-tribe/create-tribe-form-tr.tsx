@@ -25,7 +25,7 @@ export default function CreateTribeTRForm() {
   const [threshold, setTreshold] = useState(1);
   const [name, setName] = useState('');
 
-  function goToViewProposalPage() {
+  function goToHomePage() {
     setTimeout(() => {
       router.push(routes.home);
     }, 800);
@@ -85,7 +85,7 @@ export default function CreateTribeTRForm() {
 
     SessionStorage.set(SessionsStorageKeys.TRIBE, signedEvent);
     await nostrPool.publish(signedEvent);
-    goToViewProposalPage();
+    goToHomePage();
   }
 
   return (

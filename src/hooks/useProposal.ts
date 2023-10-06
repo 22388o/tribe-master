@@ -1,11 +1,12 @@
 import { useQuery } from 'react-query';
 import { Bitpac, Proposal } from '@/types';
-import fetchProposalsAndVotes from '@/utils/fetchProposalsAndVotes';
+import fetchProposalsAndVotes from '@/utils/proposal/fetchProposalsAndVotes';
 
 const useProposals = (bitpac: Bitpac, utxos?: any) => {
   const { pubkeys = [], id = '', threshold = 1 } = bitpac || {};
-  const { data, isLoading, error, refetch } = useQuery(['proposals', pubkeys, id], () =>
-    fetchProposalsAndVotes(pubkeys, id, utxos, threshold, bitpac)
+  const { data, isLoading, error, refetch } = useQuery(
+    ['proposals', pubkeys, id],
+    () => fetchProposalsAndVotes(pubkeys, id, utxos, threshold, bitpac)
   );
 
   const { proposals } = data || {};
