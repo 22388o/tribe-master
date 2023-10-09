@@ -1,6 +1,8 @@
 import cn from 'classnames';
 import Header from '@/layouts/header/header';
 import Sidebar from '@/layouts/sidebar/_default';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function ModernLayout({
   children,
@@ -17,6 +19,8 @@ export default function ModernLayout({
         )}
       >
         {children}
+
+        <ToastContainer />
       </main>
     </div>
   );

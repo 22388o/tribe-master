@@ -3,7 +3,9 @@
 // hooks/useWithBitpac.js
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import SessionStorage, { SessionsStorageKeys } from '@/services/session-storage';
+import SessionStorage, {
+  SessionsStorageKeys,
+} from '@/services/session-storage';
 import { NostrEvent } from '@/types';
 import routes from '@/config/routes';
 
@@ -18,7 +20,7 @@ export function useWithBitpac() {
     );
 
     if (!sessionTribe) {
-      console.log("redirecting")
+      console.log('redirecting');
       router.push(routes.createTribe);
     }
   }, []);

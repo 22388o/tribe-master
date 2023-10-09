@@ -17,6 +17,7 @@ import SessionStorage, {
   SessionsStorageKeys,
 } from '@/services/session-storage';
 import { pubkeyFromNpub } from '@/utils/utils';
+import { toast } from 'react-toastify';
 
 export default function CreateTribeTRForm() {
   const router = useRouter();
@@ -24,6 +25,7 @@ export default function CreateTribeTRForm() {
   const [npubkeys, setNPubKeys] = useState(['']);
   const [threshold, setTreshold] = useState(1);
   const [name, setName] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   function goToHomePage() {
     setTimeout(() => {
@@ -67,26 +69,38 @@ export default function CreateTribeTRForm() {
 
   async function handleSubmit(e: any) {
     e.preventDefault();
+    setIsLoading(true);
 
-    const address = generateMultisigAddress(npubkeys, threshold);
-    const pubkeys = npubkeys.map((p) => pubkeyFromNpub(p));
-    const event = {
-      content: JSON.stringify([name, [threshold, ...pubkeys]]),
-      created_at: Math.floor(Date.now() / 1000),
-      kind: 2858,
-      tags: [
-        ['n', NETWORK], // Network name (e.g. "mainnet", "signet")
-        ['a', address], // Address of the tribe
-        ['t', name], // name of the tribe
-      ],
-    };
+    try {
+      const address = generateMultisigAddress(npubkeys, threshold);
+      const pubkeys = npubkeys.map((p) => pubkeyFromNpub(p));
+      const event = {
+        content: JSON.stringify([name, [threshold, ...pubkeys]]),
+        created_at: Math.floor(Date.now() / 1000),
+        kind: 2858,
+        tags: [
+          ['n', NETWORK], // Network name (e.g. "mainnet", "signet")
+          ['a', address], // Address of the tribe
+          ['t', name], // name of the tribe
+        ],
+      };
 
-    const signedEvent = await nostrPool.sign(event);
+      const signedEvent = await nostrPool.sign(event);
 
-    SessionStorage.set(SessionsStorageKeys.TRIBE, signedEvent);
-    await nostrPool.publish(signedEvent);
-    goToHomePage();
+      SessionStorage.set(SessionsStorageKeys.TRIBE, signedEvent);
+      await nostrPool.publish(signedEvent);
+      toast.info(`${name} created`);
+      goToHomePage();
+    } catch (e: any) {
+      toast.error(e.message);
+    } finally {
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 1000);
+    }
   }
+
+  console.log(isLoading, !name, !threshold, !inputs?.[0]);
 
   return (
     <form noValidate onSubmit={handleSubmit} className="grid grid-cols-1 gap-4">
@@ -149,7 +163,8 @@ export default function CreateTribeTRForm() {
         <Input
           type="number"
           min={1}
-          max={66}
+          value={threshold}
+          max={inputs.length}
           placeholder="How many voters?"
           onChange={handleOnChangeThreshold}
         />
@@ -157,15 +172,16 @@ export default function CreateTribeTRForm() {
 
       <LabelBar
         title="Your policy"
-        subTitle={`1 out of 1 are required`}
+        subTitle={`${threshold} out of ${inputs.length} are required`}
         icon={<Warning />}
       ></LabelBar>
 
       <Button
         type="submit"
         className="mt-5 rounded-lg !text-sm uppercase tracking-[0.04em]"
+        disabled={isLoading || !name || !threshold || !inputs?.[0]}
       >
-        Create Bitpac
+        {isLoading ? 'Creating Bitpac...' : 'Create Bitpac'}
       </Button>
     </form>
   );
