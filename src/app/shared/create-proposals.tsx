@@ -15,11 +15,12 @@ const CreateProposal = () => {
   const { pubkey } = useWallet();
   const router = useRouter();
 
-  useEffect(() => {
-    if (!pubkey || !pubkeys.length || !pubkeys.includes(pubkey)) {
-      router.push(routes.home);
-    }
-  }, [pubkey, pubkeys]);
+  // useEffect(() => {
+  //   if (!pubkey || !pubkeys.length || !pubkeys.includes(pubkey)) {
+  //     console
+  //     router.push(routes.home);
+  //   }
+  // }, [pubkey, pubkeys]);
 
   return (
     <section className="mx-auto w-full max-w-[1160px] text-sm">
