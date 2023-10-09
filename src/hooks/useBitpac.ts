@@ -14,6 +14,7 @@ const pubkeysAtom = atom<string[]>([]);
 const idAtom = atom('');
 const addressAtom = atom('');
 const bitpacAtom = atom<Bitpac | undefined>(undefined);
+const isLoadingAtom = atom(false);
 
 const useBitpac = () => {
   const [tribe, setTribe] = useAtom(tribeAtom);
@@ -23,6 +24,7 @@ const useBitpac = () => {
   const [id, setId] = useAtom(idAtom);
   const [address, setAddress] = useAtom(addressAtom);
   const [bitpac, setBitpac] = useAtom(bitpacAtom);
+  const [isLoading, setIsLoading] = useAtom(isLoadingAtom);
 
   const fetchPac = async (bitpacId: string) => {
     const filter = [
