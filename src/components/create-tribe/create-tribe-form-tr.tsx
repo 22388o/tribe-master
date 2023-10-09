@@ -88,7 +88,7 @@ export default function CreateTribeTRForm() {
       const signedEvent = await nostrPool.sign(event);
 
       SessionStorage.set(SessionsStorageKeys.TRIBE, signedEvent);
-      await nostrPool.publish(signedEvent);
+      nostrPool.publish(signedEvent);
       toast.info(`${name} created`);
       goToHomePage();
     } catch (e: any) {

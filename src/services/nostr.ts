@@ -52,11 +52,11 @@ class NostrRelay {
     return newEvent;
   }
 
-  async publish(_event: any): Promise<unknown> {
+  async publish(_event: any): Promise<void> {
     const event = cleanEvent(_event);
 
     const pubs = this.pool.publish(this.relays, event);
-    return Promise.all(pubs);
+    await Promise.allSettled(pubs);
   }
 
   async list(filter: any) {
