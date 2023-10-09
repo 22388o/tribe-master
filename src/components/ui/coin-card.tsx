@@ -2,7 +2,7 @@
 
 import Image from '@/components/ui/image';
 import { StaticImageData } from 'next/image';
-import QRCode from 'react-qr-code'; 
+import QRCode from 'react-qr-code';
 import CopyClipboard from './copy-clipboard';
 
 type CoinCardProps = {
@@ -46,7 +46,6 @@ export function CoinCard({
         </div>
       </div>
       <div className="flex flex-col items-center justify-center text-xs font-medium 2xl:text-sm">
-        
         <QRCode
           size={220}
           style={{ height: 'auto', maxWidth: '100%', width: '100%' }}
@@ -54,7 +53,11 @@ export function CoinCard({
           viewBox={`0 0 256 256`}
           bgColor={color}
         />
-        {address && <div className='mt-6'><CopyClipboard text={address}></CopyClipboard></div>}
+        {address && (
+          <div className="mt-6">
+            <CopyClipboard text={address}></CopyClipboard>
+          </div>
+        )}
       </div>
     </div>
   );

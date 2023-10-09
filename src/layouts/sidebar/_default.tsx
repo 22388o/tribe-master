@@ -19,6 +19,7 @@ import React from 'react';
 import useBitpac from '@/hooks/useBitpac';
 import useWallet from '@/hooks/useWallet';
 import { DropdownItem } from '@/types';
+import { shortenStr } from '@/utils/utils';
 
 interface SidebarProps {
   className?: string;
@@ -31,7 +32,7 @@ export default function Sidebar({
   layoutOption = '',
   menuItems = defaultMenuItems,
 }: SidebarProps) {
-  const { pubkeys } = useBitpac();
+  const { pubkeys, name, id } = useBitpac();
   const { pubkey } = useWallet();
   if (!pubkey || !pubkeys.length || !pubkeys.includes(pubkey)) {
     menuItems = menuItems.map((item) => {
@@ -87,7 +88,11 @@ export default function Sidebar({
 
       <div className="custom-scrollbar h-[calc(100%-98px)] overflow-hidden overflow-y-auto">
         <div className="px-6 pb-5 2xl:px-8">
-          <AuthorCard image={BitcoinImage} name="Bitcoin" role="Cooperatives" />
+          <AuthorCard
+            image={BitcoinImage}
+            name={name || 'Bitcoin'}
+            role={id ? shortenStr(id) : 'Cooperatives'}
+          />
 
           <div className="mt-12">
             {sideBarMenus?.map((item, index) => (

@@ -15,9 +15,7 @@ export default function ViewTribeScreen() {
           Bitpac: {name}
         </h2>
         <span className="mt-8 text-xs font-medium tracking-wider text-gray-600 2xl:text-sm">
-          {bitpac?.id && (
-            <CopyClipboard text={bitpac.id} fulltext />
-          )} 
+          {bitpac?.id && <CopyClipboard text={bitpac.id} fulltext />}
         </span>
       </div>
 
