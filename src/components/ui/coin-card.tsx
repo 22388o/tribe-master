@@ -54,7 +54,7 @@ export function CoinCard({
           viewBox={`0 0 256 256`}
           bgColor={color}
         />
-        {address && <CopyClipboard text={address}></CopyClipboard>}
+        {address && <div className='mt-6'><CopyClipboard text={address}></CopyClipboard></div>}
       </div>
     </div>
   );
