@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import cn from 'classnames';
 import routes from '@/config/routes';
@@ -14,11 +14,21 @@ import useProposals from '@/hooks/useProposal';
 import useBitpac from '@/hooks/useBitpac';
 import useAddress from '@/hooks/useAddress';
 import { useWithBitpac } from '@/hooks/useWithBitpac';
+import useWallet from '@/hooks/useWallet';
 
 const ProposalsPage = () => {
   const router = useRouter();
-  const { bitpac, address } = useBitpac();
+  const { bitpac, address, pubkeys } = useBitpac();
+  const { pubkey } = useWallet();
+  const [isPartOfPac, setIsPartOfPac] = useState(false);
+
   useWithBitpac();
+
+  useEffect(() => {
+    if (pubkey && pubkeys.length && pubkeys.includes(pubkey)) {
+      setIsPartOfPac(true);
+    }
+  }, [pubkey, pubkeys]);
 
   const { utxos } = useAddress(address);
   const {
@@ -69,38 +79,41 @@ const ProposalsPage = () => {
       path: 'past',
     },
   ];
+
   return (
     <section className="mx-auto w-full max-w-[1160px] text-sm ">
-      <header
-        className={cn(
-          'mb-8 flex flex-col gap-4 rounded-lg bg-white p-5 py-6 shadow-card dark:bg-light-dark xs:p-6 sm:flex-row sm:items-center sm:justify-between',
-          'sm:flex-row sm:items-center sm:justify-between'
-        )}
-      >
-        <div className="flex items-start gap-4 xs:items-center xs:gap-3 xl:gap-4">
-          <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-gray-100 dark:bg-dark">
-            <Image alt="Vote Pool" src={votePool} width={32} height={32} />
+      {isPartOfPac && (
+        <header
+          className={cn(
+            'mb-8 flex flex-col gap-4 rounded-lg bg-white p-5 py-6 shadow-card dark:bg-light-dark xs:p-6 sm:flex-row sm:items-center sm:justify-between',
+            'sm:flex-row sm:items-center sm:justify-between'
+          )}
+        >
+          <div className="flex items-start gap-4 xs:items-center xs:gap-3 xl:gap-4">
+            <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-gray-100 dark:bg-dark">
+              <Image alt="Vote Pool" src={votePool} width={32} height={32} />
+            </div>
+            <div>
+              <h2 className="mb-2 text-base font-medium uppercase dark:text-gray-100 xl:text-lg">
+                Tribe
+              </h2>
+              <p className="leading-relaxed text-gray-600 dark:text-gray-400">
+                You are part of the tribe, and you can create proposals.
+              </p>
+            </div>
           </div>
-          <div>
-            <h2 className="mb-2 text-base font-medium uppercase dark:text-gray-100 xl:text-lg">
-              Tribe
-            </h2>
-            <p className="leading-relaxed text-gray-600 dark:text-gray-400">
-              You are part of the tribe, and you can create proposals.
-            </p>
+          <div className="shrink-0">
+            <Button
+              shape="rounded"
+              fullWidth={true}
+              className="uppercase"
+              onClick={() => goToCreateProposalPage()}
+            >
+              Create Proposal
+            </Button>
           </div>
-        </div>
-        <div className="shrink-0">
-          <Button
-            shape="rounded"
-            fullWidth={true}
-            className="uppercase"
-            onClick={() => goToCreateProposalPage()}
-          >
-            Create Proposal
-          </Button>
-        </div>
-      </header>
+        </header>
+      )}
 
       <Suspense fallback={<Loader variant="blink" />}>
         <ParamTab tabMenu={tabMenuItems}>
