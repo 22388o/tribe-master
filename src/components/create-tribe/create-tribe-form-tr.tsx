@@ -175,7 +175,7 @@ export default function CreateTribeTRForm() {
 
       <LabelBar
         title="Your policy"
-        subTitle={`1 out of 1 are required`}
+        subTitle={`${threshold} out of ${inputs.length} are required`}
         icon={<Warning />}
       ></LabelBar>
 
