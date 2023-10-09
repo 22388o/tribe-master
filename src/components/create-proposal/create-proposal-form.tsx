@@ -12,13 +12,18 @@ import spendCoins from '@/utils/proposal-create/spendCoints';
 import { Bitpac } from '@/types';
 import useAddress from '@/hooks/useAddress';
 import { nostrPool } from '@/services/nostr';
+import { toast } from 'react-toastify';
+import useWallet from '@/hooks/useWallet';
+import useProposals from '@/hooks/useProposal';
 
 export default function CreateProposalForm({ bitpac }: { bitpac: Bitpac }) {
   const router = useRouter();
   const [outputs, setOutputs] = useState<
     { address?: string; amount?: number }[]
   >([{}]);
+  const { privateKey, pubkey } = useWallet();
   const { utxos } = useAddress(bitpac.address);
+  const { refetch } = useProposals(bitpac, utxos);
 
   const [description, setDescription] = useState('');
   const [title, setTitle] = useState('');
@@ -90,7 +95,7 @@ export default function CreateProposalForm({ bitpac }: { bitpac: Bitpac }) {
     let proposalOutputs = [];
 
     // if user is spending funds
-    if (outputs.length) {
+    if (outputs.length && outputs[0].address && outputs[0].amount) {
       const { inputs: txInputs, outputs: txOutputs } = await spendCoins(
         bitpac.pubkeys,
         bitpac.threshold,
@@ -100,24 +105,27 @@ export default function CreateProposalForm({ bitpac }: { bitpac: Bitpac }) {
       );
       proposalInputs = txInputs;
       proposalOutputs = txOutputs;
-
-      const proposal = [
-        title,
-        proposalInputs,
-        proposalOutputs,
-        description || 'No description',
-      ];
-      const event = {
-        content: JSON.stringify(proposal),
-        created_at: Math.floor(Date.now() / 1000),
-        kind: 2859,
-        tags: [['e', bitpac.id]],
-      };
-
-      const signedEvent = await nostrPool.sign(event);
-      await nostrPool.publish(signedEvent);
-      goToProposalsPage();
     }
+
+    const proposal = [
+      title,
+      proposalInputs,
+      proposalOutputs,
+      description || 'No description',
+    ];
+
+    const event = {
+      content: JSON.stringify(proposal),
+      created_at: Math.floor(Date.now() / 1000),
+      kind: 2859,
+      tags: [['e', bitpac.id]],
+    };
+
+    const signedEvent = await nostrPool.sign(event, privateKey, pubkey);
+    nostrPool.publish(signedEvent);
+    toast.info('Proposal created');
+    refetch();
+    goToProposalsPage();
   }
 
   return (

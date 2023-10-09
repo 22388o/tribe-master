@@ -5,15 +5,24 @@ import SessionStorage, {
 import { Bitpac, NostrEvent } from '@/types';
 import { nostrPool } from '@/services/nostr';
 import { generateMultisigAddress } from '@/services/tribe';
+import { useAtom, atom } from 'jotai';
+
+const tribeAtom = atom<NostrEvent | undefined>(undefined);
+const nameAtom = atom('');
+const thresholdAtom = atom(1);
+const pubkeysAtom = atom<string[]>([]);
+const idAtom = atom('');
+const addressAtom = atom('');
+const bitpacAtom = atom<Bitpac | undefined>(undefined);
 
 const useBitpac = () => {
-  const [tribe, setTribe] = useState<NostrEvent | undefined>();
-  const [name, setName] = useState('');
-  const [threshold, setTreshold] = useState(1);
-  const [pubkeys, setPubkeys] = useState<string[]>([]);
-  const [id, setId] = useState('');
-  const [address, setAddress] = useState('');
-  const [bitpac, setBitpac] = useState<Bitpac>();
+  const [tribe, setTribe] = useAtom(tribeAtom);
+  const [name, setName] = useAtom(nameAtom);
+  const [threshold, setThreshold] = useAtom(thresholdAtom);
+  const [pubkeys, setPubkeys] = useAtom(pubkeysAtom);
+  const [id, setId] = useAtom(idAtom);
+  const [address, setAddress] = useAtom(addressAtom);
+  const [bitpac, setBitpac] = useAtom(bitpacAtom);
 
   const fetchPac = async (bitpacId: string) => {
     const filter = [
@@ -45,7 +54,7 @@ const useBitpac = () => {
     setAddress(_address);
     setId(bitpac.id);
     setName(_name);
-    setTreshold(_threshold);
+    setThreshold(_threshold);
     setPubkeys(_pubkeys);
     setBitpac(pac);
 

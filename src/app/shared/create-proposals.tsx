@@ -19,7 +19,7 @@ const CreateProposal = () => {
     if (!pubkey || !pubkeys.length || !pubkeys.includes(pubkey)) {
       router.push(routes.home);
     }
-  }, []);
+  }, [pubkey, pubkeys]);
 
   return (
     <section className="mx-auto w-full max-w-[1160px] text-sm">

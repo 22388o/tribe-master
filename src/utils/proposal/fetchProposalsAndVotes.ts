@@ -10,7 +10,6 @@ const fetchProposalsAndVotes = async (
   threshold: number,
   bitpac: Bitpac
 ): Promise<{ proposals: any[] }> => {
-  console.log('GETTING PROPOSALS AND VOTES');
   const proposals = await fetchProposals(pubkeys, bitpacId);
   const proposalVotes = await Promise.all(
     proposals.map((proposal) => fetchVotes(proposal.id))

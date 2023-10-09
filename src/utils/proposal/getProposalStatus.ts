@@ -9,7 +9,9 @@ export const getProposalStatus = async (
   utxos: any[],
   outputs: any[]
 ): Promise<'active' | 'past'> => {
-  const inputUtxosAreOurs = checkInputUtxos(inputs, utxos);
+  const inputUtxosAreOurs = inputs?.length
+    ? checkInputUtxos(inputs, utxos)
+    : true;
   const txExists = await checkTx(inputs, outputs);
   if (
     approvedVotes >= threshold ||
