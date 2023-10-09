@@ -8,7 +8,6 @@ import { Transition } from '@/components/ui/transition';
 import { DRAWER_VIEW, useDrawer } from '@/components/drawer-views/context';
 import { useLayout } from '@/lib/hooks/use-layout';
 import { LAYOUT_OPTIONS } from '@/lib/constants';
-import { defaultMenuItems } from '@/layouts/sidebar/_menu-items';
 
 // dynamic imports
 const Sidebar = dynamic(() => import('@/layouts/sidebar/_default'));

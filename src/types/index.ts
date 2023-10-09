@@ -183,3 +183,15 @@ export interface Bitpac {
 export interface EventWithVotes extends Event<number> {
   votes?: Event<number>[];
 }
+
+export type MenuItem = {
+  name: string;
+  icon: JSX.Element;
+  href: string;
+  dropdownItems?: DropdownItem[];
+};
+
+export type DropdownItem = {
+  name: string;
+  href: string;
+};

@@ -2,8 +2,9 @@ import routes from '@/config/routes';
 import { HomeIcon } from '@/components/icons/home';
 import { VoteIcon } from '@/components/icons/vote-icon';
 import { PlusCircle } from '@/components/icons/plus-circle';
+import { MenuItem } from '@/types';
 
-export const defaultMenuItems = [
+export const defaultMenuItems: MenuItem[] = [
   {
     name: 'Home',
     icon: <HomeIcon />,

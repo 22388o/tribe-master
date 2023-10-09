@@ -16,6 +16,9 @@ import { LAYOUT_OPTIONS } from '@/lib/constants';
 //images
 import AuthorImage from '@/assets/images/author.jpg';
 import React from 'react';
+import useBitpac from '@/hooks/useBitpac';
+import useWallet from '@/hooks/useWallet';
+import { DropdownItem } from '@/types';
 
 interface SidebarProps {
   className?: string;
@@ -28,6 +31,21 @@ export default function Sidebar({
   layoutOption = '',
   menuItems = defaultMenuItems,
 }: SidebarProps) {
+  const { pubkeys } = useBitpac();
+  const { pubkey } = useWallet();
+  if (!pubkey || !pubkeys.length || !pubkeys.includes(pubkey)) {
+    menuItems = menuItems.map(item => {
+      if (item.name === 'Vote') {
+        return {
+          ...item,
+          dropdownItems: item.dropdownItems?.filter((dropdownItem: DropdownItem) => dropdownItem.name !== 'Create proposal')
+        };
+      }
+      return item;
+    });
+  }
+
+
   const { closeDrawer } = useDrawer();
   const sideBarMenus = menuItems?.map((item) => ({
     name: item.name,

@@ -2,11 +2,21 @@
 
 import CreateProposalForm from '@/components/create-proposal/create-proposal-form';
 import useBitpac from '@/hooks/useBitpac';
+import useWallet from '@/hooks/useWallet';
 import { useWithBitpac } from '@/hooks/useWithBitpac';
+import routes from '@/config/routes';
+import { useRouter } from 'next/navigation';
 
 const CreateProposal = () => {
-  const { bitpac } = useBitpac();
   useWithBitpac()
+
+  const { bitpac, pubkeys } = useBitpac();
+  const { pubkey } = useWallet();
+  const router = useRouter();
+
+  if (!pubkey || !pubkeys.length || !pubkeys.includes(pubkey)) {
+    router.push(routes.home);
+  }
   
   return (
     <section className="mx-auto w-full max-w-[1160px] text-sm">

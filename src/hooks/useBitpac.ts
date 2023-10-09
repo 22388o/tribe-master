@@ -10,10 +10,10 @@ const useBitpac = () => {
   const [tribe, setTribe] = useState<NostrEvent | undefined>();
   const [name, setName] = useState('');
   const [threshold, setTreshold] = useState(1);
-  const [pubkeys, setPubkeys] = useState([]);
+  const [pubkeys, setPubkeys] = useState<string[]>([]);
   const [id, setId] = useState('');
   const [address, setAddress] = useState('');
-  const [bitpac, setBitpac] = useState<Bitpac>({});
+  const [bitpac, setBitpac] = useState<Bitpac>();
 
   const fetchPac = async (bitpacId: string) => {
     const filter = [

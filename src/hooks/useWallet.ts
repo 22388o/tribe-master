@@ -6,7 +6,7 @@ const pubKeyAtom = atom('');
 const nsecAtom = atom('');
 
 // Create a custom hook to use the atom
-const usePrivateKey = () => {
+const useWallet = () => {
   const [privateKey, setPrivateKey] = useAtom(privateKeyAtom);
   const [nsec, setNsec] = useAtom(nsecAtom);
   const [pubkey, setPubkey] = useAtom(pubKeyAtom);
@@ -31,4 +31,4 @@ const usePrivateKey = () => {
   return { privateKey, nsec, pubkey, storePrivateKey };
 };
 
-export default usePrivateKey;
+export default useWallet;

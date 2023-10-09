@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import SessionStorage, { SessionsStorageKeys } from '@/services/session-storage';
 import { NostrEvent } from '@/types';
+import routes from '@/config/routes';
 
 // TODO: THIS IS JUST A HACK TO REDIRECT, WE MUST USE
 // A MIDDLEWARE OR SOME PROPS TO DO THE CHECK AND THE REDIRECT
@@ -16,7 +17,7 @@ export function useWithBitpac() {
 
     if (!sessionTribe) {
       console.log("redirecting")
-      router.push('/create-tribe');
+      router.push(routes.createTribe);
     }
   }, []);
 }

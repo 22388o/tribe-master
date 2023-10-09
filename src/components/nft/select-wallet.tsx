@@ -6,7 +6,7 @@
 import Button from '@/components/ui/button/button';
 import Input from '@/components/ui/forms/input';
 import InputLabel from '@/components/ui/input-label';
-import usePrivateKey from '@/hooks/useWallet';
+import useWallet from '@/hooks/useWallet';
 import { privkeyFromNsec, pubFromPriv } from '@/utils/utils';
 import { useState } from 'react';
 import { useModal } from '../modal-views/context';
@@ -14,7 +14,7 @@ import { useModal } from '../modal-views/context';
 export default function SelectWallet({ ...props }) {
   const [name, setName] = useState('');
   const { closeModal } = useModal();
-  const { storePrivateKey } = usePrivateKey();
+  const { storePrivateKey } = useWallet();
   const [hasError, setHasError] = useState(false);
 
   async function handleSubmit(e: any) {
