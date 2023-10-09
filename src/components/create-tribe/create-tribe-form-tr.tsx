@@ -17,6 +17,8 @@ import SessionStorage, {
   SessionsStorageKeys,
 } from '@/services/session-storage';
 import { pubkeyFromNpub } from '@/utils/utils';
+import { toast } from 'react-toastify';
+
 
 export default function CreateTribeTRForm() {
   const router = useRouter();
@@ -85,7 +87,9 @@ export default function CreateTribeTRForm() {
 
     SessionStorage.set(SessionsStorageKeys.TRIBE, signedEvent);
     await nostrPool.publish(signedEvent);
+    toast(`${name} created`);
     goToHomePage();
+    
   }
 
   return (
@@ -149,6 +153,7 @@ export default function CreateTribeTRForm() {
         <Input
           type="number"
           min={1}
+          value={threshold}
           max={66}
           placeholder="How many voters?"
           onChange={handleOnChangeThreshold}

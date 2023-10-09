@@ -12,9 +12,9 @@ import {
   defaultMenuItems,
   otherPagesMenuItems,
 } from '@/layouts/sidebar/_menu-items';
-import { LAYOUT_OPTIONS } from '@/lib/constants';
+
 //images
-import AuthorImage from '@/assets/images/author.jpg';
+import BitcoinImage from '@/assets/images/currency/bitcoin.svg';
 import React from 'react';
 import useBitpac from '@/hooks/useBitpac';
 import useWallet from '@/hooks/useWallet';
@@ -86,9 +86,9 @@ export default function Sidebar({
       <div className="custom-scrollbar h-[calc(100%-98px)] overflow-hidden overflow-y-auto">
         <div className="px-6 pb-5 2xl:px-8">
           <AuthorCard
-            image={AuthorImage}
-            name="Cameron Williamson"
-            role="admin"
+            image={BitcoinImage}
+            name="Bitcoin"
+            role="Cooperatives"
           />
 
           <div className="mt-12">
