@@ -2,6 +2,9 @@ const SessionsStorageKeys = {
   TRIBE: 'TRIBE',
   TRIBE_ID: 'TRIBE_ID',
   PROPOSALS: 'PROPOSAL',
+  WALLET_PRIV: 'WALLET_PRIV',
+  WALLET_PUB: 'WALLET_PUB',
+  WALLET_NSEC: 'WALLET_NSEC',
 };
 
 const SessionStorage = {

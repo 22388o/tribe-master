@@ -15,7 +15,7 @@ import {
 
 //images
 import BitcoinImage from '@/assets/images/currency/bitcoin.svg';
-import React from 'react';
+import React, { useEffect } from 'react';
 import useBitpac from '@/hooks/useBitpac';
 import useWallet from '@/hooks/useWallet';
 import { DropdownItem } from '@/types';
@@ -34,20 +34,24 @@ export default function Sidebar({
 }: SidebarProps) {
   const { pubkeys, name, id } = useBitpac();
   const { pubkey } = useWallet();
-  if (!pubkey || !pubkeys.length || !pubkeys.includes(pubkey)) {
-    menuItems = menuItems.map((item) => {
-      if (item.name === 'Vote') {
-        return {
-          ...item,
-          dropdownItems: item.dropdownItems?.filter(
-            (dropdownItem: DropdownItem) =>
-              dropdownItem.name !== 'Create proposal'
-          ),
-        };
-      }
-      return item;
-    });
-  }
+
+  useEffect(() => {
+    if (!pubkey || !pubkeys.length || !pubkeys.includes(pubkey)) {
+      menuItems = menuItems.map((item) => {
+        if (item.name === 'Vote') {
+          return {
+            ...item,
+            dropdownItems: item.dropdownItems?.filter(
+              (dropdownItem: DropdownItem) =>
+                dropdownItem.name !== 'Create proposal'
+            ),
+          };
+        }
+        return item;
+      });
+    }
+  }, [pubkey, pubkeys])
+ 
 
   const { closeDrawer } = useDrawer();
   const sideBarMenus = menuItems?.map((item) => ({
