@@ -13,10 +13,12 @@ import Loader from '@/components/ui/loader';
 import useProposals from '@/hooks/useProposal';
 import useBitpac from '@/hooks/useBitpac';
 import useAddress from '@/hooks/useAddress';
+import { useWithBitpac } from '@/hooks/useWithBitpac';
 
 const ProposalsPage = () => {
   const router = useRouter();
   const { bitpac, address } = useBitpac();
+  useWithBitpac()
 
   const { utxos } = useAddress(address);
   const {
@@ -24,16 +26,15 @@ const ProposalsPage = () => {
     totalPastVote,
     current: votes = [],
     isLoading,
-    refetch
+    refetch,
   } = useProposals(bitpac, utxos);
 
   const currentVotes = votes?.filter((v) => v.status === 'active') || [];
   const pastVotes = votes?.filter((v) => v.status === 'past') || [];
-  
-  const onChange =() => {
-    refetch();
-  }
 
+  const onChange = () => {
+    refetch();
+  };
 
   function goToCreateProposalPage() {
     setTimeout(() => {
@@ -104,11 +105,19 @@ const ProposalsPage = () => {
       <Suspense fallback={<Loader variant="blink" />}>
         <ParamTab tabMenu={tabMenuItems}>
           <TabPanel className="focus:outline-none">
-            <VoteList votes={currentVotes} isLoading={isLoading} onChange={onChange} />
+            <VoteList
+              votes={currentVotes}
+              isLoading={isLoading}
+              onChange={onChange}
+            />
           </TabPanel>
 
           <TabPanel className="focus:outline-none">
-            <VoteList votes={pastVotes} isLoading={isLoading} onChange={onChange}/>
+            <VoteList
+              votes={pastVotes}
+              isLoading={isLoading}
+              onChange={onChange}
+            />
           </TabPanel>
         </ParamTab>
       </Suspense>

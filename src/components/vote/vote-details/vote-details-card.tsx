@@ -30,10 +30,10 @@ function VoteActionButton({
   privateKey: string;
   pubkey: string;
   disabled: boolean;
-  onChange?: () => {} 
+  onChange?: () => {};
 }) {
   const [isLoading, setIsLoading] = useState(false);
-  
+
   const onApprove = async () => {
     // We don't turn on the button again, since we want to have the button disabled from now on.
     setIsLoading(true);
@@ -107,7 +107,13 @@ function VoteActionButton({
 }
 
 // FIXME: need to add vote type
-export default function VoteDetailsCard({ vote , onChange }: { vote: Proposal,  onChange?: () => {}, }) {
+export default function VoteDetailsCard({
+  vote,
+  onChange,
+}: {
+  vote: Proposal;
+  onChange?: () => {};
+}) {
   const [isExpand, setIsExpand] = useState(false);
   const { privateKey, pubkey } = useWallet();
   const votesPubkeys = vote?.votes?.map((v) => v.pubkey) || [];

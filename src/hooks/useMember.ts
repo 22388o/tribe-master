@@ -22,7 +22,7 @@ const useAuthors = (pubkeys: string[]) => {
   } = useQuery(['authors', pubkeys], () => fetchAuthors(pubkeys));
 
   const missingAuthors =
-    pubkeys.filter(
+    pubkeys?.filter(
       (pubkey) => !authors?.some((author) => author.pubkey === pubkey)
     ) || [];
 

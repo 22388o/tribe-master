@@ -6,7 +6,7 @@ import { NostrEvent } from '@/types';
 import useAuthors from '@/hooks/useMember';
 import { shortenStr } from '@/utils/utils';
 
-export default function MemberList({pubkeys}: {pubkeys: string[]}) {
+export default function MemberList({ pubkeys }: { pubkeys: string[] }) {
   const { members } = useAuthors(pubkeys);
 
   return (

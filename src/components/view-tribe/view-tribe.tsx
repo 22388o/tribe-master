@@ -6,10 +6,7 @@ import VoteList from '@/components/vote/vote-list';
 import MemberList from '@/components/members/members-list';
 import { Bitpac } from '@/types';
 import BitcoinImage from '@/assets/images/coin/bitcoin.svg';
-import {
-  shortenStr,
-  satsToFormattedDollarString,
-} from '@/utils/utils';
+import { shortenStr, satsToFormattedDollarString } from '@/utils/utils';
 import useAddress from '@/hooks/useAddress';
 import useBitcoinPrice from '@/hooks/useBitcoinPrice';
 import useProposals from '@/hooks/useProposal';
@@ -18,12 +15,12 @@ export default function ModernScreen({ bitpac }: { bitpac: Bitpac }) {
   const address = bitpac.address;
   const { balance, sats, utxos } = useAddress(address);
   const { price } = useBitcoinPrice();
-  const {
-    current: votes = [],
-    isLoading,
-  } = useProposals(bitpac, utxos);
-  
-  const approved = votes?.filter((v) => v.status === 'past' && v.accepted.vote >= v.requiredVotesToPass) || [];
+  const { current: votes = [], isLoading } = useProposals(bitpac, utxos);
+
+  const approved =
+    votes?.filter(
+      (v) => v.status === 'past' && v.accepted.vote >= v.requiredVotesToPass
+    ) || [];
   const usdBalance = satsToFormattedDollarString(sats, price);
 
   const treasury = {

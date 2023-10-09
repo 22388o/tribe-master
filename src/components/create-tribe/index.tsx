@@ -22,7 +22,7 @@ const tabMenu = [
   },
 ];
 
-export default function ProfileTab() {
+export default function CreateTribe() {
   return (
     <Suspense fallback={<Loader variant="blink" />}>
       <ParamTab tabMenu={tabMenu}>
