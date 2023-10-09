@@ -11,7 +11,6 @@ const spendCoins = async (
   walletOutputs: any[],
   walletAddress: string
 ) => {
-  debugger;
   var script = [0];
   pubkeys.forEach((item) => {
     // @ts-ignore

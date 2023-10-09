@@ -1,6 +1,7 @@
 const SessionsStorageKeys = {
   TRIBE: 'TRIBE',
   TRIBE_ID: 'TRIBE_ID',
+  PROPOSALS: 'PROPOSAL',
 };
 
 const SessionStorage = {

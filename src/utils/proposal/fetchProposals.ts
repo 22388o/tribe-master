@@ -17,7 +17,7 @@ const fetchProposals = async (
   ];
 
   const proposals = await nostrPool.list(filter);
-  return proposals;
+  return proposals.sort((a, b) => b.created_at - a.created_at);
 };
 
 export default fetchProposals;
