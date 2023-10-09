@@ -56,7 +56,10 @@ class NostrRelay {
     const event = cleanEvent(_event);
 
     const pubs = this.pool.publish(this.relays, event);
-    return Promise.allSettled(pubs);
+    console.log("publishing")
+    const results = await Promise.allSettled(pubs);
+    console.log(results);
+    return results;
   }
 
   async list(filter: any) {
