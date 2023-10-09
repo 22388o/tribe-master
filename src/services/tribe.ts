@@ -1,6 +1,7 @@
 // All required business logic for tribe.
 import { Script, Tap, Address } from '@cmdcode/tapscript'; // Assuming you're using bitcoinjs-lib
 import { NETWORK } from '@/config/config';
+import { createProposal } from '@/services/tribe';
 
 // This function is used to generate a multisig address.
 export function generateMultisigAddress(
