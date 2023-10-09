@@ -100,10 +100,7 @@ export default function CreateTribeTRForm() {
     }
   }
 
-  console.log(isLoading ,
-    !name ,
-    !threshold ,
-    !inputs?.[0] )
+  console.log(isLoading, !name, !threshold, !inputs?.[0]);
 
   return (
     <form noValidate onSubmit={handleSubmit} className="grid grid-cols-1 gap-4">
@@ -182,12 +179,7 @@ export default function CreateTribeTRForm() {
       <Button
         type="submit"
         className="mt-5 rounded-lg !text-sm uppercase tracking-[0.04em]"
-        disabled={
-          isLoading ||
-          !name ||
-          !threshold ||
-          !inputs?.[0] 
-        }
+        disabled={isLoading || !name || !threshold || !inputs?.[0]}
       >
         {isLoading ? 'Creating Bitpac...' : 'Create Bitpac'}
       </Button>
