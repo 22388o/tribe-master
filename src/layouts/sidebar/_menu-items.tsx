@@ -10,11 +10,6 @@ export const defaultMenuItems = [
     href: routes.home,
   },
   {
-    name: 'Create Bitpac',
-    icon: <PlusCircle />,
-    href: routes.createTribe,
-  },
-  {
     name: 'Vote',
     icon: <VoteIcon />,
     href: routes.vote,
@@ -28,6 +23,11 @@ export const defaultMenuItems = [
         href: routes.createProposal,
       },
     ],
+  },
+  {
+    name: 'Create Bitpac',
+    icon: <PlusCircle />,
+    href: routes.createTribe,
   },
 ];
 

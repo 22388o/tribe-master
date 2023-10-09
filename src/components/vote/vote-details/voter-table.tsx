@@ -51,7 +51,7 @@ interface VoterTableTypes {
       id: string;
       link: string;
     };
-    voting_weight: number;
+    voting_weight: string;
     status: string[];
   }[];
 }

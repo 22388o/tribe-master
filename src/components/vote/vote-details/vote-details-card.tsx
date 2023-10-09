@@ -6,23 +6,100 @@ import dayjs from 'dayjs';
 import cn from 'classnames';
 import Button from '@/components/ui/button';
 import RevealContent from '@/components/ui/reveal-content';
-import AuctionCountdown from '@/components/nft/auction-countdown';
 import { Switch } from '@/components/ui/switch';
 import { ExportIcon } from '@/components/icons/export-icon';
 import VotePoll from '@/components/vote/vote-details/vote-poll';
 import VoteActions from '@/components/vote/vote-details/vote-outputs';
 import VoterTable from '@/components/vote/vote-details/voter-table';
 import { fadeInBottom } from '@/lib/framer-motion/fade-in-bottom';
-import { useLayout } from '@/lib/hooks/use-layout';
-import { LAYOUT_OPTIONS } from '@/lib/constants';
 
-function VoteActionButton() {
+import useWallet from '@/hooks/useWallet';
+import { useModal } from '@/components/modal-views/context';
+import { getApprovalSigs } from '@/services/tribe';
+import { Proposal } from '@/types';
+import { nostrPool } from '@/services/nostr';
+
+function VoteActionButton({
+  vote,
+  privateKey,
+  pubkey,
+  disabled = false,
+  onChange,
+}: {
+  vote: Proposal;
+  privateKey: string;
+  pubkey: string;
+  disabled: boolean;
+  onChange?: () => {};
+}) {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const onApprove = async () => {
+    // We don't turn on the button again, since we want to have the button disabled from now on.
+    setIsLoading(true);
+    const { inputs, outputs, bitpac, id } = vote;
+    const allSigs = getApprovalSigs({
+      inputs,
+      outputs,
+      seckey: privateKey,
+      pubkeys: bitpac.pubkeys,
+      threshold: bitpac.threshold,
+    });
+
+    const reply = {
+      content: JSON.stringify(allSigs),
+      created_at: Math.floor(Date.now() / 1000),
+      kind: 2860,
+      tags: [['e', id]],
+      pubkey: pubkey,
+    };
+
+    const signedEvent = await nostrPool.sign(reply, privateKey, pubkey);
+    await nostrPool.publish(signedEvent);
+    // Update proposal
+    if (onChange) {
+      onChange();
+    }
+  };
+
+  const onDeny = async () => {
+    const { id } = vote;
+    setIsLoading(true);
+
+    const reply = {
+      content: '',
+      created_at: Math.floor(Date.now() / 1000),
+      kind: 2860,
+      tags: [['e', id]],
+      pubkey: pubkey,
+    };
+
+    const signedEvent = await nostrPool.sign(reply, privateKey, pubkey);
+    await nostrPool.publish(signedEvent);
+    // Update proposal
+    if (onChange) {
+      onChange();
+    }
+  };
+
   return (
     <div className="mt-4 flex items-center gap-3 xs:mt-6 xs:inline-flex md:mt-10">
-      <Button shape="rounded" color="success" className="flex-1 xs:flex-auto">
+      <Button
+        shape="rounded"
+        color="success"
+        className="flex-1 xs:flex-auto"
+        onClick={onApprove}
+        disabled={disabled || isLoading}
+      >
         Accept
       </Button>
-      <Button shape="rounded" color="danger" className="flex-1 xs:flex-auto">
+      <Button
+        shape="rounded"
+        color="danger"
+        className="flex-1 xs:flex-auto"
+        onClick={onDeny}
+        disabled={disabled || isLoading}
+      >
         Reject
       </Button>
     </div>
@@ -30,9 +107,45 @@ function VoteActionButton() {
 }
 
 // FIXME: need to add vote type
-export default function VoteDetailsCard({ vote }: any) {
+export default function VoteDetailsCard({
+  vote,
+  onChange,
+}: {
+  vote: Proposal;
+  onChange?: () => {};
+}) {
   const [isExpand, setIsExpand] = useState(false);
-  const { layout } = useLayout();
+  const { privateKey, pubkey } = useWallet();
+  const votesPubkeys = vote?.votes?.map((v) => v.pubkey) || [];
+  const actionsDisabled = votesPubkeys.includes(pubkey);
+
+  const { openModal } = useModal();
+
+  const renderVotingActions = () => {
+    if (privateKey) {
+      return (
+        <VoteActionButton
+          vote={vote}
+          privateKey={privateKey}
+          pubkey={pubkey}
+          disabled={actionsDisabled}
+          onChange={onChange}
+        />
+      );
+    }
+
+    return (
+      <div className="mt-4 flex items-center gap-3 xs:mt-6 xs:inline-flex md:mt-10">
+        <Button
+          onClick={() => openModal('WALLET_CONNECT_VIEW')}
+          className={cn('shadow-main hover:shadow-large')}
+          disabled={actionsDisabled}
+        >
+          CONNECT TO VOTE
+        </Button>
+      </div>
+    );
+  };
 
   return (
     <motion.div
@@ -61,6 +174,19 @@ export default function VoteDetailsCard({ vote }: any) {
             Proposal #{vote.id}
           </p>
 
+          {vote.tx && vote.tx.txid && (
+            <div>
+              Transaction:{' '}
+              <a
+                href={vote.tx.link}
+                target="_blank"
+                className="ml-1 inline-flex items-center gap-3 font-medium text-gray-900 hover:underline hover:opacity-90 focus:underline focus:opacity-90 dark:text-gray-100"
+              >
+                {vote.tx.txid} <ExportIcon className="h-auto w-3" />
+              </a>
+            </div>
+          )}
+
           {/* show only when vote is active */}
           {vote.status === 'active' && (
             <>
@@ -73,7 +199,7 @@ export default function VoteDetailsCard({ vote }: any) {
                   Vote Now
                 </Button>
               ) : (
-                <VoteActionButton />
+                renderVotingActions()
               )}
             </>
           )}
@@ -170,12 +296,14 @@ export default function VoteDetailsCard({ vote }: any) {
                 dangerouslySetInnerHTML={{ __html: vote.description }}
               />
             </RevealContent>
-            {vote?.action?.lenght && (<RevealContent
-              defaultHeight={320}
-              className="mt-6 border-t border-dashed border-gray-200 pt-6 dark:border-gray-700"
-            >
-              <VoteActions title={'Outputs'} action={vote?.action} />
-            </RevealContent>)}
+            {vote?.action?.length && (
+              <RevealContent
+                defaultHeight={320}
+                className="mt-6 border-t border-dashed border-gray-200 pt-6 dark:border-gray-700"
+              >
+                <VoteActions title={'Outputs'} action={vote?.action} />
+              </RevealContent>
+            )}
           </motion.div>
         )}
       </AnimatePresence>

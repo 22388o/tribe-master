@@ -1,5 +1,6 @@
 import type { NextPage } from 'next';
 import type { ReactElement, ReactNode } from 'react';
+import { Event } from 'nostr-tools';
 
 export type NextPageWithLayout<P = {}> = NextPage<P> & {
   authorization?: boolean;
@@ -125,7 +126,7 @@ export interface ContactDetails {
   website: string;
 }
 
-export interface NostrTribe {
+export interface NostrEvent {
   id: string;
   content: string;
   created_at: number;
@@ -159,9 +160,16 @@ export interface Proposal {
   proposed_by: ProposedBy;
   requiredVotesToPass: number;
   requiredVotesToDeny: number;
-  status: 'active' | 'inactive'; // Add more status types as needed
+  status: 'active' | 'past'; // Add more status types as needed
   votes: any[]; // Replace 'any' with the appropriate type
   action: any[]; // Replace 'any' with the appropriate type
+  inputs: any[]; // Replace 'any' with the appropriate type
+  outputs: any[]; // Replace 'any' with the appropriate type
+  bitpac: Bitpac;
+  tx?: {
+    txid?: string;
+    link?: string;
+  };
 }
 
 export interface Bitpac {
@@ -169,4 +177,9 @@ export interface Bitpac {
   name: string;
   pubkeys: string[];
   threshold: number;
+  address: string;
+}
+
+export interface EventWithVotes extends Event<number> {
+  votes?: Event<number>[];
 }

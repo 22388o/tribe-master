@@ -8,17 +8,33 @@ import Button from '@/components/ui/button';
 import Image from '@/components/ui/image';
 import ParamTab, { TabPanel } from '@/components/ui/param-tab';
 import VoteList from '@/components/vote/vote-list';
-// static data
-import { getVotesByStatus } from '@/data/static/vote-data';
 import votePool from '@/assets/images/vote-pool.svg';
 import Loader from '@/components/ui/loader';
 import useProposals from '@/hooks/useProposal';
 import useBitpac from '@/hooks/useBitpac';
+import useAddress from '@/hooks/useAddress';
+import { useWithBitpac } from '@/hooks/useWithBitpac';
 
 const ProposalsPage = () => {
   const router = useRouter();
-  const {bitpac } = useBitpac();
-  const { totalActiveVote, totalPastVote, current: votes = [], isLoading } = useProposals(bitpac);
+  const { bitpac, address } = useBitpac();
+  useWithBitpac()
+
+  const { utxos } = useAddress(address);
+  const {
+    totalActiveVote,
+    totalPastVote,
+    current: votes = [],
+    isLoading,
+    refetch,
+  } = useProposals(bitpac, utxos);
+
+  const currentVotes = votes?.filter((v) => v.status === 'active') || [];
+  const pastVotes = votes?.filter((v) => v.status === 'past') || [];
+
+  const onChange = () => {
+    refetch();
+  };
 
   function goToCreateProposalPage() {
     setTimeout(() => {
@@ -89,11 +105,19 @@ const ProposalsPage = () => {
       <Suspense fallback={<Loader variant="blink" />}>
         <ParamTab tabMenu={tabMenuItems}>
           <TabPanel className="focus:outline-none">
-            <VoteList votes={votes} isLoading={isLoading} />
+            <VoteList
+              votes={currentVotes}
+              isLoading={isLoading}
+              onChange={onChange}
+            />
           </TabPanel>
 
           <TabPanel className="focus:outline-none">
-            {/* <VoteList voteStatus={'past'} /> */}
+            <VoteList
+              votes={pastVotes}
+              isLoading={isLoading}
+              onChange={onChange}
+            />
           </TabPanel>
         </ParamTab>
       </Suspense>

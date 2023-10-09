@@ -24,7 +24,7 @@ Both participants can make proposals and submit votes to existing proposals, pas
 
 ## Roadmap
 
-- [ ] Release alpha software 
+- [ ] Release alpha software
 
 ## Status
 

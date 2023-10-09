@@ -1,12 +1,42 @@
 'use client';
 
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useWeb3Modal } from '@web3modal/react';
-import Image from '@/components/ui/image';
-import metamaskLogo from '@/assets/images/metamask.svg';
+// import Image from '@/components/ui/image';
+// import metamaskLogo from '@/assets/images/metamask.svg';
+import Button from '@/components/ui/button/button';
+import Input from '@/components/ui/forms/input';
+import InputLabel from '@/components/ui/input-label';
+import usePrivateKey from '@/hooks/useWallet';
+import { privkeyFromNsec, pubFromPriv } from '@/utils/utils';
+import { useState } from 'react';
+import { useModal } from '../modal-views/context';
 
 export default function SelectWallet({ ...props }) {
-  const { open } = useWeb3Modal();
+  const [name, setName] = useState('');
+  const { closeModal } = useModal();
+  const { storePrivateKey } = usePrivateKey();
+  const [hasError, setHasError] = useState(false);
+
+  async function handleSubmit(e: any) {
+    e.preventDefault();
+    setHasError(false);
+    try {
+      const priv = privkeyFromNsec(name);
+      const pub = pubFromPriv(priv);
+
+      storePrivateKey({ nsec: name, priv, pub });
+      closeModal();
+    } catch (e) {
+      console.error('Invalid nsec');
+      setHasError(true);
+    }
+  }
+
+  const handleOnChangeName = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    e.preventDefault();
+    setHasError(false);
+    setName(e.target.value);
+  };
 
   return (
     <div
@@ -21,15 +51,42 @@ export default function SelectWallet({ ...props }) {
         Privacy Policy.
       </p>
 
-      <div
+      <form
+        noValidate
+        onSubmit={handleSubmit}
+        className="grid grid-cols-1 gap-4"
+      >
+        <div className="mb-4 mt-4">
+          <Input
+            type="text"
+            placeholder="Enter your nsec"
+            onChange={handleOnChangeName}
+            className="error"
+          />
+          {hasError && (
+            <span role="alert" className="mt-2 block text-red-500 sm:mt-2.5">
+              Invalid nsec
+            </span>
+          )}
+        </div>
+
+        <Button
+          type="submit"
+          className="mt-5 rounded-lg !text-sm uppercase tracking-[0.04em]"
+        >
+          Connect with private key
+        </Button>
+      </form>
+
+      {/* <div
         className="mt-12 flex h-14 w-full cursor-pointer items-center justify-between rounded-lg bg-gradient-to-l from-[#ffdc24] to-[#ff5c00] px-4 text-base text-white transition-all hover:-translate-y-0.5"
-        onClick={() => open()}
+        onClick={() => {}}
       >
         <span>MetaMask</span>
         <span className="h-auto w-9">
           <Image src={metamaskLogo} alt="metamask" width={36} />
         </span>
-      </div>
+      </div> */}
     </div>
   );
 }

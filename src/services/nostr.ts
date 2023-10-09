@@ -29,10 +29,12 @@ class NostrRelay {
     this.relays = [...RELAYS];
   }
 
-  async sign(event: any) {
-    const privKey = bytesToHex(nobleSecp256k1.utils.randomPrivateKey());
+  async sign(event: any, privKey?: string, pubKey?: string) {
+    const privkey =
+      privKey || bytesToHex(nobleSecp256k1.utils.randomPrivateKey());
     // @ts-ignore
-    const pubkey = nobleSecp256k1.getPublicKey(privKey, true).substring(2);
+    const pubkey =
+      pubKey || nobleSecp256k1.getPublicKey(privKey, true).substring(2);
 
     const eventBase = {
       ...event,
@@ -44,7 +46,7 @@ class NostrRelay {
       id: getEventHash(eventBase),
     };
 
-    const sig = await nobleSecp256k1.schnorr.sign(newEvent.id, privKey);
+    const sig = await nobleSecp256k1.schnorr.sign(newEvent.id, privkey);
     newEvent.sig = sig;
 
     return newEvent;
@@ -59,11 +61,6 @@ class NostrRelay {
 
   async list(filter: any) {
     const events = await this.pool.list([...this.relays], filter);
-
-    const sub = this.pool.sub([...this.relays], filter);
-    sub.on('event', (event) => {
-      console.log('new event', event);
-    });
     return events;
   }
 }

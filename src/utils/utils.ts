@@ -1,4 +1,7 @@
+import { API_ENDPOINTS } from '@/data/utils/endpoints';
 import { bech32 } from 'bech32';
+import * as nobleSecp256k1 from 'noble-secp256k1';
+import axios from 'axios';
 
 const bytesToHex = (bytes: any) => {
   return bytes.reduce(
@@ -47,6 +50,46 @@ function pubkeyFromNpub(npub: string) {
   );
 }
 
+function privkeyFromNsec(nsec: string) {
+  return Buffer.from(bech32.fromWords(bech32.decode(nsec).words)).toString(
+    'hex'
+  );
+}
+function pubFromPriv(seckey: string): string {
+  return nobleSecp256k1.getPublicKey(seckey, true).substring(2);
+}
+
+async function checkIfTxHappened(txid: string) {
+  const response = await fetch(`${API_ENDPOINTS.MEMPOOL_API}/tx/${txid}`);
+  if (!response.ok) {
+    throw new Error('Network response was not ok');
+  }
+  const responseData = await response.json();
+  return responseData;
+}
+
+async function pushTx(rawtx: string) {
+  try {
+    const response = await axios.post(
+      `${API_ENDPOINTS.MEMPOOL_API}/tx`,
+      rawtx,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    console.log('responseData', response.data);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    // throw new Error('Network response was not ok');
+  }
+
+  return null;
+}
+
 export {
   bytesToHex,
   getNostrTagValue,
@@ -54,4 +97,8 @@ export {
   satsToBtc,
   satsToFormattedDollarString,
   pubkeyFromNpub,
+  privkeyFromNsec,
+  pubFromPriv,
+  checkIfTxHappened,
+  pushTx,
 };

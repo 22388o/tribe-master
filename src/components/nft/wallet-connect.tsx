@@ -1,7 +1,5 @@
 'use client';
 
-import { useWeb3Modal } from '@web3modal/react';
-import { useAccount, useBalance, useDisconnect } from 'wagmi';
 import cn from 'classnames';
 import Button from '@/components/ui/button';
 import { Menu } from '@/components/ui/menu';
@@ -9,6 +7,7 @@ import { Transition } from '@/components/ui/transition';
 import ActiveLink from '@/components/ui/links/active-link';
 import { ChevronForward } from '@/components/icons/chevron-forward';
 import { PowerIcon } from '@/components/icons/power';
+import { useModal } from '@/components/modal-views/context';
 
 export default function WalletConnect({
   btnClassName,
@@ -17,13 +16,13 @@ export default function WalletConnect({
   btnClassName?: string;
   anchorClassName?: string;
 }) {
-  const { address } = useAccount();
-  const { open } = useWeb3Modal();
-  const { data } = useBalance({
-    address,
-  });
-  const { disconnect } = useDisconnect();
-  const balance = data?.formatted;
+  const { openModal } = useModal();
+
+  const address = undefined;
+  const balance = 0;
+
+  const disconnect = () => {};
+  const open = () => {};
 
   return (
     <>
@@ -100,7 +99,7 @@ export default function WalletConnect({
         </div>
       ) : (
         <Button
-          onClick={() => open()}
+          onClick={() => openModal('WALLET_CONNECT_VIEW')}
           className={cn('shadow-main hover:shadow-large', btnClassName)}
         >
           CONNECT
