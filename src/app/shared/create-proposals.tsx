@@ -9,7 +9,7 @@ import routes from '@/config/routes';
 import { useRouter } from 'next/navigation';
 
 const CreateProposal = () => {
-  useWithBitpac()
+  useWithBitpac();
 
   const { bitpac, pubkeys } = useBitpac();
   const { pubkey } = useWallet();
@@ -19,10 +19,8 @@ const CreateProposal = () => {
     if (!pubkey || !pubkeys.length || !pubkeys.includes(pubkey)) {
       router.push(routes.home);
     }
-  }, [])
+  }, []);
 
-  
-  
   return (
     <section className="mx-auto w-full max-w-[1160px] text-sm">
       <h2 className="mb-5 text-lg font-medium dark:text-gray-100 sm:mb-6 lg:mb-7 xl:text-xl">

@@ -34,17 +34,19 @@ export default function Sidebar({
   const { pubkeys } = useBitpac();
   const { pubkey } = useWallet();
   if (!pubkey || !pubkeys.length || !pubkeys.includes(pubkey)) {
-    menuItems = menuItems.map(item => {
+    menuItems = menuItems.map((item) => {
       if (item.name === 'Vote') {
         return {
           ...item,
-          dropdownItems: item.dropdownItems?.filter((dropdownItem: DropdownItem) => dropdownItem.name !== 'Create proposal')
+          dropdownItems: item.dropdownItems?.filter(
+            (dropdownItem: DropdownItem) =>
+              dropdownItem.name !== 'Create proposal'
+          ),
         };
       }
       return item;
     });
   }
-
 
   const { closeDrawer } = useDrawer();
   const sideBarMenus = menuItems?.map((item) => ({
@@ -85,11 +87,7 @@ export default function Sidebar({
 
       <div className="custom-scrollbar h-[calc(100%-98px)] overflow-hidden overflow-y-auto">
         <div className="px-6 pb-5 2xl:px-8">
-          <AuthorCard
-            image={BitcoinImage}
-            name="Bitcoin"
-            role="Cooperatives"
-          />
+          <AuthorCard image={BitcoinImage} name="Bitcoin" role="Cooperatives" />
 
           <div className="mt-12">
             {sideBarMenus?.map((item, index) => (

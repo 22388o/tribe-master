@@ -18,7 +18,7 @@ import { useWithBitpac } from '@/hooks/useWithBitpac';
 const ProposalsPage = () => {
   const router = useRouter();
   const { bitpac, address } = useBitpac();
-  useWithBitpac()
+  useWithBitpac();
 
   const { utxos } = useAddress(address);
   const {

@@ -7,7 +7,6 @@ export default function ViewTribeScreen() {
   const { bitpac, name } = useBitpac();
   useWithBitpac();
 
-
   return (
     <>
       <div className="mb-12">
