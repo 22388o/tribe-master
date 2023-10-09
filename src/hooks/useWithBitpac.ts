@@ -1,3 +1,5 @@
+'use client';
+
 // hooks/useWithBitpac.js
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';

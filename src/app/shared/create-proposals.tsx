@@ -4,6 +4,7 @@ import CreateProposalForm from '@/components/create-proposal/create-proposal-for
 import useBitpac from '@/hooks/useBitpac';
 import useWallet from '@/hooks/useWallet';
 import { useWithBitpac } from '@/hooks/useWithBitpac';
+import { useEffect } from 'react';
 import routes from '@/config/routes';
 import { useRouter } from 'next/navigation';
 
@@ -14,9 +15,13 @@ const CreateProposal = () => {
   const { pubkey } = useWallet();
   const router = useRouter();
 
-  if (!pubkey || !pubkeys.length || !pubkeys.includes(pubkey)) {
-    router.push(routes.home);
-  }
+  useEffect(() => {
+    if (!pubkey || !pubkeys.length || !pubkeys.includes(pubkey)) {
+      router.push(routes.home);
+    }
+  }, [])
+
+  
   
   return (
     <section className="mx-auto w-full max-w-[1160px] text-sm">
