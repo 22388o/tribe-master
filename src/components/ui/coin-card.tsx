@@ -49,7 +49,7 @@ export function CoinCard({
         <QRCode
           size={220}
           style={{ height: 'auto', maxWidth: '100%', width: '100%' }}
-          value={address ? address : ''}
+          value={address ? `bitcoin:${address}` : ''}
           viewBox={`0 0 256 256`}
           bgColor={color}
         />
