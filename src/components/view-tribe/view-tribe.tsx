@@ -31,7 +31,7 @@ export default function ModernScreen({ bitpac }: { bitpac: Bitpac }) {
     usdBalance,
     logo: BitcoinImage,
     color: '#FDEDD4',
-    address: shortenStr(address),
+    address,
   };
 
   return (
