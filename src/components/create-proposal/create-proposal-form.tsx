@@ -15,6 +15,8 @@ import { nostrPool } from '@/services/nostr';
 import { toast } from 'react-toastify';
 import useWallet from '@/hooks/useWallet';
 import useProposals from '@/hooks/useProposal';
+import useBitcoinPrice from '@/hooks/useBitcoinPrice';
+import { satsToFormattedDollarString } from '@/utils/utils';
 
 export default function CreateProposalForm({ bitpac }: { bitpac: Bitpac }) {
   const router = useRouter();
@@ -22,9 +24,12 @@ export default function CreateProposalForm({ bitpac }: { bitpac: Bitpac }) {
     { address?: string; amount?: number }[]
   >([{}]);
   const { privateKey, pubkey } = useWallet();
-  const { utxos } = useAddress(bitpac.address);
+  const { balance, sats, utxos } = useAddress(bitpac.address);
   const { refetch } = useProposals(bitpac, utxos);
+  const { price } = useBitcoinPrice();
   const [isLoading, setIsLoading] = useState(false)
+
+  const usdBalance = satsToFormattedDollarString(sats, price);
 
   const [description, setDescription] = useState('');
   const [title, setTitle] = useState('');
@@ -171,6 +176,9 @@ export default function CreateProposalForm({ bitpac }: { bitpac: Bitpac }) {
         <h3 className="mb-2 text-base font-medium dark:text-gray-100 xl:text-lg">
           Spend some money
         </h3>
+        
+        <p className='text-xs mb-6 text-gray-600 dark:text-white'>Balance: {usdBalance} USD <span>{sats} sats</span></p>
+
         <p className="mb-5 leading-[1.8] dark:text-gray-300">
           This section is for crafting a proposal that involves spending some
           funds. Please specify the amount to be spent and provide a detailed
@@ -178,6 +186,8 @@ export default function CreateProposalForm({ bitpac }: { bitpac: Bitpac }) {
           considering the value and impact of your proposal based on this
           information.
         </p>
+
+        
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-3">
           <div className="mb-4 flex">
             <div className="flex-grow">
