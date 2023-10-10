@@ -1,9 +1,10 @@
+import SessionStorage, {SessionsStorageKeys} from '@/services/session-storage';
 import { atom, useAtom } from 'jotai';
 
 // Create an atom to store the private key
-const privateKeyAtom = atom('');
-const pubKeyAtom = atom('');
-const nsecAtom = atom('');
+const privateKeyAtom = atom(SessionStorage.get(SessionsStorageKeys.WALLET_PRIV) || '');
+const pubKeyAtom = atom(SessionStorage.get(SessionsStorageKeys.WALLET_PUB) || '');
+const nsecAtom = atom(SessionStorage.get(SessionsStorageKeys.WALLET_NSEC) || '');
 
 // Create a custom hook to use the atom
 const useWallet = () => {
@@ -26,6 +27,11 @@ const useWallet = () => {
     setNsec(nsec);
     // @ts-ignore
     setPubkey(pub);
+
+    // Store the values in SessionStorage
+    SessionStorage.set(SessionsStorageKeys.WALLET_PRIV, priv);
+    SessionStorage.set(SessionsStorageKeys.WALLET_NSEC, nsec);
+    SessionStorage.set(SessionsStorageKeys.WALLET_PUB, pub);
   };
 
   return { privateKey, nsec, pubkey, storePrivateKey };

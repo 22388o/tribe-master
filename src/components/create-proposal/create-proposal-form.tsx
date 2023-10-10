@@ -24,6 +24,7 @@ export default function CreateProposalForm({ bitpac }: { bitpac: Bitpac }) {
   const { privateKey, pubkey } = useWallet();
   const { utxos } = useAddress(bitpac.address);
   const { refetch } = useProposals(bitpac, utxos);
+  const [isLoading, setIsLoading] = useState(false)
 
   const [description, setDescription] = useState('');
   const [title, setTitle] = useState('');
@@ -90,6 +91,7 @@ export default function CreateProposalForm({ bitpac }: { bitpac: Bitpac }) {
 
   async function handleSubmit(e: any) {
     e.preventDefault();
+    setIsLoading(true);
 
     let proposalInputs = [];
     let proposalOutputs = [];
@@ -123,9 +125,11 @@ export default function CreateProposalForm({ bitpac }: { bitpac: Bitpac }) {
 
     const signedEvent = await nostrPool.sign(event, privateKey, pubkey);
     nostrPool.publish(signedEvent);
+    await new Promise(resolve => setTimeout(resolve, 1500));
     toast.info('Proposal created');
     refetch();
     goToProposalsPage();
+    setIsLoading(false);
   }
 
   return (
@@ -228,6 +232,7 @@ export default function CreateProposalForm({ bitpac }: { bitpac: Bitpac }) {
         <Button
           type="submit"
           className="mt-5 rounded-lg !text-sm uppercase tracking-[0.04em]"
+          disabled={isLoading || !title || !description || !privateKey || !pubkey}
         >
           Create Proposal
         </Button>
