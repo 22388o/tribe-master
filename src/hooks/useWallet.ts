@@ -30,8 +30,8 @@ const useWallet = () => {
 
     // Store the values in SessionStorage
     SessionStorage.set(SessionsStorageKeys.WALLET_PRIV, priv);
-    SessionStorage.set(SessionsStorageKeys.WALLET_PUB, nsec);
-    SessionStorage.set(SessionsStorageKeys.WALLET_NSEC, pub);
+    SessionStorage.set(SessionsStorageKeys.WALLET_NSEC, nsec);
+    SessionStorage.set(SessionsStorageKeys.WALLET_PUB, pub);
   };
 
   return { privateKey, nsec, pubkey, storePrivateKey };

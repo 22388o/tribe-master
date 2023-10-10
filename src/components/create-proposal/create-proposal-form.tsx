@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import routes from '@/config/routes';
 import Button from '@/components/ui/button/button';
@@ -25,10 +25,6 @@ export default function CreateProposalForm({ bitpac }: { bitpac: Bitpac }) {
   const { utxos } = useAddress(bitpac.address);
   const { refetch } = useProposals(bitpac, utxos);
   const [isLoading, setIsLoading] = useState(false)
-
-  useEffect(() => {
-    console.log("keys set");
-  }, [privateKey, pubkey])
 
   const [description, setDescription] = useState('');
   const [title, setTitle] = useState('');
