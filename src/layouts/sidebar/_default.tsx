@@ -50,8 +50,7 @@ export default function Sidebar({
         return item;
       });
     }
-  }, [pubkey, pubkeys])
- 
+  }, [pubkey, pubkeys]);
 
   const { closeDrawer } = useDrawer();
   const sideBarMenus = menuItems?.map((item) => ({

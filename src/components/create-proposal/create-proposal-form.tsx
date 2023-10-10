@@ -15,6 +15,8 @@ import { nostrPool } from '@/services/nostr';
 import { toast } from 'react-toastify';
 import useWallet from '@/hooks/useWallet';
 import useProposals from '@/hooks/useProposal';
+import useBitcoinPrice from '@/hooks/useBitcoinPrice';
+import { satsToFormattedDollarString } from '@/utils/utils';
 
 export default function CreateProposalForm({ bitpac }: { bitpac: Bitpac }) {
   const router = useRouter();
@@ -22,9 +24,12 @@ export default function CreateProposalForm({ bitpac }: { bitpac: Bitpac }) {
     { address?: string; amount?: number }[]
   >([{}]);
   const { privateKey, pubkey } = useWallet();
-  const { utxos } = useAddress(bitpac.address);
+  const { sats, utxos } = useAddress(bitpac.address);
   const { refetch } = useProposals(bitpac, utxos);
-  const [isLoading, setIsLoading] = useState(false)
+  const { price } = useBitcoinPrice();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const usdBalance = satsToFormattedDollarString(sats, price);
 
   const [description, setDescription] = useState('');
   const [title, setTitle] = useState('');
@@ -125,7 +130,7 @@ export default function CreateProposalForm({ bitpac }: { bitpac: Bitpac }) {
 
     const signedEvent = await nostrPool.sign(event, privateKey, pubkey);
     nostrPool.publish(signedEvent);
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    await new Promise((resolve) => setTimeout(resolve, 1500));
     toast.info('Proposal created');
     refetch();
     goToProposalsPage();
@@ -171,6 +176,11 @@ export default function CreateProposalForm({ bitpac }: { bitpac: Bitpac }) {
         <h3 className="mb-2 text-base font-medium dark:text-gray-100 xl:text-lg">
           Spend some money
         </h3>
+
+        <p className="mb-6 text-xs text-gray-600 dark:text-white">
+          Balance: {usdBalance} USD <span>{sats} sats</span>
+        </p>
+
         <p className="mb-5 leading-[1.8] dark:text-gray-300">
           This section is for crafting a proposal that involves spending some
           funds. Please specify the amount to be spent and provide a detailed
@@ -178,61 +188,66 @@ export default function CreateProposalForm({ bitpac }: { bitpac: Bitpac }) {
           considering the value and impact of your proposal based on this
           information.
         </p>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-3">
-          <div className="mb-4 flex">
-            <div className="flex-grow">
-              {outputs.map((_, index) => (
-                <div
-                  className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-3"
-                  key={index}
-                >
-                  <Input
-                    type="text"
-                    placeholder="Address"
-                    inputClassName="focus:!ring-0 placeholder:text-[#6B7280]"
-                    onChange={(e) => handleAddressChange(index, e)}
-                  />
-                  <Input
-                    type="number"
-                    placeholder="Amount in sats"
-                    inputClassName="focus:!ring-0 placeholder:text-[#6B7280]"
-                    onChange={(e) => handleAmountChange(index, e)}
-                  />
-                </div>
-              ))}
-            </div>
-            <div className="ml-4 flex items-center">
-              <Button
-                size="mini"
-                color="gray"
-                shape="circle"
-                variant="transparent"
-                onClick={handleAddInput}
-              >
-                <Plus className="h-auto w-3" />
-              </Button>
-              {outputs.length > 1 && (
+
+        {sats && (
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-3">
+            <div className="mb-4 flex">
+              <div className="flex-grow">
+                {outputs.map((_, index) => (
+                  <div
+                    className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-3"
+                    key={index}
+                  >
+                    <Input
+                      type="text"
+                      placeholder="Address"
+                      inputClassName="focus:!ring-0 placeholder:text-[#6B7280]"
+                      onChange={(e) => handleAddressChange(index, e)}
+                    />
+                    <Input
+                      type="number"
+                      placeholder="Amount in sats"
+                      inputClassName="focus:!ring-0 placeholder:text-[#6B7280]"
+                      onChange={(e) => handleAmountChange(index, e)}
+                    />
+                  </div>
+                ))}
+              </div>
+              <div className="ml-4 flex items-center">
                 <Button
                   size="mini"
                   color="gray"
                   shape="circle"
                   variant="transparent"
-                  onClick={handleRemoveInput}
-                  className="ml-2"
+                  onClick={handleAddInput}
                 >
-                  <Minus className="h-auto w-3" />
+                  <Plus className="h-auto w-3" />
                 </Button>
-              )}
+                {outputs.length > 1 && (
+                  <Button
+                    size="mini"
+                    color="gray"
+                    shape="circle"
+                    variant="transparent"
+                    onClick={handleRemoveInput}
+                    className="ml-2"
+                  >
+                    <Minus className="h-auto w-3" />
+                  </Button>
+                )}
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
 
       <div className="mt-6">
         <Button
           type="submit"
           className="mt-5 rounded-lg !text-sm uppercase tracking-[0.04em]"
-          disabled={isLoading || !title || !description || !privateKey || !pubkey}
+          disabled={
+            isLoading || !title || !description || !privateKey || !pubkey
+          }
         >
           Create Proposal
         </Button>
