@@ -40,6 +40,7 @@ const ProposalsPage = () => {
   } = useProposals(bitpac, utxos);
 
   const currentVotes = votes?.filter((v) => v.status === 'active') || [];
+
   const pastVotes = votes?.filter((v) => v.status === 'past') || [];
 
   const onChange = () => {

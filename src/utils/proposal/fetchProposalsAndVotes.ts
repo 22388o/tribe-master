@@ -7,7 +7,6 @@ const fetchProposalsAndVotes = async (
   pubkeys: string[],
   bitpacId: string,
   utxos: any[],
-  threshold: number,
   bitpac: Bitpac
 ): Promise<{ proposals: any[] }> => {
   const proposals = await fetchProposals(pubkeys, bitpacId);
@@ -23,9 +22,7 @@ const fetchProposalsAndVotes = async (
   });
 
   const proposalsData = await Promise.all(
-    proposals.map((proposal) =>
-      getProposal(proposal, utxos, pubkeys, threshold, bitpac)
-    )
+    proposals.map((proposal) => getProposal(proposal, utxos, pubkeys, bitpac))
   );
 
   return { proposals: proposalsData };

@@ -15,10 +15,10 @@ const getProposal = async (
   proposal: any,
   utxos: any[],
   pubkeys: string[],
-  threshold: number = 1,
   bitpac: Bitpac
 ) => {
   const votes = proposal.votes;
+  const threshold = bitpac.threshold || 100000; // Never met the threshold if is not present.
   const { id, pubkey, title, inputs, outputs, description } =
     getProposalContent(proposal);
   const { approvedVotes, rejectedVotes } = getVoteCounts(votes);
@@ -38,7 +38,7 @@ const getProposal = async (
     utxos,
     outputs
   );
-
+  
   // Let's try to send the transaction
   if (
     inputUtxosAreOurs &&
