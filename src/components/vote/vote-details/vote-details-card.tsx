@@ -12,7 +12,7 @@ import VotePoll from '@/components/vote/vote-details/vote-poll';
 import VoteActions from '@/components/vote/vote-details/vote-outputs';
 import VoterTable from '@/components/vote/vote-details/voter-table';
 import { fadeInBottom } from '@/lib/framer-motion/fade-in-bottom';
-
+import { toast } from 'react-toastify';
 import useWallet from '@/hooks/useWallet';
 import { useModal } from '@/components/modal-views/context';
 import { getApprovalSigs } from '@/services/tribe';
@@ -55,7 +55,9 @@ function VoteActionButton({
     };
 
     const signedEvent = await nostrPool.sign(reply, privateKey, pubkey);
-    await nostrPool.publish(signedEvent);
+    nostrPool.publish(signedEvent);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    toast.info(`${vote.title} approved`);
     // Update proposal
     if (onChange) {
       onChange();
@@ -75,7 +77,9 @@ function VoteActionButton({
     };
 
     const signedEvent = await nostrPool.sign(reply, privateKey, pubkey);
-    await nostrPool.publish(signedEvent);
+    nostrPool.publish(signedEvent);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    toast.info(`${vote.title} rejected`);
     // Update proposal
     if (onChange) {
       onChange();

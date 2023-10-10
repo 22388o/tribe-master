@@ -28,23 +28,23 @@ export const createTransaction = async (
   });
 
   const validSigs = [];
-  for (let i = 0; i < inputs.length; i++) {
+  for (let i = 0; i < allSignatures[0].sigs.length; i++) {
     const sighash = Signer.taproot.hash(txdata, i, { extension: tapleaf });
     try {
       const isValid = await nobleSecp256k1.schnorr.verify(
         // @ts-ignore
-        allSignatures[i].sigs[i],
+        allSignatures[0].sigs[i],
         bytesToHex(sighash),
-        allSignatures[i].pubkey
+        allSignatures[0].pubkey
       );
       if (!isValid) {
-        return false;
+        continue;
       }
     } catch (e) {
-      return false;
+      continue;
     }
 
-    validSigs.push(allSignatures[i]);
+    validSigs.push(allSignatures[0].sigs[i]);
   }
 
   // So far everything looks good. Let's continue broadcasting the transaction

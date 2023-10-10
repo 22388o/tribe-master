@@ -14,11 +14,11 @@ const isLoadingAtom = atom(false);
 const errorAtom = atom<any>(null);
 
 const useProposals = (bitpac: Bitpac, utxos?: any) => {
-  const { pubkeys = [], id = '', threshold = 1 } = bitpac || {};
+  const { pubkeys = [], id = '' } = bitpac || {};
 
   const { refetch } = useQuery(
     ['proposals', pubkeys, id],
-    () => fetchProposalsAndVotes(pubkeys, id, utxos, threshold, bitpac),
+    () => fetchProposalsAndVotes(pubkeys, id, utxos, bitpac),
     {
       onSuccess: (data) => {
         if (data?.proposals?.length && id) {
