@@ -120,6 +120,7 @@ export default function CreateProposalForm({ bitpac }: { bitpac: Bitpac }) {
       description || 'No description',
     ];
 
+    console.log("he")
     const event = {
       content: JSON.stringify(proposal),
       created_at: Math.floor(Date.now() / 1000),
