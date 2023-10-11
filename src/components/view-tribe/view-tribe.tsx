@@ -10,12 +10,14 @@ import { satsToFormattedDollarString } from '@/utils/utils';
 import useAddress from '@/hooks/useAddress';
 import useBitcoinPrice from '@/hooks/useBitcoinPrice';
 import useProposals from '@/hooks/useProposal';
+import useAddressTxs from '@/hooks/useAddressTxs';
 
 export default function ModernScreen({ bitpac }: { bitpac: Bitpac }) {
   const address = bitpac.address;
   const { balance, sats, utxos } = useAddress(address);
   const { price } = useBitcoinPrice();
   const { current: votes = [], isLoading } = useProposals(bitpac, utxos);
+  const { txs } = useAddressTxs(address, price);
 
   const approved =
     votes?.filter(
@@ -66,9 +68,11 @@ export default function ModernScreen({ bitpac }: { bitpac: Bitpac }) {
         <VoteList votes={approved} isLoading={isLoading} />
       </div>
 
-      <div className="my-8 sm:my-10">
-        <TransactionTable address={address} price={price} />
-      </div>
+      {txs?.length && (
+        <div className="my-8 sm:my-10">
+          <TransactionTable transactions={txs} />
+        </div>
+      )}
     </>
   );
 }

@@ -1,6 +1,6 @@
 'use client';
 import cn from 'classnames';
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   useTable,
   useResizeColumns,
@@ -18,6 +18,7 @@ import useAddressTxs from '@/hooks/useAddressTxs';
 import { shortenStr } from '@/utils/utils';
 import { ExportIcon } from '@/components/icons/export-icon';
 import { API_ENDPOINTS } from '@/data/utils/endpoints';
+import { AddressTx } from '@/types';
 
 const COLUMNS = [
   {
@@ -91,14 +92,11 @@ const COLUMNS = [
 ];
 
 export default function TransactionTable({
-  address,
-  price,
+  transactions,
 }: {
-  address: string;
-  price: number;
+  transactions: AddressTx[];
 }) {
-  const { txs } = useAddressTxs(address, price);
-  const data = React.useMemo(() => txs || [], []);
+  const data = React.useMemo(() => transactions || [], []);
   const columns = React.useMemo(() => COLUMNS, []);
 
   const {
