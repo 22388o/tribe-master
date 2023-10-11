@@ -10,7 +10,7 @@ import { getSignatures } from './getSignatures';
 import { getOutputActions } from './getOutputActions';
 import { getVoters } from './getVoters';
 import { createTransaction } from './createTransaction';
-import { toast } from 'react-toastify'
+import { toast } from 'react-toastify';
 
 const getProposal = async (
   proposal: any,
@@ -64,7 +64,7 @@ const getProposal = async (
 
       if (txid) {
         txId = txid;
-        toast.info(`Transaction created: ${txId}`)
+        toast.info(`Transaction created: ${txId}`);
       }
     }
   }

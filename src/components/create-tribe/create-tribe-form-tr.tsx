@@ -90,7 +90,7 @@ export default function CreateTribeTRForm() {
       SessionStorage.set(SessionsStorageKeys.TRIBE, signedEvent);
       nostrPool.publish(signedEvent);
       toast.info(`${name} created`);
-      
+
       goToHomePage();
     } catch (e: any) {
       toast.error(e.message);

@@ -100,8 +100,10 @@ export default function CreateProposalForm({ bitpac }: { bitpac: Bitpac }) {
     setIsLoading(true);
 
     if (!pubkey || !bitpac.pubkeys.length || !bitpac.pubkeys.includes(pubkey)) {
-      toast.error('Please reconnect your wallet, looks like you do not belong to the bitpac');
-      logout()
+      toast.error(
+        'Please reconnect your wallet, looks like you do not belong to the bitpac'
+      );
+      logout();
       // Go home
       router.push(routes.home);
       return;

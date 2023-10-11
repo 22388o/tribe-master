@@ -48,11 +48,11 @@ export const createTransaction = async (
         console.error(e);
         continue;
       }
-  
+
       validSigs.push(signature.sigs[j]);
     }
-  };
-  
+  }
+
   // So far everything looks good. Let's continue broadcasting the transaction
   if (validSigs.length >= threshold) {
     // loop through event content
@@ -61,11 +61,11 @@ export const createTransaction = async (
 
       const sigsArray: any[] = [];
       pubkeys.forEach((item) => {
-        const pubkeySig = allSignatures.find(a => a.pubkey === item);
+        const pubkeySig = allSignatures.find((a) => a.pubkey === item);
         if (!sigsArray.includes(pubkeySig.sigs[i])) {
-          sigsArray.push(pubkeySig.sigs[i])
+          sigsArray.push(pubkeySig.sigs[i]);
         } else {
-          sigsArray.push('')
+          sigsArray.push('');
         }
       });
 
