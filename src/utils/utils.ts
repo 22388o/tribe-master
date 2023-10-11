@@ -70,20 +70,37 @@ async function checkIfTxHappened(txid: string) {
 
 async function pushTx(rawtx: string) {
   try {
-    const response = await fetch(
-      `${API_ENDPOINTS.MEMPOOL_API}/tx`,
-      {
-        method: 'POST',
-        body: rawtx,
-      }
-    );
+    const response = await fetch(`${API_ENDPOINTS.MEMPOOL_API}/tx`, {
+      method: 'POST',
+      body: rawtx,
+    });
 
     const responseData = await response.json();
-    
+
     return responseData;
   } catch (error) {
     console.error(error);
     // throw new Error('Network response was not ok');
+  }
+
+  return null;
+}
+
+async function getAddressTxs(address: string) {
+  try {
+    const response = await fetch(
+      `${API_ENDPOINTS.MEMPOOL_API}/address/${address}/txs`,
+      {
+        method: 'GET',
+      }
+    );
+
+    const responseData = await response.json();
+
+    return responseData;
+  } catch (error) {
+    console.error(error);
+    throw new Error('Network response was not ok');
   }
 
   return null;
@@ -100,4 +117,5 @@ export {
   pubFromPriv,
   checkIfTxHappened,
   pushTx,
+  getAddressTxs,
 };

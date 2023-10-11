@@ -6,7 +6,7 @@ import VoteList from '@/components/vote/vote-list';
 import MemberList from '@/components/members/members-list';
 import { Bitpac } from '@/types';
 import BitcoinImage from '@/assets/images/coin/bitcoin.svg';
-import { shortenStr, satsToFormattedDollarString } from '@/utils/utils';
+import { satsToFormattedDollarString } from '@/utils/utils';
 import useAddress from '@/hooks/useAddress';
 import useBitcoinPrice from '@/hooks/useBitcoinPrice';
 import useProposals from '@/hooks/useProposal';
@@ -67,7 +67,7 @@ export default function ModernScreen({ bitpac }: { bitpac: Bitpac }) {
       </div>
 
       <div className="my-8 sm:my-10">
-        <TransactionTable />
+        <TransactionTable address={address} price={price} />
       </div>
     </>
   );

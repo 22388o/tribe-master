@@ -38,7 +38,7 @@ const getProposal = async (
     utxos,
     outputs
   );
-  
+
   // Let's try to send the transaction
   if (
     inputUtxosAreOurs &&

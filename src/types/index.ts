@@ -195,3 +195,14 @@ export type DropdownItem = {
   name: string;
   href: string;
 };
+
+export type AddressTx = {
+  id: string;
+  transactionType: 'send' | 'receive';
+  date: number;
+  status: 'Pending' | 'Confirmed';
+  amount: {
+    balance: string;
+    usdBalance: string;
+  };
+};

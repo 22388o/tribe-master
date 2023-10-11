@@ -1,5 +1,5 @@
 'use client';
-
+import cn from 'classnames';
 import React from 'react';
 import {
   useTable,
@@ -13,21 +13,28 @@ import Scrollbar from '@/components/ui/scrollbar';
 import { ChevronDown } from '@/components/icons/chevron-down';
 import { LongArrowRight } from '@/components/icons/long-arrow-right';
 import { LongArrowLeft } from '@/components/icons/long-arrow-left';
-import { LinkIcon } from '@/components/icons/link-icon';
-import { TransactionData } from '@/data/static/transaction-data';
+import { ArrowUp } from '@/components/icons/arrow-up';
+import useAddressTxs from '@/hooks/useAddressTxs';
+import { shortenStr } from '@/utils/utils';
+import { ExportIcon } from '@/components/icons/export-icon';
+import { API_ENDPOINTS } from '@/data/utils/endpoints';
 
 const COLUMNS = [
   {
     Header: 'ID',
     accessor: 'id',
-    minWidth: 60,
-    maxWidth: 80,
-  },
-  {
-    Header: 'Type',
-    accessor: 'transactionType',
-    minWidth: 60,
-    maxWidth: 80,
+    // @ts-ignore
+    Cell: ({ cell: { value } }) => (
+      <a
+        href={`${API_ENDPOINTS.MEMPOOL}/tx/${value}`}
+        target="_blank"
+        className="ml-1 inline-flex items-center gap-3 font-medium text-gray-900 hover:underline hover:opacity-90 focus:underline focus:opacity-90 dark:text-gray-100"
+      >
+        {shortenStr(value)} <ExportIcon className="h-auto w-3" />
+      </a>
+    ),
+    minWidth: 100,
+    maxWidth: 180,
   },
   {
     Header: () => <div className="ltr:ml-auto rtl:mr-auto">Date</div>,
@@ -36,18 +43,8 @@ const COLUMNS = [
     Cell: ({ cell: { value } }) => (
       <div className="ltr:text-right rtl:text-left">{value}</div>
     ),
-    minWidth: 160,
-    maxWidth: 220,
-  },
-  {
-    Header: () => <div className="ltr:ml-auto rtl:mr-auto">Asset</div>,
-    accessor: 'symbol',
-    // @ts-ignore
-    Cell: ({ cell: { value } }) => (
-      <div className="ltr:text-right rtl:text-left">{value}</div>
-    ),
-    minWidth: 80,
-    maxWidth: 120,
+    minWidth: 60,
+    maxWidth: 80,
   },
   {
     Header: () => <div className="ltr:ml-auto rtl:mr-auto">Status</div>,
@@ -60,28 +57,28 @@ const COLUMNS = [
     maxWidth: 180,
   },
   {
-    Header: () => <div className="ltr:ml-auto rtl:mr-auto">Address</div>,
-    accessor: 'address',
-    // @ts-ignore
-    Cell: ({ cell: { value } }) => (
-      <div className="flex items-center justify-end">
-        <LinkIcon className="h-[18px] w-[18px] ltr:mr-2 rtl:ml-2" /> {value}
-      </div>
-    ),
-    minWidth: 220,
-    maxWidth: 280,
-  },
-  {
     Header: () => <div className="ltr:ml-auto rtl:mr-auto">Amount</div>,
     accessor: 'amount',
     // @ts-ignore
-    Cell: ({ cell: { value } }) => (
+    Cell: ({ cell: { value }, row: { original } }) => (
       <div className="-tracking-[1px] ltr:text-right rtl:text-left">
         <strong className="mb-0.5 flex justify-end text-base md:mb-1.5 md:text-lg lg:text-base 3xl:text-2xl">
           {value.balance}
           <span className="inline-block ltr:ml-1.5 rtl:mr-1.5 md:ltr:ml-2 md:rtl:mr-2">
             BTC
           </span>
+          <div
+            className={cn(
+              'ml-2',
+              original.transactionType === 'receive'
+                ? 'text-green-500'
+                : 'text-red-500',
+              original.transactionType === 'receive' ? '' : 'rotate-180',
+              original.transactionType === 'receive' ? 'mt-1' : 'mb-2'
+            )}
+          >
+            <ArrowUp />
+          </div>
         </strong>
         <span className="text-gray-600 dark:text-gray-400">
           ${value.usdBalance}
@@ -93,8 +90,15 @@ const COLUMNS = [
   },
 ];
 
-export default function TransactionTable() {
-  const data = React.useMemo(() => TransactionData, []);
+export default function TransactionTable({
+  address,
+  price,
+}: {
+  address: string;
+  price: number;
+}) {
+  const { txs } = useAddressTxs(address, price);
+  const data = React.useMemo(() => txs || [], []);
   const columns = React.useMemo(() => COLUMNS, []);
 
   const {
