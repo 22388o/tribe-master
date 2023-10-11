@@ -28,25 +28,31 @@ export const createTransaction = async (
   });
 
   const validSigs = [];
-  for (let i = 0; i < allSignatures[0].sigs.length; i++) {
-    const sighash = Signer.taproot.hash(txdata, i, { extension: tapleaf });
-    try {
-      const isValid = await nobleSecp256k1.schnorr.verify(
-        // @ts-ignore
-        allSignatures[0].sigs[i],
-        bytesToHex(sighash),
-        allSignatures[0].pubkey
-      );
-      if (!isValid) {
+  for (let i = 0; i < allSignatures.length; i++) {
+    const signature = allSignatures[i];
+
+    for (let j = 0; j < signature.sigs.length; j++) {
+      const sighash = Signer.taproot.hash(txdata, j, { extension: tapleaf });
+      try {
+        const msgHash = bytesToHex(sighash);
+        const isValid = await nobleSecp256k1.schnorr.verify(
+          signature.sigs[j],
+          msgHash,
+          signature.pubkey
+        );
+
+        if (!isValid) {
+          continue;
+        }
+      } catch (e) {
+        console.error(e);
         continue;
       }
-    } catch (e) {
-      continue;
+  
+      validSigs.push(signature.sigs[j]);
     }
-
-    validSigs.push(allSignatures[0].sigs[i]);
-  }
-
+  };
+  
   // So far everything looks good. Let's continue broadcasting the transaction
   if (validSigs.length >= threshold) {
     // loop through event content
@@ -55,10 +61,11 @@ export const createTransaction = async (
 
       const sigsArray: any[] = [];
       pubkeys.forEach((item) => {
-        if (votes.some((vote: any) => vote.pubkey === item)) {
-          sigsArray.push(allSignatures[0].sigs[i]);
+        const pubkeySig = allSignatures.find(a => a.pubkey === item);
+        if (!sigsArray.includes(pubkeySig.sigs[i])) {
+          sigsArray.push(pubkeySig.sigs[i])
         } else {
-          sigsArray.push('');
+          sigsArray.push('')
         }
       });
 
@@ -76,7 +83,6 @@ export const createTransaction = async (
 
     if (txdata) {
       const txId = await pushTx(Tx.encode(txdata).hex);
-      console.log('pushing ', Tx.encode(txdata).hex, txId);
       return txId;
     }
   }

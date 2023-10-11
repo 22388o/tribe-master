@@ -17,6 +17,7 @@ import useWallet from '@/hooks/useWallet';
 import useProposals from '@/hooks/useProposal';
 import useBitcoinPrice from '@/hooks/useBitcoinPrice';
 import { satsToFormattedDollarString } from '@/utils/utils';
+import logout from '@/utils/logout';
 
 export default function CreateProposalForm({ bitpac }: { bitpac: Bitpac }) {
   const router = useRouter();
@@ -97,6 +98,14 @@ export default function CreateProposalForm({ bitpac }: { bitpac: Bitpac }) {
   async function handleSubmit(e: any) {
     e.preventDefault();
     setIsLoading(true);
+
+    if (!pubkey || !bitpac.pubkeys.length || !bitpac.pubkeys.includes(pubkey)) {
+      toast.error('Please reconnect your wallet, looks like you do not belong to the bitpac');
+      logout()
+      // Go home
+      router.push(routes.home);
+      return;
+    }
 
     let proposalInputs = [];
     let proposalOutputs = [];

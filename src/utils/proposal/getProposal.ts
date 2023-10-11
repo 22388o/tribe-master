@@ -10,6 +10,7 @@ import { getSignatures } from './getSignatures';
 import { getOutputActions } from './getOutputActions';
 import { getVoters } from './getVoters';
 import { createTransaction } from './createTransaction';
+import { toast } from 'react-toastify'
 
 const getProposal = async (
   proposal: any,
@@ -24,7 +25,8 @@ const getProposal = async (
   const { approvedVotes, rejectedVotes } = getVoteCounts(votes);
   const { acceptedPercentage, rejectedPercentage } = calculateVotePercentages(
     approvedVotes,
-    rejectedVotes
+    rejectedVotes,
+    threshold
   );
 
   let txId = await checkTx(inputs, outputs);
@@ -51,7 +53,7 @@ const getProposal = async (
     const allSignatures = getSignatures(votes);
     // We are ready to send, since we have all the signatures ready
     if (allSignatures.length >= threshold) {
-      txId = await createTransaction(
+      const txid = await createTransaction(
         inputs,
         outputs,
         pubkeys,
@@ -59,6 +61,11 @@ const getProposal = async (
         threshold,
         votes
       );
+
+      if (txid) {
+        txId = txid;
+        toast.info(`Transaction created: ${txId}`)
+      }
     }
   }
 
