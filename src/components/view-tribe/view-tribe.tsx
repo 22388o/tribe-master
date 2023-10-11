@@ -68,7 +68,7 @@ export default function ModernScreen({ bitpac }: { bitpac: Bitpac }) {
         <VoteList votes={approved} isLoading={isLoading} />
       </div>
 
-      {txs?.length && (
+      {txs?.length > 0 && (
         <div className="my-8 sm:my-10">
           <TransactionTable transactions={txs} />
         </div>
