@@ -75,8 +75,7 @@ async function pushTx(rawtx: string) {
       body: rawtx,
     });
 
-    const responseData = await response.json();
-
+    const responseData = await response.text();
     return responseData;
   } catch (error) {
     console.error(error);
