@@ -24,7 +24,8 @@ Both participants can make proposals and submit votes to existing proposals, pas
 
 ## Roadmap
 
-- [ ] Release alpha software
+- [ ] Ordinals
+- [ ] BTC address
 
 ## Status
 
