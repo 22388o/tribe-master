@@ -5,12 +5,8 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        hostname: 'image.nostr.build',
-      },
-      {
-        hostname: 'nostr.build',
-      },
-    ],
+        hostname: '**',
+      }],
     domains: ['res.cloudinary.com'],
   },
   ...(process.env.NODE_ENV === 'production' && {
