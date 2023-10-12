@@ -3,6 +3,10 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
+    remotePatterns: [
+      {
+        hostname: '**',
+      }],
     domains: ['res.cloudinary.com'],
   },
   ...(process.env.NODE_ENV === 'production' && {
