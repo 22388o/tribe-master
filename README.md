@@ -25,7 +25,7 @@ Both participants can make proposals and submit votes to existing proposals, pas
 ## Roadmap
 
 - [ ] Ordinals
-- [ ] BTC address
+- [x] BTC address (WIP)
 
 ## Status
 
