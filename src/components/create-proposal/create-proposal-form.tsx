@@ -35,6 +35,7 @@ export default function CreateProposalForm({ bitpac }: { bitpac: Bitpac }) {
   const [description, setDescription] = useState('');
   const [title, setTitle] = useState('');
 
+  
   function goToProposalsPage() {
     setTimeout(() => {
       router.push(routes.proposals);
@@ -163,6 +164,8 @@ export default function CreateProposalForm({ bitpac }: { bitpac: Bitpac }) {
           placeholder="Enter title of your proposal"
           value={title}
           onChange={handleOnChangeTitle}
+          required
+          maxLength={20}
         />
       </div>
 
@@ -180,6 +183,8 @@ export default function CreateProposalForm({ bitpac }: { bitpac: Bitpac }) {
           inputClassName="md:h-32 xl:h-36"
           value={description}
           onChange={handleOnChangeDescription}
+          required
+          maxLength={200}
         />
       </div>
 
@@ -214,12 +219,16 @@ export default function CreateProposalForm({ bitpac }: { bitpac: Bitpac }) {
                       placeholder="Address"
                       inputClassName="focus:!ring-0 placeholder:text-[#6B7280]"
                       onChange={(e) => handleAddressChange(index, e)}
+                      required
+                      pattern='^(tb1p|[13])[a-zA-HJ-NP-Z0-9]{25,64}$'
                     />
                     <Input
                       type="number"
                       placeholder="Amount in sats"
                       inputClassName="focus:!ring-0 placeholder:text-[#6B7280]"
                       onChange={(e) => handleAmountChange(index, e)}
+                      min={546}
+                      required
                     />
                   </div>
                 ))}
@@ -257,7 +266,8 @@ export default function CreateProposalForm({ bitpac }: { bitpac: Bitpac }) {
           type="submit"
           className="mt-5 rounded-lg !text-sm uppercase tracking-[0.04em]"
           disabled={
-            isLoading || !title || !description || !privateKey || !pubkey
+            isLoading || 
+            !title || !description || !privateKey || !pubkey
           }
         >
           Create Proposal

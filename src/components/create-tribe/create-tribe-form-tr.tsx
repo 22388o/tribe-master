@@ -111,6 +111,7 @@ export default function CreateTribeTRForm() {
           type="text"
           placeholder="Enter your bitpac name"
           onChange={handleOnChangeName}
+          required
         />
       </div>
 
@@ -124,9 +125,13 @@ export default function CreateTribeTRForm() {
             <Input
               key={index}
               value={input}
+              minLength={63}
+              maxLength={67}
               type="text"
               placeholder="Enter member npub"
               onChange={(e) => handleInputChange(index, e)}
+              required
+            
             />
           ))}
         </div>
@@ -168,6 +173,7 @@ export default function CreateTribeTRForm() {
           max={inputs.length}
           placeholder="How many voters?"
           onChange={handleOnChangeThreshold}
+          required
         />
       </div>
 

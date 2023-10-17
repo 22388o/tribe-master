@@ -37,7 +37,8 @@ export default function CreateTribe() {
           </div>
         </TabPanel>
         {/* Place holders for upcomming Nostr and ordinals tabs! */}
-        <TabPanel className="focus:outline-none"></TabPanel>
+        <TabPanel className="focus:outline-none">
+        </TabPanel>
         <TabPanel className="focus:outline-none"></TabPanel>
       </ParamTab>
     </Suspense>
