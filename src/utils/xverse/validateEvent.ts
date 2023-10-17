@@ -19,16 +19,14 @@ const validateEvent = (event: any, bitpac: Bitpac) => {
     return false;
   }
 
-
-
   const address = getNostrTagValue(Tags.ADDRESS, event.tags);
   const sig = getNostrTagValue(Tags.WALLET_SIG, event.tags);
   const parentEventId = getNostrTagValue(Tags.PARENT_EVENT_ID, event.tags);
-  
+
   if (!sig) {
     return false;
   }
-  
+
   const sigBase64 = Buffer.from(sig, 'hex').toString('base64');
 
   const hashedEvent = {
@@ -46,7 +44,9 @@ const validateEvent = (event: any, bitpac: Bitpac) => {
   // verify BIP-322 signature
   try {
     const isValid =
-      address && sig ? verifyBIP322Signature(address, eventHash, sigBase64) : false;
+      address && sig
+        ? verifyBIP322Signature(address, eventHash, sigBase64)
+        : false;
     return isValid;
   } catch (e) {
     console.error(e);

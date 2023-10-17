@@ -148,7 +148,7 @@ export default function CreateProposalForm({ bitpac }: { bitpac: Bitpac }) {
 
     if (provider === Provider.XVERSE) {
       try {
-        // we add a tag with the signature, so that can be later on validated. 
+        // we add a tag with the signature, so that can be later on validated.
         event = await signXverseEvent(event, xverseAddress, bitpac);
       } catch (e) {
         toast.error(e.message);

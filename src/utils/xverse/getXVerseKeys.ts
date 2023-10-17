@@ -34,8 +34,8 @@ export async function getXverseKeys(): Promise<WalletKeys> {
         response.addresses.find(
           (address) => address.purpose === 'ordinals'
         ) || { publicKey: '', address: '' };
-      
-        const { publicKey: xPaymentPublicKey, address: xPaymentAddress } =
+
+      const { publicKey: xPaymentPublicKey, address: xPaymentAddress } =
         response.addresses.find((address) => address.purpose === 'payment') || {
           publicKey: '',
           address: '',

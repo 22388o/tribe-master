@@ -18,7 +18,7 @@ const useProposals = (bitpac: Bitpac, utxos?: any) => {
 
   const { refetch } = useQuery(
     ['proposals', pubkeys, id],
-    () => fetchProposalsAndVotes(pubkeys, id, utxos, bitpac),
+    () => fetchProposalsAndVotes(pubkeys, utxos, bitpac),
     {
       onSuccess: (data) => {
         if (data?.proposals?.length && id) {

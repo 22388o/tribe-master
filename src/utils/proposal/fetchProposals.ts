@@ -31,11 +31,13 @@ const fetchProposals = async (
       ];
 
   let proposals = (await nostrPool.list(filter)) || [];
-  
+
   // We must filter out invalid events and events that the pubkey doesn't belong to the pac.
-  return  proposals.filter((proposal) => {
-    return validateEvent(proposal, bitpac);
-  }).sort((a, b) => b.created_at - a.created_at);
+  return proposals
+    .filter((proposal) => {
+      return validateEvent(proposal, bitpac);
+    })
+    .sort((a, b) => b.created_at - a.created_at);
 };
 
 export default fetchProposals;

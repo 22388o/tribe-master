@@ -42,6 +42,7 @@ function VoteActionButton({
   const onApprove = async () => {
     // We don't turn on the button again, since we want to have the button disabled from now on.
     setIsLoading(true);
+
     const { inputs, outputs, bitpac, id } = vote;
     const allSigs = getApprovalSigs({
       inputs,
@@ -63,7 +64,7 @@ function VoteActionButton({
 
     if (provider === Provider.XVERSE) {
       try {
-        // we add a tag with the signature, so that can be later on validated. 
+        // we add a tag with the signature, so that can be later on validated.
         reply = await signXverseEvent(reply, address, bitpac);
       } catch (e) {
         toast.error(e.message);
@@ -86,18 +87,36 @@ function VoteActionButton({
   };
 
   const onDeny = async () => {
-    const { id } = vote;
+    const { id, bitpac } = vote;
     setIsLoading(true);
 
-    const reply = {
+    let reply = {
       content: '',
       created_at: Math.floor(Date.now() / 1000),
       kind: 2860,
-      tags: [['e', id]],
+      tags: [
+        [Tags.PARENT_EVENT_ID, id],
+        [Tags.PUBKEY, pubkey],
+      ],
       pubkey: pubkey,
     };
 
-    const signedEvent = await nostrPool.sign(reply, privateKey, pubkey);
+    if (provider === Provider.XVERSE) {
+      try {
+        // we add a tag with the signature, so that can be later on validated.
+        reply = await signXverseEvent(reply, address, bitpac);
+      } catch (e) {
+        toast.error(e.message);
+        return;
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    const pk = provider === Provider.XVERSE ? undefined : privateKey;
+    const pbk = provider === Provider.XVERSE ? undefined : pubkey;
+
+    const signedEvent = await nostrPool.sign(reply, pk, pbk);
     nostrPool.publish(signedEvent);
     await new Promise((resolve) => setTimeout(resolve, 1000));
     toast.info(`${vote.title} rejected`);

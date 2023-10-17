@@ -5,7 +5,6 @@ import getProposal from './getProposal';
 
 const fetchProposalsAndVotes = async (
   pubkeys: string[],
-  bitpacId: string,
   utxos: any[],
   bitpac: Bitpac
 ): Promise<{ proposals: any[] }> => {

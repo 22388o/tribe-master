@@ -68,11 +68,10 @@ class NostrRelay {
       pbk = '';
     }
 
-    const privkey =
-    pk || bytesToHex(nobleSecp256k1.utils.randomPrivateKey());
+    const privkey = pk || bytesToHex(nobleSecp256k1.utils.randomPrivateKey());
     // @ts-ignore
     const pubkey =
-    pbk || nobleSecp256k1.getPublicKey(privkey, true).substring(2);
+      pbk || nobleSecp256k1.getPublicKey(privkey, true).substring(2);
 
     const newEvent = this.getEvent(event, pubkey);
 
