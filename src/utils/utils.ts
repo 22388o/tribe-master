@@ -1,7 +1,7 @@
 import { API_ENDPOINTS } from '@/data/utils/endpoints';
 import { bech32 } from 'bech32';
 import * as nobleSecp256k1 from 'noble-secp256k1';
-import axios from 'axios';
+const { Verifier } = require('bip322-js');
 
 const bytesToHex = (bytes: any) => {
   return bytes.reduce(
@@ -105,6 +105,14 @@ async function getAddressTxs(address: string) {
   return null;
 }
 
+function toXOnly(key: any) {
+  return key.length === 33 ? key.slice(1, 33) : key;
+}
+
+function verifyBIP322Signature(address: string, message: string, sig: string) {
+  return Verifier.verifySignature(address, message, sig);
+}
+
 export {
   bytesToHex,
   getNostrTagValue,
@@ -117,4 +125,6 @@ export {
   checkIfTxHappened,
   pushTx,
   getAddressTxs,
+  toXOnly,
+  verifyBIP322Signature,
 };

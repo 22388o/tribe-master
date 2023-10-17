@@ -178,6 +178,7 @@ export interface Bitpac {
   pubkeys: string[];
   threshold: number;
   address: string;
+  provider?: string;
 }
 
 export interface EventWithVotes extends Event<number> {

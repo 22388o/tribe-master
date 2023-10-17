@@ -5,6 +5,8 @@ const SessionsStorageKeys = {
   WALLET_PRIV: 'WALLET_PRIV',
   WALLET_PUB: 'WALLET_PUB',
   WALLET_NSEC: 'WALLET_NSEC',
+  WALLET_PROVIDER: 'WALLET_PROVIDER',
+  WALLET_ADDRESS: 'WALLET_ADDRESS',
 };
 
 const SessionStorage = {

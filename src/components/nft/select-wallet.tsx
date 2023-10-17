@@ -1,20 +1,20 @@
 'use client';
 
 /* eslint-disable react-hooks/exhaustive-deps */
-// import Image from '@/components/ui/image';
-// import metamaskLogo from '@/assets/images/metamask.svg';
+import Image from '@/components/ui/image';
+import metamaskLogo from '@/assets/images/xverse-white.png';
 import Button from '@/components/ui/button/button';
 import Input from '@/components/ui/forms/input';
-import InputLabel from '@/components/ui/input-label';
-import useWallet from '@/hooks/useWallet';
+import useWallet, { Provider } from '@/hooks/useWallet';
 import { privkeyFromNsec, pubFromPriv } from '@/utils/utils';
 import { useState } from 'react';
 import { useModal } from '../modal-views/context';
+import { toast } from 'react-toastify';
 
 export default function SelectWallet({ ...props }) {
   const [name, setName] = useState('');
   const { closeModal } = useModal();
-  const { storePrivateKey } = useWallet();
+  const { storePrivateKey, connect } = useWallet();
   const [hasError, setHasError] = useState(false);
 
   async function handleSubmit(e: any) {
@@ -29,6 +29,14 @@ export default function SelectWallet({ ...props }) {
     } catch (e) {
       console.error('Invalid nsec');
       setHasError(true);
+    }
+  }
+
+  async function onConnectXVerse() {
+    try {
+      await connect({ provider: Provider.XVERSE, callback: closeModal });
+    } catch (e: any) {
+      toast.error(e.message);
     }
   }
 
@@ -78,15 +86,15 @@ export default function SelectWallet({ ...props }) {
         </Button>
       </form>
 
-      {/* <div
-        className="mt-12 flex h-14 w-full cursor-pointer items-center justify-between rounded-lg bg-gradient-to-l from-[#ffdc24] to-[#ff5c00] px-4 text-base text-white transition-all hover:-translate-y-0.5"
-        onClick={() => {}}
+      <div
+        className="mt-12 flex h-14 w-full cursor-pointer items-center justify-between rounded-lg bg-gradient-to-l from-[#1a1a1a] to-[#e77935] px-4 text-base text-white transition-all hover:-translate-y-0.5"
+        onClick={onConnectXVerse}
       >
-        <span>MetaMask</span>
+        <span>XVERSE</span>
         <span className="h-auto w-9">
           <Image src={metamaskLogo} alt="metamask" width={36} />
         </span>
-      </div> */}
+      </div>
     </div>
   );
 }

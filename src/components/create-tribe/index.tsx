@@ -3,6 +3,7 @@ import cn from 'classnames';
 import ParamTab, { TabPanel } from '@/components/ui/param-tab';
 import Loader from '@/components/ui/loader';
 import CreateTribeTRForm from './create-tribe-form-tr';
+import CreateTribeNostrForm from './create-tribe-form-nostr';
 
 const tabMenu = [
   {
@@ -13,7 +14,7 @@ const tabMenu = [
   {
     title: 'Bitcoin TR Address',
     path: 'pubkeys',
-    disabled: true,
+    disabled: false,
   },
   {
     title: 'Ordinals',
@@ -33,11 +34,13 @@ export default function CreateTribe() {
               'md:grid-cols-1'
             )}
           >
-            <CreateTribeTRForm />
+            <CreateTribeNostrForm />
           </div>
         </TabPanel>
         {/* Place holders for upcomming Nostr and ordinals tabs! */}
-        <TabPanel className="focus:outline-none"></TabPanel>
+        <TabPanel className="focus:outline-none">
+          <CreateTribeTRForm />
+        </TabPanel>
         <TabPanel className="focus:outline-none"></TabPanel>
       </ParamTab>
     </Suspense>

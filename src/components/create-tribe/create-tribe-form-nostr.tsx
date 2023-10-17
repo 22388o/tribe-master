@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import routes from '@/config/routes';
 import Button from '@/components/ui/button/button';
@@ -18,23 +18,16 @@ import SessionStorage, {
 } from '@/services/session-storage';
 import { pubkeyFromNpub } from '@/utils/utils';
 import { toast } from 'react-toastify';
-import useWallet, { Provider } from '@/hooks/useWallet';
+import { Provider } from '@/hooks/useWallet';
 import { BitpacType } from '@/hooks/useBitpac';
 
 export default function CreateTribeTRForm() {
-  const { pubkey } = useWallet();
   const router = useRouter();
   const [inputs, setInputs] = useState(['']);
   const [npubkeys, setNPubKeys] = useState(['']);
   const [threshold, setTreshold] = useState(1);
   const [name, setName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    if (pubkey && inputs.length === 1 && inputs[0] === '') {
-      setInputs([pubkey, '']);
-    }
-  }, [pubkey]);
 
   function goToHomePage() {
     setTimeout(() => {
@@ -58,6 +51,7 @@ export default function CreateTribeTRForm() {
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     // Todo, validate that it is a valid pubkey
+    // TODO: Validate that it is a nostr key, usually starts with npub
     const newInputs = [...inputs];
     newInputs[index] = e.target.value;
     setInputs(newInputs);
@@ -82,15 +76,7 @@ export default function CreateTribeTRForm() {
 
     try {
       const address = generateMultisigAddress(npubkeys, threshold);
-      const pubkeys = npubkeys.map((p) =>
-        p.startsWith('npub') ? pubkeyFromNpub(p) : p
-      );
-
-      if (!pubkeys.length || pubkeys[0] === '') {
-        toast.error('Missing public keys, please add some');
-        return;
-      }
-
+      const pubkeys = npubkeys.map((p) => pubkeyFromNpub(p));
       const event = {
         content: JSON.stringify([name, [threshold, ...pubkeys]]),
         created_at: Math.floor(Date.now() / 1000),
@@ -99,7 +85,7 @@ export default function CreateTribeTRForm() {
           [Tags.NETWORK, NETWORK], // Network name (e.g. "mainnet", "signet")
           [Tags.ADDRESS, address], // Address of the tribe
           [Tags.NAME, name], // name of the tribe,
-          [Tags.BITPAC_TYPE, BitpacType.BTC],
+          [Tags.BITPAC_TYPE, BitpacType.NOSTR],
         ],
       };
 
@@ -134,14 +120,14 @@ export default function CreateTribeTRForm() {
         <div className="flex-grow">
           <InputLabel
             title="Pubs"
-            subTitle="Enter a pub for everyone in your bitpac"
+            subTitle="Enter an npub for everyone in your bitpac"
           />
           {inputs.map((input, index) => (
             <Input
               key={index}
               value={input}
               type="text"
-              placeholder="Enter member public key"
+              placeholder="Enter member npub"
               onChange={(e) => handleInputChange(index, e)}
             />
           ))}

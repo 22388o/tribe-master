@@ -1,7 +1,9 @@
 import { nostrPool } from '@/services/nostr';
+import { Bitpac } from '@/types';
 import { Event } from 'nostr-tools';
+import validateEvent from '../xverse/validateEvent';
 
-const fetchVotes = async (proposalEventId: string): Promise<Event[]> => {
+const fetchVotes = async (proposalEventId: string, bitpac: Bitpac): Promise<Event[]> => {
   if (!proposalEventId) return [];
 
   const filter = [
@@ -18,7 +20,9 @@ const fetchVotes = async (proposalEventId: string): Promise<Event[]> => {
   const filteredVotes = orderedVotes.filter(
     (vote, index, self) =>
       index === self.findIndex((v) => v.pubkey === vote.pubkey)
-  );
+  ).filter((proposal) => {
+    return validateEvent(proposal, bitpac);
+  });
 
   return filteredVotes;
 };
