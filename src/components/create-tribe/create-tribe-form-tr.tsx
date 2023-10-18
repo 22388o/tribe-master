@@ -26,6 +26,7 @@ export default function CreateTribeTRForm() {
   const [threshold, setTreshold] = useState(1);
   const [name, setName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [repeatedNpub, setRepeatedNpub] = useState(false)
 
   function goToHomePage() {
     setTimeout(() => {
@@ -52,6 +53,7 @@ export default function CreateTribeTRForm() {
   ) => {
     const repeatedPubkey = inputs.includes(e.target.value)
     if (repeatedPubkey) {
+      setRepeatedNpub(true)
       alert('You have already used this npub. Use a different one.')
     } else {
       const newInputs = [...inputs];
@@ -189,7 +191,7 @@ export default function CreateTribeTRForm() {
       <Button
         type="submit"
         className="mt-5 rounded-lg !text-sm uppercase tracking-[0.04em]"
-        disabled={isLoading || !name || !threshold || !inputs?.[0] || repeatedNpub }
+        disabled={isLoading || !name || !threshold || !inputs?.[0] || !repeatedNpub }
       >
         {isLoading ? 'Creating Bitpac...' : 'Create Bitpac'}
       </Button>
