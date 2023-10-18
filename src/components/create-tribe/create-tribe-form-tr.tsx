@@ -125,8 +125,7 @@ export default function CreateTribeTRForm() {
             <Input
               key={index}
               value={input}
-              minLength={63}
-              maxLength={67}
+              pattern='^(npub)[a-zA-HJ-NP-Z0-9]{25,64}$'
               type="text"
               placeholder="Enter member npub"
               onChange={(e) => handleInputChange(index, e)}
