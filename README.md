@@ -26,6 +26,7 @@ Both participants can make proposals and submit votes to existing proposals, pas
 
 - [ ] Ordinals
 - [x] BTC address (WIP)
+- [x] Xverse (WIP)
 
 ## Status
 
