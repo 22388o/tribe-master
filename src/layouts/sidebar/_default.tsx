@@ -69,7 +69,8 @@ export default function Sidebar({
   return (
     <aside
       className={cn(
-        'top-0 z-40 h-full w-full max-w-full border-dashed border-gray-200 bg-body ltr:left-0 ltr:border-r rtl:right-0 rtl:border-l dark:border-gray-700 dark:bg-dark xs:w-80 xl:fixed  xl:w-72 2xl:w-80',
+        'top-0 z-40 h-full w-full max-w-full border-dashed border-gray-200 ltr:left-0 ltr:border-r rtl:right-0 rtl:border-l dark:border-gray-700 dark:bg-dark xs:w-80 xl:fixed  xl:w-72 2xl:w-80 bg-sky-200',
+        // Change bg color to sky
         className
       )}
     >
