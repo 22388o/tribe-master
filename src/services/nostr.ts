@@ -6,8 +6,13 @@ import {
   validateEvent,
   verifySignature,
 } from 'nostr-tools';
-import { bytesToHex } from '@/utils/utils';
+import { bytesToHex, toXOnly, testnet } from '@/utils/utils';
 import * as nobleSecp256k1 from 'noble-secp256k1';
+const signerModule = import('@scure/btc-signer');
+import { hex } from '@scure/base';
+import * as bitcoin from 'bitcoinjs-lib';
+import ecc from '@bitcoinerlab/secp256k1';
+import BIP32Factory from 'bip32';
 
 export enum Tags {
   WALLET_PROVIDER = 'w',
@@ -73,8 +78,30 @@ class NostrRelay {
     const pubkey =
       pbk || nobleSecp256k1.getPublicKey(privkey, true).substring(2);
 
-    const newEvent = this.getEvent(event, pubkey);
+    if (privkey.startsWith('xprv') || privKey?.startsWith('tprv')) {
+      const bip32 = BIP32Factory(ecc);
+      const node = bip32.fromBase58(privkey, testnet);
+      const sm = await signerModule;
+      const pb = toXOnly(node.publicKey);
+      const p2trAddress = sm.p2tr(pb, undefined, testnet);
+      const result = {
+        ...p2trAddress,
+        tapInternalKey: Buffer.from(p2trAddress.tapInternalKey),
+        output: hex.encode(p2trAddress.script),
+        script: Buffer.from(p2trAddress.script),
+        pubkey: Buffer.from(pb, 'hex'),
+      };
+      const newEvent = this.getEvent(event, result.pubkey.toString('hex'));
+      const sig = await nobleSecp256k1.schnorr.sign(
+        newEvent.id,
+        // @ts-ignore
+        node.privateKey
+      );
+      newEvent.sig = sig;
+      return newEvent;
+    }
 
+    const newEvent = this.getEvent(event, pubkey);
     const sig = await nobleSecp256k1.schnorr.sign(newEvent.id, privkey);
     newEvent.sig = sig;
 

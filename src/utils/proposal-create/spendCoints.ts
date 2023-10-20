@@ -13,6 +13,8 @@ const spendCoins = async (
 ) => {
   var script = [0];
   pubkeys.forEach((item) => {
+    if (item.startsWith('xpub') || item.startsWith('tpub')) {
+    }
     // @ts-ignore
     script.push(item, 'OP_CHECKSIGADD');
   });

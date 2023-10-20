@@ -26,6 +26,7 @@ const addressAtom = atom(
 export enum Provider {
   XVERSE = 'XVerse',
   NOSTR = 'Nostr',
+  XPRV = 'xpriv',
 }
 
 // Create a custom hook to use the atom

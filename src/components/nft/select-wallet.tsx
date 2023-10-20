@@ -6,7 +6,7 @@ import metamaskLogo from '@/assets/images/xverse-white.png';
 import Button from '@/components/ui/button/button';
 import Input from '@/components/ui/forms/input';
 import useWallet, { Provider } from '@/hooks/useWallet';
-import { privkeyFromNsec, pubFromPriv } from '@/utils/utils';
+import { getPubKeyFromXPrv, privkeyFromNsec, pubFromPriv } from '@/utils/utils';
 import { useState } from 'react';
 import { useModal } from '../modal-views/context';
 import { toast } from 'react-toastify';
@@ -21,13 +21,15 @@ export default function SelectWallet({ ...props }) {
     e.preventDefault();
     setHasError(false);
     try {
-      const priv = privkeyFromNsec(name);
-      const pub = pubFromPriv(priv);
+      const priv = name.startsWith('nsec') ? privkeyFromNsec(name) : name;
+      const pub = name.startsWith('npub')
+        ? pubFromPriv(priv)
+        : getPubKeyFromXPrv(name);
 
-      storePrivateKey({ nsec: name, priv, pub });
+      storePrivateKey({ nsec: name, priv, pub, provider: Provider.XPRV });
       closeModal();
     } catch (e) {
-      console.error('Invalid nsec');
+      console.error('Invalid nsec', e);
       setHasError(true);
     }
   }
@@ -67,7 +69,7 @@ export default function SelectWallet({ ...props }) {
         <div className="mb-4 mt-4">
           <Input
             type="text"
-            placeholder="Enter your nsec"
+            placeholder="Enter your private key (xprv, nsec)"
             onChange={handleOnChangeName}
             className="error"
           />

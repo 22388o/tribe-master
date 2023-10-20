@@ -103,15 +103,16 @@ export default function CreateProposalForm({ bitpac }: { bitpac: Bitpac }) {
     e.preventDefault();
     setIsLoading(true);
 
-    if (!pubkey || !bitpac.pubkeys.length || !bitpac.pubkeys.includes(pubkey)) {
-      toast.error(
-        'Please reconnect your wallet, looks like you do not belong to the bitpac'
-      );
-      logout();
-      // Go home
-      router.push(routes.home);
-      return;
-    }
+    // TODO: ENABLE BACK AGAIN
+    // if (!pubkey || !bitpac.pubkeys.length || !bitpac.pubkeys.includes(pubkey)) {
+    //   toast.error(
+    //     'Please reconnect your wallet, looks like you do not belong to the bitpac'
+    //   );
+    //   logout();
+    //   // Go home
+    //   router.push(routes.home);
+    //   return;
+    // }
 
     let proposalInputs = [];
     let proposalOutputs = [];
@@ -159,7 +160,7 @@ export default function CreateProposalForm({ bitpac }: { bitpac: Bitpac }) {
     }
 
     // TODO: Sign the nostr event using xverse as soon as possible. It will increase security.
-    const signedEvent = await nostrPool.sign(event);
+    const signedEvent = await nostrPool.sign(event, privateKey, pubkey);
     nostrPool.publish(signedEvent);
     await new Promise((resolve) => setTimeout(resolve, 1500));
     toast.info('Proposal created');

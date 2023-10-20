@@ -2,7 +2,6 @@ import { signMessage, BitcoinNetwork } from 'sats-connect';
 import { NETWORK } from '@/config/config';
 export const signMessageXVerse = (message: string, address: string) => {
   return new Promise((resolve, reject) => {
-    debugger;
     const signMessageOptions = {
       payload: {
         network: {

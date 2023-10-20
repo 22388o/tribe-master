@@ -16,7 +16,7 @@ import { NETWORK } from '@/config/config';
 import SessionStorage, {
   SessionsStorageKeys,
 } from '@/services/session-storage';
-import { pubkeyFromNpub } from '@/utils/utils';
+import { pubkeyFromNpub, pubkeyFromXpub } from '@/utils/utils';
 import { toast } from 'react-toastify';
 import useWallet, { Provider } from '@/hooks/useWallet';
 import { BitpacType } from '@/hooks/useBitpac';
@@ -83,7 +83,7 @@ export default function CreateTribeTRForm() {
     try {
       const address = generateMultisigAddress(npubkeys, threshold);
       const pubkeys = npubkeys.map((p) =>
-        p.startsWith('npub') ? pubkeyFromNpub(p) : p
+        p.startsWith('npub') ? pubkeyFromNpub(p) : pubkeyFromXpub(p)
       );
 
       if (!pubkeys.length || pubkeys[0] === '') {
