@@ -26,6 +26,7 @@ export default function CreateTribeTRForm() {
   const [threshold, setTreshold] = useState(1);
   const [name, setName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [repeatedNpub, setRepeatedNpub] = useState(false)
 
   function goToHomePage() {
     setTimeout(() => {
@@ -38,9 +39,11 @@ export default function CreateTribeTRForm() {
     setInputs([...inputs, '']);
   };
 
-  const handleRemoveInput = () => {
+  const handleRemoveInput = (e: any) => {
+    e.preventDefault();
     if (inputs.length > 1) {
       setInputs(inputs.slice(0, -1));
+      setNPubKeys(inputs.slice(0, -1));
     }
   };
 
@@ -48,11 +51,16 @@ export default function CreateTribeTRForm() {
     index: number,
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
-    // Todo, validate that it is a valid pubkey
-    const newInputs = [...inputs];
-    newInputs[index] = e.target.value;
-    setInputs(newInputs);
-    setNPubKeys(newInputs);
+    const repeatedPubkey = inputs.includes(e.target.value)
+    if (repeatedPubkey) {
+      setRepeatedNpub(true)
+      alert('You have already used this npub. Use a different one.')
+    } else {
+      const newInputs = [...inputs];
+      newInputs[index] = e.target.value;
+      setInputs(newInputs);
+      setNPubKeys(newInputs);
+    }
   };
 
   const handleOnChangeName = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -111,6 +119,7 @@ export default function CreateTribeTRForm() {
           type="text"
           placeholder="Enter your bitpac name"
           onChange={handleOnChangeName}
+          required
         />
       </div>
 
@@ -124,11 +133,12 @@ export default function CreateTribeTRForm() {
             <Input
               key={index}
               value={input}
+              pattern='^(npub)[a-zA-HJ-NP-Z0-9]{25,64}$'
               type="text"
               placeholder="Enter member npub"
               onChange={(e) => handleInputChange(index, e)}
-            />
-          ))}
+              required  
+            />))}
         </div>
 
         <div className="ml-4 mt-14 flex items-center">
@@ -168,6 +178,7 @@ export default function CreateTribeTRForm() {
           max={inputs.length}
           placeholder="How many voters?"
           onChange={handleOnChangeThreshold}
+          required
         />
       </div>
 
@@ -180,7 +191,7 @@ export default function CreateTribeTRForm() {
       <Button
         type="submit"
         className="mt-5 rounded-lg !text-sm uppercase tracking-[0.04em]"
-        disabled={isLoading || !name || !threshold || !inputs?.[0]}
+        disabled={isLoading || !name || !threshold || !inputs?.[0] || !repeatedNpub }
       >
         {isLoading ? 'Creating Bitpac...' : 'Create Bitpac'}
       </Button>
