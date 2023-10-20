@@ -10,9 +10,10 @@ type AuthorCardProps = {
 export default function AuthorCard({ image, name, role }: AuthorCardProps) {
   return (
     <div
+      // Change bg color to sky
       className={`flex items-center rounded-lg  ${
         name
-          ? 'bg-gray-100  p-5  dark:bg-light-dark'
+          ? 'bg-gradient-to-r from-blue-500 to-sky-500  p-5  dark:bg-light-dark'
           : 'ml-3 justify-center bg-none p-5 dark:mr-3 dark:bg-none'
       }`}
     >
