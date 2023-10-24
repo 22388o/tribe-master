@@ -1,20 +1,26 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import SessionStorage, {
   SessionsStorageKeys,
 } from '@/services/session-storage';
 import { Bitpac, NostrEvent } from '@/types';
-import { nostrPool } from '@/services/nostr';
+import { Tags, nostrPool } from '@/services/nostr';
 import { generateMultisigAddress } from '@/services/tribe';
 import { useAtom, atom } from 'jotai';
+import { getNostrTagValue } from '@/utils/utils';
 
 const tribeAtom = atom<NostrEvent | undefined>(undefined);
 const nameAtom = atom('');
 const thresholdAtom = atom(1);
 const pubkeysAtom = atom<string[]>([]);
 const idAtom = atom('');
+const providerAtom = atom('');
 const addressAtom = atom('');
 const bitpacAtom = atom<Bitpac | undefined>(undefined);
-const isLoadingAtom = atom(false);
+
+export enum BitpacType {
+  NOSTR = 'nostr',
+  BTC = 'btc',
+}
 
 const useBitpac = () => {
   const [tribe, setTribe] = useAtom(tribeAtom);
@@ -24,7 +30,7 @@ const useBitpac = () => {
   const [id, setId] = useAtom(idAtom);
   const [address, setAddress] = useAtom(addressAtom);
   const [bitpac, setBitpac] = useAtom(bitpacAtom);
-  const [isLoading, setIsLoading] = useAtom(isLoadingAtom);
+  const [provider, setProvider] = useAtom(providerAtom);
 
   const fetchPac = async (bitpacId: string) => {
     const filter = [
@@ -43,14 +49,18 @@ const useBitpac = () => {
     const _name = content[0];
     const [_threshold, ..._pubkeys] = content[1];
     const _address = generateMultisigAddress(_pubkeys, _threshold);
+    const _provider = getNostrTagValue(Tags.BITPAC_TYPE, bitpac.tags) || '';
 
-    const pac = {
+    const pac: Bitpac = {
       id: bitpac.id,
       name: _name,
       pubkeys: _pubkeys,
       threshold: _threshold,
       address: _address,
+      provider: _provider,
     };
+
+    console.log('this is the pac', bitpac);
 
     setTribe(bitpac);
     setAddress(_address);
@@ -59,6 +69,7 @@ const useBitpac = () => {
     setThreshold(_threshold);
     setPubkeys(_pubkeys);
     setBitpac(pac);
+    setProvider(_provider);
 
     // Allow for faster query instead of going to nostr.
     SessionStorage.set(SessionsStorageKeys.TRIBE, bitpac);
@@ -94,7 +105,7 @@ const useBitpac = () => {
     fetchData();
   }, []);
 
-  return { tribe, name, threshold, pubkeys, id, bitpac, address };
+  return { tribe, name, threshold, pubkeys, id, bitpac, address, provider };
 };
 
 export default useBitpac;

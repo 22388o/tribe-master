@@ -11,20 +11,24 @@ import Textarea from '@/components/ui/forms/textarea';
 import spendCoins from '@/utils/proposal-create/spendCoints';
 import { Bitpac } from '@/types';
 import useAddress from '@/hooks/useAddress';
-import { nostrPool } from '@/services/nostr';
+import { Tags, nostrPool } from '@/services/nostr';
 import { toast } from 'react-toastify';
-import useWallet from '@/hooks/useWallet';
+import useWallet, { Provider } from '@/hooks/useWallet';
 import useProposals from '@/hooks/useProposal';
 import useBitcoinPrice from '@/hooks/useBitcoinPrice';
 import { satsToFormattedDollarString } from '@/utils/utils';
 import logout from '@/utils/logout';
+import { signMessageXVerse } from '@/utils/xverse/signMessage';
+import { getEventHash } from '@/utils/xverse/getEventHash';
+import validateEvent from '@/utils/xverse/validateEvent';
+import signXverseEvent from '@/utils/xverse/signEvent';
 
 export default function CreateProposalForm({ bitpac }: { bitpac: Bitpac }) {
   const router = useRouter();
   const [outputs, setOutputs] = useState<
     { address?: string; amount?: number }[]
   >([{}]);
-  const { privateKey, pubkey } = useWallet();
+  const { privateKey, pubkey, provider, address: xverseAddress } = useWallet();
   const { sats, utxos } = useAddress(bitpac.address);
   const { refetch } = useProposals(bitpac, utxos);
   const { price } = useBitcoinPrice();
@@ -100,15 +104,16 @@ export default function CreateProposalForm({ bitpac }: { bitpac: Bitpac }) {
     e.preventDefault();
     setIsLoading(true);
 
-    if (!pubkey || !bitpac.pubkeys.length || !bitpac.pubkeys.includes(pubkey)) {
-      toast.error(
-        'Please reconnect your wallet, looks like you do not belong to the bitpac'
-      );
-      logout();
-      // Go home
-      router.push(routes.home);
-      return;
-    }
+    // TODO: ENABLE BACK AGAIN
+    // if (!pubkey || !bitpac.pubkeys.length || !bitpac.pubkeys.includes(pubkey)) {
+    //   toast.error(
+    //     'Please reconnect your wallet, looks like you do not belong to the bitpac'
+    //   );
+    //   logout();
+    //   // Go home
+    //   router.push(routes.home);
+    //   return;
+    // }
 
     let proposalInputs = [];
     let proposalOutputs = [];
@@ -133,13 +138,29 @@ export default function CreateProposalForm({ bitpac }: { bitpac: Bitpac }) {
       description || 'No description',
     ];
 
-    const event = {
+    let event = {
       content: JSON.stringify(proposal),
       created_at: Math.floor(Date.now() / 1000),
       kind: 2859,
-      tags: [['e', bitpac.id]],
+      tags: [
+        [Tags.PARENT_EVENT_ID, bitpac.id],
+        [Tags.PUBKEY, pubkey],
+      ],
     };
 
+    if (provider === Provider.XVERSE) {
+      try {
+        // we add a tag with the signature, so that can be later on validated.
+        event = await signXverseEvent(event, xverseAddress, bitpac);
+      } catch (e) {
+        toast.error(e.message);
+        return;
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    // TODO: Sign the nostr event using xverse as soon as possible. It will increase security.
     const signedEvent = await nostrPool.sign(event, privateKey, pubkey);
     nostrPool.publish(signedEvent);
     await new Promise((resolve) => setTimeout(resolve, 1500));
@@ -187,25 +208,24 @@ export default function CreateProposalForm({ bitpac }: { bitpac: Bitpac }) {
           maxLength={200}
         />
       </div>
+      {!!sats && (
+        <div className="mb-6 rounded-lg bg-white p-5 shadow-card transition-shadow duration-200 hover:shadow-large dark:bg-light-dark xs:p-6 xs:pb-8">
+          <h3 className="mb-2 text-base font-medium dark:text-gray-100 xl:text-lg">
+            Spend some money
+          </h3>
 
-      <div className="mb-6 rounded-lg bg-white p-5 shadow-card transition-shadow duration-200 hover:shadow-large dark:bg-light-dark xs:p-6 xs:pb-8">
-        <h3 className="mb-2 text-base font-medium dark:text-gray-100 xl:text-lg">
-          Spend some money
-        </h3>
+          <p className="mb-6 text-xs text-gray-600 dark:text-white">
+            Balance: {usdBalance} USD <span>{sats} sats</span>
+          </p>
 
-        <p className="mb-6 text-xs text-gray-600 dark:text-white">
-          Balance: {usdBalance} USD <span>{sats} sats</span>
-        </p>
+          <p className="mb-5 leading-[1.8] dark:text-gray-300">
+            This section is for crafting a proposal that involves spending some
+            funds. Please specify the amount to be spent and provide a detailed
+            explanation of how the funds will be used. Remember, voters will be
+            considering the value and impact of your proposal based on this
+            information.
+          </p>
 
-        <p className="mb-5 leading-[1.8] dark:text-gray-300">
-          This section is for crafting a proposal that involves spending some
-          funds. Please specify the amount to be spent and provide a detailed
-          explanation of how the funds will be used. Remember, voters will be
-          considering the value and impact of your proposal based on this
-          information.
-        </p>
-
-        {sats && (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-3">
             <div className="mb-4 flex">
               <div className="flex-grow">
@@ -258,8 +278,8 @@ export default function CreateProposalForm({ bitpac }: { bitpac: Bitpac }) {
               </div>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
       <div className="mt-6">
         <Button

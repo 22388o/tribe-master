@@ -5,13 +5,12 @@ import getProposal from './getProposal';
 
 const fetchProposalsAndVotes = async (
   pubkeys: string[],
-  bitpacId: string,
   utxos: any[],
   bitpac: Bitpac
 ): Promise<{ proposals: any[] }> => {
-  const proposals = await fetchProposals(pubkeys, bitpacId);
+  const proposals = await fetchProposals(pubkeys, bitpac, bitpac.provider);
   const proposalVotes = await Promise.all(
-    proposals.map((proposal) => fetchVotes(proposal.id))
+    proposals.map((proposal) => fetchVotes(proposal.id, bitpac))
   );
 
   proposals.forEach((proposal, index) => {

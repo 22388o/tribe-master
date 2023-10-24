@@ -13,16 +13,19 @@ import VoteActions from '@/components/vote/vote-details/vote-outputs';
 import VoterTable from '@/components/vote/vote-details/voter-table';
 import { fadeInBottom } from '@/lib/framer-motion/fade-in-bottom';
 import { toast } from 'react-toastify';
-import useWallet from '@/hooks/useWallet';
+import useWallet, { Provider } from '@/hooks/useWallet';
 import { useModal } from '@/components/modal-views/context';
 import { getApprovalSigs } from '@/services/tribe';
 import { Proposal } from '@/types';
-import { nostrPool } from '@/services/nostr';
+import { Tags, nostrPool } from '@/services/nostr';
+import signXverseEvent from '@/utils/xverse/signEvent';
 
 function VoteActionButton({
   vote,
   privateKey,
   pubkey,
+  provider = '',
+  address = '',
   disabled = false,
   onChange,
 }: {
@@ -30,6 +33,8 @@ function VoteActionButton({
   privateKey: string;
   pubkey: string;
   disabled: boolean;
+  provider?: string;
+  address?: string;
   onChange?: () => {};
 }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -37,6 +42,7 @@ function VoteActionButton({
   const onApprove = async () => {
     // We don't turn on the button again, since we want to have the button disabled from now on.
     setIsLoading(true);
+
     const { inputs, outputs, bitpac, id } = vote;
     const allSigs = getApprovalSigs({
       inputs,
@@ -46,15 +52,31 @@ function VoteActionButton({
       threshold: bitpac.threshold,
     });
 
-    const reply = {
+    let reply = {
       content: JSON.stringify(allSigs),
       created_at: Math.floor(Date.now() / 1000),
       kind: 2860,
-      tags: [['e', id]],
-      pubkey: pubkey,
+      tags: [
+        [Tags.PARENT_EVENT_ID, id],
+        [Tags.PUBKEY, pubkey],
+      ],
     };
 
-    const signedEvent = await nostrPool.sign(reply, privateKey, pubkey);
+    if (provider === Provider.XVERSE) {
+      try {
+        // we add a tag with the signature, so that can be later on validated.
+        reply = await signXverseEvent(reply, address, bitpac);
+      } catch (e) {
+        toast.error(e.message);
+        return;
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    const pk = provider === Provider.XVERSE ? undefined : privateKey;
+    const pbk = provider === Provider.XVERSE ? undefined : pubkey;
+    const signedEvent = await nostrPool.sign(reply, pk, pbk);
     nostrPool.publish(signedEvent);
     await new Promise((resolve) => setTimeout(resolve, 1000));
     toast.info(`${vote.title} approved`);
@@ -65,18 +87,36 @@ function VoteActionButton({
   };
 
   const onDeny = async () => {
-    const { id } = vote;
+    const { id, bitpac } = vote;
     setIsLoading(true);
 
-    const reply = {
+    let reply = {
       content: '',
       created_at: Math.floor(Date.now() / 1000),
       kind: 2860,
-      tags: [['e', id]],
+      tags: [
+        [Tags.PARENT_EVENT_ID, id],
+        [Tags.PUBKEY, pubkey],
+      ],
       pubkey: pubkey,
     };
 
-    const signedEvent = await nostrPool.sign(reply, privateKey, pubkey);
+    if (provider === Provider.XVERSE) {
+      try {
+        // we add a tag with the signature, so that can be later on validated.
+        reply = await signXverseEvent(reply, address, bitpac);
+      } catch (e) {
+        toast.error(e.message);
+        return;
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    const pk = provider === Provider.XVERSE ? undefined : privateKey;
+    const pbk = provider === Provider.XVERSE ? undefined : pubkey;
+
+    const signedEvent = await nostrPool.sign(reply, pk, pbk);
     nostrPool.publish(signedEvent);
     await new Promise((resolve) => setTimeout(resolve, 1000));
     toast.info(`${vote.title} rejected`);
@@ -119,7 +159,7 @@ export default function VoteDetailsCard({
   onChange?: () => {};
 }) {
   const [isExpand, setIsExpand] = useState(false);
-  const { privateKey, pubkey } = useWallet();
+  const { privateKey, pubkey, provider, address } = useWallet();
   const votesPubkeys = vote?.votes?.map((v) => v.pubkey) || [];
   const actionsDisabled = votesPubkeys.includes(pubkey);
 
@@ -134,6 +174,8 @@ export default function VoteDetailsCard({
           pubkey={pubkey}
           disabled={actionsDisabled}
           onChange={onChange}
+          provider={provider}
+          address={address}
         />
       );
     }

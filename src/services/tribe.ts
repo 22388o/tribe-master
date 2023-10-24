@@ -1,6 +1,7 @@
 // All required business logic for tribe.
 import { Script, Tap, Address, Tx, Signer } from '@cmdcode/tapscript';
 import { NETWORK } from '@/config/config';
+import { getPrivkeyBufferFromXprv } from '@/utils/utils';
 
 // This function is used to generate a multisig address.
 export function generateMultisigAddress(
@@ -66,8 +67,13 @@ const getAllSigs = ({ inputs, outputs, seckey, pubkeys, threshold }: any) => {
   // Initialize an empty array for the signatures
   const all_sigs = [];
   // For each input, generate a signature and add it to the array
+  let pk = seckey;
+  if (seckey.startsWith('xprv') || seckey.startsWith('tprv')) {
+    pk = getPrivkeyBufferFromXprv(seckey);
+  }
+
   for (let i = 0; i < inputs.length; i++) {
-    var sig = Signer.taproot.sign(seckey, txdata, i, { extension: tapleaf });
+    var sig = Signer.taproot.sign(pk, txdata, i, { extension: tapleaf });
     all_sigs.push(sig.hex);
   }
 

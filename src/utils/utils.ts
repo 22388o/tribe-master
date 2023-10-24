@@ -1,7 +1,40 @@
 import { API_ENDPOINTS } from '@/data/utils/endpoints';
 import { bech32, bech32m } from 'bech32';
 import * as nobleSecp256k1 from 'noble-secp256k1';
-import axios from 'axios';
+const { Verifier } = require('bip322-js');
+
+import * as bitcoin from 'bitcoinjs-lib';
+import ecc from '@bitcoinerlab/secp256k1';
+import BIP32Factory from 'bip32';
+
+bitcoin.initEccLib(ecc);
+
+const testnet = {
+  messagePrefix: '\x18Bitcoin Signed Message:\n',
+  bech32: 'tb',
+  bip32: {
+    public: 0x043587cf,
+    private: 0x04358394,
+  },
+  pubKeyHash: 0x6f,
+  scriptHash: 0xc4,
+  wif: 0xef,
+};
+
+const getPrivkeyBufferFromXprv = (xprv: string) => {
+  const bip32 = BIP32Factory(ecc);
+  const node = bip32.fromBase58(xprv, bitcoin.networks.testnet);
+  return node.privateKey;
+};
+
+const getPubKeyFromXPrv = (xprv: string) => {
+  const bip32 = BIP32Factory(ecc);
+  const node = bip32.fromBase58(xprv, bitcoin.networks.testnet);
+
+  return bip32
+    .fromPublicKey(node.publicKey, node.chainCode, bitcoin.networks.testnet)
+    .toBase58();
+};
 
 const bytesToHex = (bytes: any) => {
   return bytes.reduce(
@@ -54,6 +87,12 @@ function pubkeyFromNpub(npub: string) {
   return Buffer.from(bech32.fromWords(bech32.decode(npub).words)).toString(
     'hex'
   );
+}
+
+function pubkeyFromXpub(xpub: string) {
+  const bip32 = BIP32Factory(ecc);
+  const pb = bip32.fromBase58(xpub, testnet);
+  return toXOnly(pb.publicKey).toString('hex');
 }
 
 function privkeyFromNsec(nsec: string) {
@@ -111,6 +150,14 @@ async function getAddressTxs(address: string) {
   return null;
 }
 
+function toXOnly(key: any) {
+  return key.length === 33 ? key.slice(1, 33) : key;
+}
+
+function verifyBIP322Signature(address: string, message: string, sig: string) {
+  return Verifier.verifySignature(address, message, sig);
+}
+
 export {
   bytesToHex,
   getNostrTagValue,
@@ -124,4 +171,10 @@ export {
   checkIfTxHappened,
   pushTx,
   getAddressTxs,
+  toXOnly,
+  verifyBIP322Signature,
+  getPubKeyFromXPrv,
+  pubkeyFromXpub,
+  getPrivkeyBufferFromXprv,
+  testnet,
 };
