@@ -1,5 +1,5 @@
 import { API_ENDPOINTS } from '@/data/utils/endpoints';
-import { bech32 } from 'bech32';
+import { bech32, bech32m } from 'bech32';
 import * as nobleSecp256k1 from 'noble-secp256k1';
 const { Verifier } = require('bip322-js');
 
@@ -76,6 +76,12 @@ const satsToFormattedDollarString = (sats: number, bitcoinPrice: number) => {
     maximumFractionDigits: 2,
   });
 };
+
+function pubkeyFromTaproot(address: string) {
+  return Buffer.from(bech32.bech32m.fromWords(bech32.bech32m.decode(address).words)).toString(
+    'hex'
+  );
+}
 
 function pubkeyFromNpub(npub: string) {
   return Buffer.from(bech32.fromWords(bech32.decode(npub).words)).toString(
@@ -158,6 +164,7 @@ export {
   shortenStr,
   satsToBtc,
   satsToFormattedDollarString,
+  pubkeyFromTaproot,
   pubkeyFromNpub,
   privkeyFromNsec,
   pubFromPriv,

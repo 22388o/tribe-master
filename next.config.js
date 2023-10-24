@@ -3,6 +3,10 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
+    remotePatterns: [
+      {
+        hostname: '**',
+      }],
     domains: ['res.cloudinary.com'],
   },
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
