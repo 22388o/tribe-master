@@ -24,8 +24,7 @@ Both participants can make proposals and submit votes to existing proposals, pas
 
 ## Roadmap
 
-- [ ] Ordinals
-- [x] BTC address (WIP)
+- [x] Ordinals (WIP)
 - [ ] Lightning network
 - [ ] Frost
 - [ ] BitVM with Bit Value using Schnorr Signature
