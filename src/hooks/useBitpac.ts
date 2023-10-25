@@ -60,8 +60,6 @@ const useBitpac = () => {
       provider: _provider,
     };
 
-    console.log('this is the pac', bitpac);
-
     setTribe(bitpac);
     setAddress(_address);
     setId(bitpac.id);

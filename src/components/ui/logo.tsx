@@ -40,13 +40,13 @@ export default function Logo({ className }: LogoPropTypes) {
                 // style={{ filter: 'brightness(0)' }}
                 priority
               />
-              <Image 
-                src={darkTextLogo} 
-                alt="Tribe" 
-                priority 
+              <Image
+                src={darkTextLogo}
+                alt="Tribe"
+                priority
                 width={62}
-                // style={{ filter: 'brightness(0)' }} 
-                />
+                // style={{ filter: 'brightness(0)' }}
+              />
             </div>
           )}
           {!isDarkMode && (
@@ -58,12 +58,13 @@ export default function Logo({ className }: LogoPropTypes) {
                 priority
                 style={{ filter: 'brightness(0)' }}
               />
-               <Image 
-                src={lightTextLogo} 
-                alt="Tribe" 
-                priority 
+              <Image
+                src={lightTextLogo}
+                alt="Tribe"
+                priority
                 width={62}
-                style={{ filter: 'brightness(0)' }} />
+                style={{ filter: 'brightness(0)' }}
+              />
             </div>
           )}
         </span>

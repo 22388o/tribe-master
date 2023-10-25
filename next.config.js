@@ -6,7 +6,8 @@ const nextConfig = {
     remotePatterns: [
       {
         hostname: '**',
-      }],
+      },
+    ],
     domains: ['res.cloudinary.com'],
   },
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {

@@ -17,10 +17,6 @@ import useWallet, { Provider } from '@/hooks/useWallet';
 import useProposals from '@/hooks/useProposal';
 import useBitcoinPrice from '@/hooks/useBitcoinPrice';
 import { satsToFormattedDollarString } from '@/utils/utils';
-import logout from '@/utils/logout';
-import { signMessageXVerse } from '@/utils/xverse/signMessage';
-import { getEventHash } from '@/utils/xverse/getEventHash';
-import validateEvent from '@/utils/xverse/validateEvent';
 import signXverseEvent from '@/utils/xverse/signEvent';
 
 export default function CreateProposalForm({ bitpac }: { bitpac: Bitpac }) {
@@ -39,7 +35,6 @@ export default function CreateProposalForm({ bitpac }: { bitpac: Bitpac }) {
   const [description, setDescription] = useState('');
   const [title, setTitle] = useState('');
 
-  
   function goToProposalsPage() {
     setTimeout(() => {
       router.push(routes.proposals);
@@ -240,7 +235,7 @@ export default function CreateProposalForm({ bitpac }: { bitpac: Bitpac }) {
                       inputClassName="focus:!ring-0 placeholder:text-[#6B7280]"
                       onChange={(e) => handleAddressChange(index, e)}
                       required
-                      pattern='^(tb1p|[13])[a-zA-HJ-NP-Z0-9]{25,64}$'
+                      // pattern='^(tb1p|[13])[a-zA-HJ-NP-Z0-9]{25,64}$'
                     />
                     <Input
                       type="number"
@@ -286,8 +281,7 @@ export default function CreateProposalForm({ bitpac }: { bitpac: Bitpac }) {
           type="submit"
           className="mt-5 rounded-lg !text-sm uppercase tracking-[0.04em]"
           disabled={
-            isLoading || 
-            !title || !description || !privateKey || !pubkey
+            isLoading || !title || !description || !privateKey || !pubkey
           }
         >
           Create Proposal

@@ -16,26 +16,22 @@ import { NETWORK } from '@/config/config';
 import SessionStorage, {
   SessionsStorageKeys,
 } from '@/services/session-storage';
-import { pubkeyFromNpub, pubkeyFromXpub } from '@/utils/utils';
+import {
+  pubkeyFromNpub,
+  pubkeyFromTaproot,
+  pubkeyFromXpub,
+} from '@/utils/utils';
 import { toast } from 'react-toastify';
 import useWallet, { Provider } from '@/hooks/useWallet';
 import { BitpacType } from '@/hooks/useBitpac';
 
 export default function CreateTribeTRForm() {
-  const { pubkey } = useWallet();
   const router = useRouter();
   const [inputs, setInputs] = useState(['']);
   const [npubkeys, setNPubKeys] = useState(['']);
   const [threshold, setTreshold] = useState(1);
   const [name, setName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [repeatedNpub, setRepeatedNpub] = useState(false)
-
-  useEffect(() => {
-    if (pubkey && inputs.length === 1 && inputs[0] === '') {
-      setInputs([pubkey, '']);
-    }
-  }, [pubkey]);
 
   function goToHomePage() {
     setTimeout(() => {
@@ -60,15 +56,26 @@ export default function CreateTribeTRForm() {
     index: number,
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const repeatedPubkey = inputs.includes(e.target.value)
-    if (repeatedPubkey) {
-      setRepeatedNpub(true)
-      alert('You have already used this npub. Use a different one.')
-    } else {
+    try {
+      const address = e.target.value;
+      if (!address) {
+        const newInputs = [...inputs];
+        newInputs[index] = '';
+        setInputs(newInputs);
+        setNPubKeys(newInputs);
+
+        return;
+      }
+
+      // Validate key
+      pubkeyFromTaproot(address);
+
       const newInputs = [...inputs];
-      newInputs[index] = e.target.value;
+      newInputs[index] = address;
       setInputs(newInputs);
       setNPubKeys(newInputs);
+    } catch (e: any) {
+      toast.error(e.message);
     }
   };
 
@@ -89,10 +96,8 @@ export default function CreateTribeTRForm() {
     setIsLoading(true);
 
     try {
-      const address = generateMultisigAddress(npubkeys, threshold);
-      const pubkeys = npubkeys.map((p) =>
-        p.startsWith('npub') ? pubkeyFromNpub(p) : pubkeyFromXpub(p)
-      );
+      const pubkeys = npubkeys.map(pubkeyFromTaproot);
+      const address = generateMultisigAddress(pubkeys, threshold);
 
       if (!pubkeys.length || pubkeys[0] === '') {
         toast.error('Missing public keys, please add some');
@@ -127,6 +132,7 @@ export default function CreateTribeTRForm() {
     }
   }
 
+  console.log(isLoading, !name, !threshold, !inputs?.[0]);
   return (
     <form noValidate onSubmit={handleSubmit} className="grid grid-cols-1 gap-4">
       <div className="mb-4">
@@ -143,18 +149,18 @@ export default function CreateTribeTRForm() {
         <div className="flex-grow">
           <InputLabel
             title="Pubs"
-            subTitle="Enter a pub for everyone in your bitpac"
+            subTitle="Enter a taproot address for everyone in your bitpac"
           />
           {inputs.map((input, index) => (
             <Input
               key={index}
               value={input}
-              pattern='^(npub)[a-zA-HJ-NP-Z0-9]{25,64}$'
               type="text"
-              placeholder="Enter member public key"
+              placeholder="Enter member taproot address"
               onChange={(e) => handleInputChange(index, e)}
-              required  
-            />))}
+              required
+            />
+          ))}
         </div>
 
         <div className="ml-4 mt-14 flex items-center">
@@ -207,7 +213,7 @@ export default function CreateTribeTRForm() {
       <Button
         type="submit"
         className="mt-5 rounded-lg !text-sm uppercase tracking-[0.04em]"
-        disabled={isLoading || !name || !threshold || !inputs?.[0] || !repeatedNpub }
+        disabled={isLoading || !name || !threshold || !inputs?.[0]}
       >
         {isLoading ? 'Creating Bitpac...' : 'Create Bitpac'}
       </Button>

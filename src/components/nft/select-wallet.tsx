@@ -6,25 +6,40 @@ import metamaskLogo from '@/assets/images/xverse-white.png';
 import Button from '@/components/ui/button/button';
 import Input from '@/components/ui/forms/input';
 import useWallet, { Provider } from '@/hooks/useWallet';
-import { getPubKeyFromXPrv, privkeyFromNsec, pubFromPriv } from '@/utils/utils';
+import {
+  getPubKeyFromXPrv,
+  privkeyFromNsec,
+  pubFromPriv,
+  getPrivKeyFromXPrv,
+} from '@/utils/utils';
 import { useState } from 'react';
 import { useModal } from '../modal-views/context';
 import { toast } from 'react-toastify';
+import useBitpac from '@/hooks/useBitpac';
 
 export default function SelectWallet({ ...props }) {
   const [name, setName] = useState('');
   const { closeModal } = useModal();
   const { storePrivateKey, connect } = useWallet();
   const [hasError, setHasError] = useState(false);
+  const { pubkeys } = useBitpac();
 
   async function handleSubmit(e: any) {
     e.preventDefault();
     setHasError(false);
     try {
-      const priv = name.startsWith('nsec') ? privkeyFromNsec(name) : name;
+      debugger;
+      const priv = name.startsWith('nsec')
+        ? privkeyFromNsec(name)
+        : getPrivKeyFromXPrv(name);
       const pub = name.startsWith('npub')
         ? pubFromPriv(priv)
         : getPubKeyFromXPrv(name);
+
+      if (!pubkeys.includes(pub)) {
+        toast.error('Please connect a wallet that belongs to the Bitpac.');
+        return;
+      }
 
       storePrivateKey({ nsec: name, priv, pub, provider: Provider.XPRV });
       closeModal();
