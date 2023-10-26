@@ -17,28 +17,26 @@ const Logo: React.FC<React.SVGAttributes<{}>> = (props) => {
         {isMounted && isDarkMode && (
           <div>
             <Image src={darkLogo} alt="Tribe" priority fill />
-            <Image 
-                src={darkTextLogo} 
-                alt="Tribe" 
-                priority 
-                width={62}
-                style={{ filter: 'brightness(0)' }} 
-                />
+            <Image
+              src={darkTextLogo}
+              alt="Tribe"
+              priority
+              width={62}
+              style={{ filter: 'brightness(0)' }}
+            />
           </div>
-          
         )}
         {isMounted && !isDarkMode && (
           <div>
             <Image src={lightLogo} alt="Tribe" priority fill />
-            <Image 
-                src={lightTextLogo} 
-                alt="Tribe" 
-                priority 
-                width={62}
-                style={{ filter: 'brightness(0)' }} 
-                />
+            <Image
+              src={lightTextLogo}
+              alt="Tribe"
+              priority
+              width={62}
+              style={{ filter: 'brightness(0)' }}
+            />
           </div>
-          
         )}
       </span>
     </div>

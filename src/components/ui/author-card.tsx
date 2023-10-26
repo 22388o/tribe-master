@@ -13,7 +13,7 @@ export default function AuthorCard({ image, name, role }: AuthorCardProps) {
       // Change bg color to sky
       className={`flex items-center rounded-lg  ${
         name
-          ? 'bg-gradient-to-r bg-gray-100  p-5  dark:bg-light-dark'
+          ? 'bg-gray-100 bg-gradient-to-r  p-5  dark:bg-light-dark'
           : 'ml-3 justify-center bg-none p-5 dark:mr-3 dark:bg-none'
       }`}
     >

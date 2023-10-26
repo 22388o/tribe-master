@@ -6,25 +6,39 @@ import metamaskLogo from '@/assets/images/xverse-white.png';
 import Button from '@/components/ui/button/button';
 import Input from '@/components/ui/forms/input';
 import useWallet, { Provider } from '@/hooks/useWallet';
-import { getPubKeyFromXPrv, privkeyFromNsec, pubFromPriv } from '@/utils/utils';
+import {
+  getPubKeyFromXPrv,
+  privkeyFromNsec,
+  pubFromPriv,
+  getPrivKeyFromXPrv,
+} from '@/utils/utils';
 import { useState } from 'react';
 import { useModal } from '../modal-views/context';
 import { toast } from 'react-toastify';
+import useBitpac from '@/hooks/useBitpac';
 
 export default function SelectWallet({ ...props }) {
   const [name, setName] = useState('');
   const { closeModal } = useModal();
   const { storePrivateKey, connect } = useWallet();
   const [hasError, setHasError] = useState(false);
+  const { pubkeys } = useBitpac();
 
   async function handleSubmit(e: any) {
     e.preventDefault();
     setHasError(false);
     try {
-      const priv = name.startsWith('nsec') ? privkeyFromNsec(name) : name;
+      const priv = name.startsWith('nsec')
+        ? privkeyFromNsec(name)
+        : getPrivKeyFromXPrv(name);
       const pub = name.startsWith('npub')
         ? pubFromPriv(priv)
         : getPubKeyFromXPrv(name);
+
+      if (!pubkeys.includes(pub)) {
+        toast.error('Please connect a wallet that belongs to the Bitpac.');
+        return;
+      }
 
       storePrivateKey({ nsec: name, priv, pub, provider: Provider.XPRV });
       closeModal();
@@ -88,7 +102,7 @@ export default function SelectWallet({ ...props }) {
         </Button>
       </form>
 
-      <div
+      {/* <div
         className="mt-12 flex h-14 w-full cursor-pointer items-center justify-between rounded-lg bg-gradient-to-l from-[#1a1a1a] to-[#e77935] px-4 text-base text-white transition-all hover:-translate-y-0.5"
         onClick={onConnectXVerse}
       >
@@ -96,7 +110,7 @@ export default function SelectWallet({ ...props }) {
         <span className="h-auto w-9">
           <Image src={metamaskLogo} alt="metamask" width={36} />
         </span>
-      </div>
+      </div> */}
     </div>
   );
 }

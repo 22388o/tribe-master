@@ -2,7 +2,7 @@ import { API_ENDPOINTS } from '@/data/utils/endpoints';
 import { bech32, bech32m } from 'bech32';
 import * as nobleSecp256k1 from 'noble-secp256k1';
 const { Verifier } = require('bip322-js');
-
+import { Address, Tap } from '@cmdcode/tapscript';
 import * as bitcoin from 'bitcoinjs-lib';
 import ecc from '@bitcoinerlab/secp256k1';
 import BIP32Factory from 'bip32';
@@ -21,19 +21,44 @@ const testnet = {
   wif: 0xef,
 };
 
+const network = 'testnet';
+
 const getPrivkeyBufferFromXprv = (xprv: string) => {
   const bip32 = BIP32Factory(ecc);
   const node = bip32.fromBase58(xprv, bitcoin.networks.testnet);
   return node.privateKey;
 };
 
+const getPrivKeyFromXPrv = (xprv: string) => {
+  const bip32 = BIP32Factory(ecc);
+  const node = bip32.fromBase58(xprv, bitcoin.networks.testnet);
+  const seckey = node?.privateKey?.toString('hex');
+  const pubkey = node?.publicKey?.toString('hex');
+
+  if (!seckey || !pubkey) {
+    throw new Error('Invalid private key');
+  }
+
+  const [tseckey] = Tap.getSecKey(seckey);
+  return tseckey;
+};
+
 const getPubKeyFromXPrv = (xprv: string) => {
   const bip32 = BIP32Factory(ecc);
   const node = bip32.fromBase58(xprv, bitcoin.networks.testnet);
 
-  return bip32
-    .fromPublicKey(node.publicKey, node.chainCode, bitcoin.networks.testnet)
-    .toBase58();
+  const seckey = node?.privateKey?.toString('hex');
+  const pubkey = node?.publicKey?.toString('hex');
+
+  if (!seckey || !pubkey) {
+    throw new Error('Invalid private key');
+  }
+
+  // For key-spends, we need to tweak both the secret key and public key.
+  const [tpubkey] = Tap.getPubKey(pubkey);
+
+  const address = Address.p2tr.encode(tpubkey);
+  return pubkeyFromTaproot(address);
 };
 
 const bytesToHex = (bytes: any) => {
@@ -78,9 +103,7 @@ const satsToFormattedDollarString = (sats: number, bitcoinPrice: number) => {
 };
 
 function pubkeyFromTaproot(address: string) {
-  return Buffer.from(bech32.bech32m.fromWords(bech32.bech32m.decode(address).words)).toString(
-    'hex'
-  );
+  return Buffer.from(Address.p2tr.decode(address)).toString('hex');
 }
 
 function pubkeyFromNpub(npub: string) {
@@ -176,5 +199,6 @@ export {
   getPubKeyFromXPrv,
   pubkeyFromXpub,
   getPrivkeyBufferFromXprv,
+  getPrivKeyFromXPrv,
   testnet,
 };

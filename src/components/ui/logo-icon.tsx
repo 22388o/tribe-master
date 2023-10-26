@@ -6,7 +6,6 @@ import lightTextLogo from '@/assets/images/tribeTextLogo-orange.png';
 import darkLogo from '@/assets/images/tribeLogo-white.png';
 import darkTextLogo from '@/assets/images/tribeTextLogo-white.png';
 
-
 const Logo: React.FC<React.SVGAttributes<{}>> = (props) => {
   const isMounted = useIsMounted();
   const { isDarkMode } = useIsDarkMode();
