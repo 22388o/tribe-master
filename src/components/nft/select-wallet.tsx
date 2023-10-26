@@ -28,7 +28,6 @@ export default function SelectWallet({ ...props }) {
     e.preventDefault();
     setHasError(false);
     try {
-      debugger;
       const priv = name.startsWith('nsec')
         ? privkeyFromNsec(name)
         : getPrivKeyFromXPrv(name);
