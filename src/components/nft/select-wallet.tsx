@@ -102,7 +102,7 @@ export default function SelectWallet({ ...props }) {
         </Button>
       </form>
 
-      <div
+      {/* <div
         className="mt-12 flex h-14 w-full cursor-pointer items-center justify-between rounded-lg bg-gradient-to-l from-[#1a1a1a] to-[#e77935] px-4 text-base text-white transition-all hover:-translate-y-0.5"
         onClick={onConnectXVerse}
       >
@@ -110,7 +110,7 @@ export default function SelectWallet({ ...props }) {
         <span className="h-auto w-9">
           <Image src={metamaskLogo} alt="metamask" width={36} />
         </span>
-      </div>
+      </div> */}
     </div>
   );
 }
