@@ -6,8 +6,8 @@ import {
 
 try {
     const invoice = await receivePayment({
-        amountMsat: 3_000_000, 
-        description: "Invoice for 3000 sats"
+        amountMsat: 0, 
+        description: "Invoice for sats"
     })
 } catch (error) {
     console.log(error)
