@@ -2,6 +2,7 @@ import React, { useEffect } from "react"
 import {  
     sendPayment,
     receivePayment,
+    BOLT11,
 } from "@breeztech/react-native-breez-sdk";
 
 try {
@@ -13,7 +14,7 @@ try {
     console.log(error)
 }
 
-const bolt11 = "..."
+const bolt11 = await receiveBolt12 ({
 try {
     const payment = await sendPayment(bolt11, 3000)
 } catch (error) {
