@@ -2,6 +2,7 @@
 import { Script, Tap, Address, Tx, Signer } from '@cmdcode/tapscript';
 import { NETWORK } from '@/config/config';
 import { getPrivkeyBufferFromXprv } from '@/utils/utils';
+import {BOLT11, sendPayment, receivePayment } from '@/utils/utils';
 
 // This function is used to generate a multisig address.
 export function generateMultisigAddress(
