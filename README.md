@@ -20,15 +20,5 @@ Alice and Bob enter their Nostr Keys (Npubs) as inputs to create a Bitpac.
 
 A multisig bitpac is created where both participants have access to make proposals, submit votes, and thus control the treasurary.
 
-Both participants can make proposals and submit votes to existing proposals, passed votes generate treasury transactions.
+Both participants can make proposals and submit votes to existing proposals, passed votes generate treasury transactions
 
-## Roadmap
-
-- [x] Ordinals (WIP)
-- [ ] Lightning network
-- [ ] Frost
-- [ ] BitVM with Bit Value using Schnorr Signature
-
-## Status
-
-Currenctly, we're building our MVP and Alpha software for Tribe
